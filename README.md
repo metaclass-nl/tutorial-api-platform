@@ -1,165 +1,237 @@
-Chapter 3: Localization - api
-=============================
+Chapter 4: Labels - Api
+=======================
 
-The environment is te same as in the chapter2-api branche, except:
-- instructions from README.md of chapter2-api where applied
+The environment is te same as in the chapter3-api branche, except:
+- instructions from README.md of chapter3-api where applied
 
-This chapter adds Localization.
+This chapter removes some columns from api lists end adds labels to referred employees.
+The client section replaces ids by labels and a select widget
 
-Hints
------
+Schema.org/name
+---------------
+If the user interface an Entity it in fact shows the data from the properties of the entity. 
+However, if a property of one entity conaints one or more references to other entities, 
+the user interface needs a representation of the Entity itself. That could be a graphical 
+representation but to keep things simple the default representation of Entities is textual. 
 
-Most of the work has to be done on the client, but the api can provide some hints
-for the client (generator) in the jsonld metadata.
+Currently the user interface uses the @id of the entity, but to most users the @id has little
+meaning so they will find it hard to remember the @ids of entities and recognize entities 
+by their @ids. Therefore ::getLabel methods where added to both the Employee and Hours class
+that return a string to represent the Entity to the user. 
 
-To see the metadata without the hints point your browser at [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
-Under property "hydra:supportedClass" at index 0 (@id: "#Employee") 
-under its property "hydra:supportedProperty: at index 6 (hydra:title: "birthDate") 
-under its property "hydra:property": you find
-"range": "xmls:dateTime".
-This makes the client generator produce a form with an input type "dateTime" for arrival. But 
-according to the ORM the property only contains a date:
+The Api platform Admin component supports these representations when on the 
+api a property is configured as the http://schema.org/name type. This can be
+done by adding an @ApiProperty tag like this:
+
 ```php
-     * @ORM\Column(type="date")
-'''
-
-In order to get an input type "date", in Entity Employee at the field doc above private $birthDate add:
-```php
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#date"}
-     * )
+    /**
+     * Represent the entity to the user in a single string
+     * @return string
+     * @ApiProperty(iri="http://schema.org/name")
+     */
+    function getLabel() {
+        return $this->getLastName(). ', '. $this->getFirstName();
+    }
 ```
-You also need to add a use statement for ApiProperty above the class statement:
+
+Add this tag to the ::getLabel methods of Employee and Hours classes. 
+To Hours class you also need to add a use statement for the tag:
 ```php
 use ApiPlatform\Core\Annotation\ApiProperty;
 ```
 
-Now refresh [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
-At the same position you should now find
-"range": "http://www.w3.org/2001/XMLSchema#date".
+(The getLabel method could have had any name as long as it has the annotation. 
+Given the schema.org property is would have been logical to call it getName,
+but experience has learnt that that a property 'name' is often already used 
+as just another property, while 'label' is usually available)
 
-To change the corresponding range of property $arrival add the following to its method doc:
+
+Serialization groups
+--------------------
+By default api platform includes all own properties of entities when they are serialized
+and only @ids of referred entities. Ids of entities referred to by 1 t m relations are
+also included. 
+
+This may be a good choice for generic api's, but from the point of
+view of the crud client application some properties will not be shown in lists so
+they can be left out from lists. Furthermore it would be nice if the labels 
+of referred Employees where included so that the client does not have to fetch them one 
+by one. Finally the client never uses collections of entities referred to by 
+1 t m relations so they can be left out.
+
+Using serialization groups the serialization can be more taylorized the the
+clients that are consuming the api. In this case the crud client application.
+
+Let's start with entity Hours. First add a use statement to make the
+@Group annotation available:
 ```php
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#time"}
-     * )
+use Symfony\Component\Serializer\Annotation\Groups;
 ```
 
-Now refresh [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
-Under "hydra:supportedProperty: at index 7 (hydra:title: "arrival") you should now find
-"range": "http://www.w3.org/2001/XMLSchema#time".
+In order to make api platform use the serialization groups the
+@ApiResource annotation needs to be adapted:
+```php
+ * @ApiResource(attributes={
+ *     "pagination_items_per_page"=10,
+ *     "order"={"start": "DESC", "description": "ASC"},
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"hours_get"}}
+ *          },
+ *          "patch",
+ *          "delete"
+ *     },
+ *     collectionOperations={
+ *         "get"={
+ *              "normalization_context"={"groups"={"hours_list"}}
+ *          },
+ *          "post"
+ *     }
+ * )
+```
+This makes api platform use two serialization groups:
+- hours_get is usef for getting individual Hours
+- hours_list is used for getting collections of Hours
+Because the hours_get will include all writable singe value properties
+it is not necessary to set normalization contexts for patch, delete and post
+(If collection property 'hours' is left out in these operations api platform
+does not update their values). 
 
-For more clarity here is the json of the two properties:
+Then to specify the groups add the following to the comments of properties
+$nHours, $start, $description, $employee and to the comments of methods
+::getLabel and ::getDay:
+```php
+     * @Groups({"hours_get", "hours_list"})
+```
+And add the following to the comment of property $onInvoice:
+```php
+     * @Groups({"hours_get"})
+```
+
+You can test your configuration at https://localhost:8443/ .
+When you try out Get /hours there should be response body like:
 ```json
-{ "@type":"hydra:SupportedProperty",
-  "hydra:property":{
-    "@id":"#Employee\/birthDate",
-    "@type":"rdf:Property",
-    "rdfs:label":"birthDate",
-    "domain":"#Employee",
-    "range":"http:\/\/www.w3.org\/2001\/XMLSchema#date"},
-  "hydra:title":"birthDate",
-  "hydra:required":true,
-  "hydra:readable":true,
-  "hydra:writable":true,
-  "hydra:description":"Date of birth"},
-{ "@type":"hydra:SupportedProperty",
-  "hydra:property":{
-    "@id":"http:\/\/schema.org\/Time",
-    "@type":"rdf:Property",
-    "rdfs:label":"arrival",
-    "domain":"#Employee",
-    "range":"http:\/\/www.w3.org\/2001\/XMLSchema#time"},
-  "hydra:title":"arrival",
-  "hydra:required":false,
-  "hydra:readable":true,
-  "hydra:writable":true,
-  "hydra:description":"Time the employee usually arrives at work"},
-```
-
-Translation of error messages
------------------------------
-
-All error messages of api platform are in English, but the messages 
-from validators can be translated by the translation service of Symfony.
-The validation error messages are already available in many languages,
-so you will probably not have to create any translation files yourself.
-
-To install the translation service:
-```shell
-docker-compose exec php composer require symfony/translation
-```
-
-The following file will be added, you need to add it to git:
-```yaml
-# config/packages/translation.yaml
-framework:
-    default_locale: en
-    translator:
-        default_path: '%kernel.project_dir%/translations'
-        fallbacks:
-            - en
-
-```
-This activates and configures the translation service. It sets
-the default locale to 'en'. 
-
-In order to get the translator to translate to the language of the client 
-the locale of the client must be set into the http request before it is processed.
-This can be done by adding an Event Subscriber. First create a new folder
-'EventSubscriber' in folder api/src. Then add a file LocaleSubscriber.php
-to that new folder with the following:
-```php
-<?php
-// api/src/EventSubscriber/LocaleSubscriber.php
-
-namespace App\EventSubscriber;
-
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\HeaderUtils;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-
-class LocaleSubscriber implements EventSubscriberInterface
 {
-
-    public function onKernelRequest(RequestEvent $event)
+  "@context": "/contexts/Hours",
+  "@id": "/hours",
+  "@type": "hydra:Collection",
+  "hydra:member": [
     {
-        $request = $event->getRequest();
-        $accept_language = $request->headers->get("accept-language");
-        if (empty($accept_language)) {
-            return;
-        }
-        $arr = HeaderUtils::split($accept_language, ',;');
-        if (empty($arr[0][0])) {
-            return;
-        }
-
-        // Symfony expects underscore instead of dash in locale
-        $locale = str_replace('-', '_', $arr[0][0]);
-
-        $request->setLocale($locale);
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            // must be registered before (i.e. with a higher priority than) the default Locale listener
-            KernelEvents::REQUEST => [['onKernelRequest', 20]],
-        ];
-    }
+      "@id": "/hours/115",
+      "@type": "Hours",
+      "nHours": 8,
+      "start": "2019-09-20T08:47:00+00:00",
+      "description": "architecture for coolkids",
+      "employee": {
+        "@id": "/employees/55",
+        "@type": "Employee",
+        "label": "Eden, Nicky"
+      },
+      "label": "2019-09-20 architecture for coolkids",
+      "day": "Fri"
+    },
+(..)
+```
+And when you fill out the number from @id from your own response at Get /hours/{id} 
+there should be response body like:
+```json
+{
+  "@context": "/contexts/Hours",
+  "@id": "/hours/115",
+  "@type": "Hours",
+  "nHours": 8,
+  "start": "2019-09-20T08:47:00+00:00",
+  "onInvoice": true,
+  "description": "architecture for coolkids",
+  "employee": {
+    "@id": "/employees/55",
+    "@type": "Employee",
+    "label": "Eden, Nicky"
+  },
+  "label": "2019-09-20 architecture for coolkids",
+  "day": "Fri"
 }
 ```
 
-It should be picked up automatically by Symfony. You can test it like this:
-```shell
-curl -X POST "https://localhost:8443/employees" -H  "accept-language: nl-NL" -H  "accept: application/ld+json" -H  "Content-Type: application/ld+json" -d "{\"firstName\":\"abcdefghijklmnopqrstuvwxyz\"}" -k
+Then entity Employee. Once again add a use statement to make the
+@Group annotation available:
+```php
+use Symfony\Component\Serializer\Annotation\Groups;
 ```
 
-If you still get validation errors in English, make a to change a config file of Symfony
-or run 
-```shell
-docker-compose exec php ./bin/console cache:clear
+Then the @ApiResource annotation:
+```php
+ * @ApiResource(
+ *     attributes={"order"={"lastName", "firstName"}},
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"employee_get"}}
+ *          },
+ *          "put",
+ *          "patch",
+ *          "delete"
+ *     },
+ *     collectionOperations={
+ *         "get"={
+ *              "normalization_context"={"groups"={"employee_list"}}
+ *          },
+ *          "post"
+ *     }
+ * )
 ```
 
-Then try again the curl command.
+To specify the groups add the following to the comments of properties
+$function, $birthDate, $arrival:
+```php
+     * @Groups({"employee_get", "employee_list"})
+```
+
+And add the following to the comment of properties $firstName, $lastName, 
+$address, $zipcode, $city
+```php
+     * @Groups({"employee_get"})
+```
+
+Finally add the following to the comment of method ::getLabel
+```php
+     * @Groups({"employee_get", "employee_list", "hours_get", "hours_list"})
+```
+This makes the label not only show up in employee operations but also in hours get operations.
+
+You can test your configuration at https://localhost:8443/.
+When you try out Get //employees there should be response body like:
+```json
+{
+  "@context": "/contexts/Employee",
+  "@id": "/employees",
+  "@type": "hydra:Collection",
+  "hydra:member": [
+    {
+      "@id": "/employees/55",
+      "@type": "Employee",
+      "function": "architect",
+      "birthDate": "1982-01-28T00:00:00+00:00",
+      "arrival": "1970-01-01T09:30:00+00:00",
+      "label": "Eden, Nicky"
+    },
+(..)
+```
+And when you fill out the number from @id from your own response at Get /employees/{id} 
+there should be response body like:
+```json
+{
+  "@context": "/contexts/Employee",
+  "@id": "/employees/55",
+  "@type": "Employee",
+  "firstName": "Nicky",
+  "lastName": "Eden",
+  "function": "architect",
+  "address": "Zuiderdiep 17",
+  "zipcode": "9722 AB",
+  "city": "Groningen",
+  "birthDate": "1982-01-28T00:00:00+00:00",
+  "arrival": "1970-01-01T09:30:00+00:00",
+  "label": "Eden, Nicky"
+}
+```
