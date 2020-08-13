@@ -11,6 +11,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * Registration of time worked by an Employee on a day
@@ -36,6 +37,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
  * @ApiFilter(DateFilter::class, properties={"start"})
  * @ApiFilter(RangeFilter::class, properties={"nHours"})
+ * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
  * @ORM\Entity
  */
 class Hours

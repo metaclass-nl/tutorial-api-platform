@@ -1,189 +1,347 @@
-Chapter 6: Sorting - Api
-========================
+Chapter 7: Authentication - Api
+===============================
 
-The environment is te same as in the chapter5-api branche, except:
-- instructions from README.md of chapter5-api where applied
+The environment is te same as in the chapter6-api branche, except:
+- instructions from README.md of chapter6-api where applied,
+- api/config/packages/lexik_jwt_authentication.yaml was added,
+- environment variables for the LexikJWTAuthenticationBundle where added to the .env file.
 
-This chapter adds filters for sorting and a custom Filter service
-for searching with a single text input in several fields.
+This chapter adds JWT authentication
 
+Error after installing this branch
+----------------------------------
+After installing this branch the api will allways return an Internal Server Error
+with a description like 'There is no extension able to load the configuration for "lexik_jwt_authentication"'.
+This will be solved by installing the LexikJWTAuthenticationBundle, more specifically, 
+by the composer install command.
 
-OrderFilter
------------
+LexikJWTAuthenticationBundle environment
+----------------------------------------
 
-For a start add the following import to Employee.php and Hours.php in api/src/Entity:
-```php
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+Before installing the LexikJWTAuthenticationBundle you should be aware that
+environment variables for its configuration where already added to 
+this branch:
+```shell environment
+###> lexik/jwt-authentication-bundle ###
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+JWT_PASSPHRASE=9fe20a8b7757fa9e800b6eb23dfb0145
+###< lexik/jwt-authentication-bundle ###
 ```
+This has the effect that your JWT_PASSPHRASE will be the same as for
+everyone who uses this tutorial. Of course this is kind of a
+security risk but it has the advantage that you can switch to
+the chapter7-react branche and chapter 8 and higher branches
+and back to this branch without the JWT_PASSPHRASE getting changed. 
+Because the corrsponding public and private keys are not in git they will remain unchanged 
+so that the LexikJWTAuthenticationBundle will no longer work properly if the
+JWT_PASSPHRASE is changed by git checkout.
 
-Most columns in the Hours list contain values from a single property of Employee.
-Column "Employee" contains labels, that are made up from values from two properties of Employee:
-lastName and FirstName. Api platform allows the client to specify multiple properties 
-for ordering by, so the following annotation should do:
-```php comment
- * @ApiFilter(OrderFilter::class)
-```
-This allows ordering by a combination any properties of the entity. Ordering ascending by
-the labels for example can be specified by query string "order[lastName]=asc&order[firstName]=asc".
-You can test this at https://localhost:8443/ 
+If you don't want this you should remove the above addition to the .env file now,
+so that it will be generated to a unique value autmatically that you then need to
+paste in the .env file every time you swith to another branch.
 
-The Hours list has a column Employee that holds the labels of the referred Employees. Ordering
-by these labels can be specified by query string "order[employee.lastName]=asc&order[employee.firstName]=asc".
-However, these are not direct properties of Hours so all properties need to be specified in the class comment
-of Hours:
-```php comment
- * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
-```
+If  you don't remove it you are advised to make sure not to use an environment with 
+the above JWT_PASSPHRASE in production.
 
-SimpleSearch Filter
--------------------
-So far all filters the application uses standard filter services that where included with api platform. 
-One limitation of those filter services is that they all combine their query expressions through AND.
-For the user of the client application the consequence is that he/she has to choose a property 
-in whose input to type the search term. 
 
-SimpleSearch allows the user to type all terms in a single input. 
-It searches each term in all properties specified, combining per term the resulting query expressions through OR,
-but combining the terms through AND. For an entity to be found it must contain all 
-search terms but it does not matter in which of the properties specified.
+Installing LexikJWTAuthenticationBundle
+---------------------------------------
+Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#installing-lexikjwtauthenticationbundle)
+under "Installing LexikJWTAuthenticationBundle". 
 
-To do this a custom service is required. In preparation you are advised to read
-[Creating Custom Filters](https://api-platform.com/docs/core/filters/#creating-custom-filters) 
-in the api platform docs.
+Because the api/config/packages/lexik_jwt_authentication.yaml was already included in this branch
+it will not be owned by root so that you can check it out from some other branch without
+git running into authorization problems. 
 
-To create the class if the filter create a new folder 'Filter' in api/src 
-and add a new file SimpleSearchFilter.php with the following content:
+
+User classes
+------------
+
+You can follow the instructions in [the symfon docs](https://symfony.com/doc/current/security.html#a-create-your-user-class)
+but then afterwards you may need to chown the files that where created and 
+api/config/packages/security.yaml to your own user so that you
+can edit them and git can add, remove and replace them. Or you can add them
+manually following the instructions below.
+
+Add a new file User.php in folder api/src/Entity with content:
 ```php
 <?php
 
-namespace App\Filter;
+namespace App\Entity;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Selects entities where each search term is found somewhere
- * in at least one of the specified properties.
- * Search terms must be separated by spaces.
- * Search is case insensitive.
- * All specified properties type must be string.
- * @package App\Filter
+ * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(name="`user`")
  */
-class SimpleSearchFilter extends AbstractContextAwareFilter
+class User implements UserInterface
 {
-    private $searchParameterName;
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
     /**
-     * Add configuration parameter
-     * {@inheritdoc}
-     * @param string $searchParameterName The parameter whose value this filter searches for
+     * @ORM\Column(type="string", length=180, unique=true)
      */
-    public function __construct(ManagerRegistry $managerRegistry, ?RequestStack $requestStack = null, LoggerInterface $logger = null, array $properties = null, NameConverterInterface $nameConverter = null, string $searchParameterName = 'simplesearch')
-    {
-        parent::__construct($managerRegistry, $requestStack, $logger, $properties, $nameConverter);
+    private $email;
 
-        $this->searchParameterName = $searchParameterName;
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
-    /** {@inheritdoc} */
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null, array $context = [])
+    public function getEmail(): ?string
     {
-        if (null === $value || $property !== $this->searchParameterName) {
-            return;
-        }
-
-        $words = explode(' ', $value);
-        foreach ($words as $word) {
-            if (empty($word)) continue;
-
-            $this->addWhere($queryBuilder, $word, $queryNameGenerator->generateParameterName($property));
-        }
+        return $this->email;
     }
 
-    private function addWhere($queryBuilder, $word, $parameterName)
+    public function setEmail(string $email): self
     {
-        $alias = $queryBuilder->getRootAliases()[0];
+        $this->email = $email;
 
-        // Build OR expression
-        $orExp = $queryBuilder->expr()->orX();
-        foreach ($this->getProperties() as $prop => $ignoored) {
-            $orExp->add($queryBuilder->expr()->like('LOWER('. $alias. '.' . $prop. ')', ':' . $parameterName));
-        }
-
-        $queryBuilder
-            ->andWhere('(' . $orExp . ')')
-            ->setParameter($parameterName, '%' . strtolower($word). '%');
+        return $this;
     }
 
-    /** {@inheritdoc} */
-    public function getDescription(string $resourceClass): array
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        $props = $this->getProperties();
-        if (null===$props) {
-            throw new InvalidArgumentException('Properties must be specified');
-        }
-        return [
-            $this->searchParameterName => [
-                'property' => implode(', ', array_keys($props)),
-                'type' => 'string',
-                'required' => false,
-                'swagger' => [
-                    'description' => 'Selects entities where each search term is found somewhere in at least one of the specified properties',
-                ]
-            ]
-        ];
+        return (string) $this->email;
     }
 
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+}
+
+```
+
+Create a new folder Repository under api/src/ and add the
+file UserRepository.ph to it with the following content:
+```php
+<?php
+
+namespace App\Repository;
+
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * @method User|null find($id, $lockMode = null, $lockVersion = null)
+ * @method User|null findOneBy(array $criteria, array $orderBy = null)
+ * @method User[]    findAll()
+ * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, User::class);
+    }
+
+    /**
+     * Used to upgrade (rehash) the user's password automatically over time.
+     */
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+        }
+
+        $user->setPassword($newEncodedPassword);
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+}
+
+```
+
+To migrate the database execute the following on the shell prompt:
+```shell
+docker-compose exec php bin/console doctrine:migrations:diff
+docker-compose exec php bin/console doctrine:migrations:migrate
+```
+
+
+User Fixtures
+-------------
+
+And to add the users, create a new file api/src/DataFixtures/UserFixtures.php
+with the following content:
+```php
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\User;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+class UserFixtures extends Fixture
+{
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(ObjectManager $manager)
+    {
+        // Create Users
+        $entity = new User();
+        $entity->setEmail('j.horlings@amsterdam.nl')
+            ->setPassword($this->passwordEncoder->encodePassword(
+                $entity,
+                'j.horlings_password'));
+        $manager->persist($entity);
+
+        $entity = new User();
+        $entity->setEmail('d.peters@leiden.nl')
+            ->setRoles(['ROLE_ADMINISTRATOR'])
+            ->setPassword($this->passwordEncoder->encodePassword(
+                $entity,
+                'd.peters_password'));
+        $manager->persist($entity);
+
+        $entity = new User();
+        $entity->setEmail('n.eden@groningen.nl')
+            ->setPassword($this->passwordEncoder->encodePassword(
+                $entity,
+                'n.eden_password'));
+        $manager->persist($entity);
+
+        $entity = new User();
+        $entity->setEmail('s.jacobs@groningen.nl')
+            ->setPassword($this->passwordEncoder->encodePassword(
+                $entity,
+                's.jacobs_password'));
+        $manager->persist($entity);
+
+        $manager->flush();
+    }
 }
 ```
-A constructor is included to allow the argument "searchParameterName" to be specified in the @ApiFilter tag. 
-The real work is done by ::filterProperty. It explodes the value of the search parameter by a space and
-calls ::addWhere for each of the resulting words. The ::addWhere method builds a OR expression adding
-a LIKE expression for each property with the same parameter. Finally sets the parameter value to the word urroudend by procent cahracters and puts the entire OR expression between brackets and ANDs that to the QueryBuilder.
 
-The getDescription method returns a description for the "hydra:search" object in the results of the api call.
-It appears to have a problem with api platform assuming that each parameter in the query string is applied to a single
-property. The SimpleSearch service applies its parameter to ALL of the specified properties, so 
-it returns all of them as comma separated list. It is not clear from the api platform documentation
-if this is allowed, but it does work and is simply returned in the results of the api call.
-
-Due to the constructor argument "searchParameterName" the service needs configuration in api/config/services.yaml
-```yaml
-    'App\Filter\SimpleSearchFilter':
-        arguments:
-            $searchParameterName: 'ignoored'
+To clear the database and execute all fixtures enter the following command:
+```shell
+docker-compose exec php bin/console doctrine:fixtures:load
 ```
-This is a bit strange because the class defines the argument with a default value:
-```php
- $searchParameterName = 'simplesearch'
+Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
+(You will loose all data in the database of your api-platform install).
+
+
+Configuring the Symfony SecurityBundle
+--------------------------------------
+Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#configuring-the-symfony-securitybundle) under "update the security configuration" except for the dev: firewall and
+ "declare the route used for /authentication_token".
+
+To enable testing the api through https://localhost:8443/docs 
+you also need to add the configuration from 
+[Documenting the Authentication Mechanism with Swagger/Open API](https://api-platform.com/docs/core/jwt/#configuring-api-platform).
+
+You can now test the authentication by going to https://localhost:8443/docs
+and executing an operation. Each operation should result in 401 Unauthorized with:
+```json
+{
+  "code": 401,
+  "message": "JWT Token not found"
+}
 ```
-but appearently Symfonies autoconfiguration does not use those defaults. The reason
-to pass string 'ignoored' is because api platform on its turn does use the default value from
-the constructor and ignores the value from the service configuration.
 
-Once the service is in place the entity class Employee can use it:
-```php
-use App\Filter\SimpleSearchFilter;
+Getting a token and testing it
+------------------------------
 
+You can continue with the instructions on [Adding endpoint to SwaggerUI to retrieve a JWT token](Adding endpoint to SwaggerUI to retrieve a JWT token) or you can simply run the following shell command:
+```shell
+curl -X POST -H "Content-Type: application/json" https://localhost:8443/authentication_token -d '{"email":"d.peters@leiden.nl","password":"d.peters_password"}' -k
 ```
-and in the class comment:
-```php comment
- * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "function", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
+this should output something like:
+```json
+{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE1OTU5NTA0MjUsImV4cCI6MTU5NTk1NDAyNSwicm9sZXMiOlsiUk9MRV9BRE1JTklTVFJBVE9SIiwiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZC5wZXRlcnNAbGVpZGVuLm5sIn0.vT2QoRL5jc9MEtCFeqK6TRoG2oA5miV8NUFr3rp3k7TLwWEa32wak9V9ufN5h-tmsXLGG3FyLjGQ9Nw5mBU0O66O7t20VEUarTR2mCqx-Opmli55-0ka6BlsfP6Oy4t-ZUEMXB_d_HB0joOYXc6zt27ZUbUuVoJ-AFg3SX8BET7Q1QjoMChwFA2Asuh7b7V6w0E3FmDUdpQn2AEawz7jdwClbdl6MftlBqYsc1Xmq4pFw6tB7-ogVP4xfP-mAJuBgQcFRjktAj3ksqPtNwQX4fHKZc5IUltqlrZf5mOnW-Eo67MhzA4wS5vh_vTrjmlJC4Cfg2tm8yFqTEsYnAQORjBlvFeNjko2nnOeEs0Aq9xO5CGKTPrg9L9TqCK-SbevjHjLgfUDRfh1L54Xwww2g4aEN0jqMo-mFjl6DtNVw9j4lze3g9I1QhNvscZ_i7SfeFnt7fy0IWxzH75b811LGryEK0vSvcqLc6nI71ZsNToUcRNczsJOql_TGBV_aLCxNNIq0ODd6IMSfuAns6l3GbDhs-3u6Y7N-8H8SSJMo4k3zW-V28Rldq-TQogXrEk0pIxk9QmSCYBGZHzKfxZbAy8jndzcea1CGRnlazLaYAEqvfgtqwjgJjNbG6f5UCuf8dGGGUa14uwBsUlPgGs3B8aiTzeUAMzqIyZYAHhlJFA"}
 ```
-This makes the SimpleSearchFilter search in the properties "lastName", "firstName", "function", "address", "zipcode" and "city".
-It will look for query parameter "search" instead of the default 'simplesearch'.
 
-You can now test the filter at https://localhost:8443/ 
+If you go to https://localhost:8443/docs there should be a button "Authorize". 
+Press it an type "Bearer " (without the quotes but with the space) and then paste the token 
+from your curl output (without the quotes) and press "Authorize". This does not send the token 
+to the api so it is not yet get validated. But as soon as you try to execute anything in the 
+Swagger UI it will send what you entered as Authorization header to the api so that you should 
+get the normal response instead of 401 Unauthorized.
 
-One limitation of the SimpleSearchFilter is that it can only search in properties that contain strings.
-If you include properties that contain other types of values, it will result in an error like "An exception occurred while executing 'SELECT ...' ' with params ... SQLSTATE[42883]: Undefined function: 7 ERROR:  function lower(time without time zone) does not exist"
-(For readability some lengthy pieces where replaced by ...).
-
-Another limitation is that it allways searches case insensitive. Finally it has no default for the properties. If you do not specify any properties it will throw an InvalidArgumentException "Properties must be specified". 
 

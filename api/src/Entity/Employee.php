@@ -9,6 +9,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use App\Filter\SimpleSearchFilter;
 
 /**
  * Class defining entities with data about an Employees
@@ -30,6 +33,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "post"
  *     }
  * )
+ * @ApiFilter(OrderFilter::class)
+ * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "function", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
  * @ORM\Entity
  */
 class Employee
