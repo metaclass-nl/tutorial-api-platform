@@ -8,5 +8,5 @@ api_platform:
     swagger:
         versions: [3]
     # Mercure integration, remove if unwanted
-    mercure:
-        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
+#    mercure:
+#        hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'

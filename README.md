@@ -1,162 +1,410 @@
-<h1>Tutorial and examples for api-platform</h1>
+Chapter 1: Employee base
+========================
 
-[API Platform](https://api-platform.com) is an extremely powerfull web framework, but i's aproach to application 
-development is still revolutionary: 
-Instead of developing your own controllers, services and a user interface on top of 
-an existing framework, you only supply the domain classes (Entities) and the framework
-generates the first version of the application. Then you then you adapt 
-(override, specialize, extend) it to suit your needs. 
+The environment is te same as in the master branche, except:
+- Entity Greetings was removed
+- A migration was added to adjust the database
+- Switched off mercure to avoid it's viral agpl license
+- Changed client/public/index.html title to "API Platform Tutorial"
 
-With proper training this approach gives high productivity and great flexibility,
-but is tends to have a steep leaning curve. Api platform is quite well documented, 
-but the documentation is stuctured according to the components and features
-of api-platform, not to the tasks of building an actual application. 
- 
-This tutorial takes you step by step through the process of building 
-a simple application with api platform and the react client generator. 
-Each chapter has one 'api' branche in git and one 'react' branche. 
-The 'api' branches only contain api code, the 'react' branches
-contain both api code and react code. 
+This chapter adds an entity class Employee.
 
-The tutorial comes with an [extended react client generator](https://github.com/metaclass-nl/client-generator) that puts
-what you have learnt into use for scaffolding your own application.
-
-Chapters and branches
----------------------
-1. Employee base [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter1-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter1-react) 
-2. Hours registration [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter2-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter2-react)
-3. Localization and Internationalization [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter3-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter3-react)
-4. Labels and Entity Select [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter4-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter4-react)
-5. Search [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter5-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter5-react)
-6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter6-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter6-react)
-7. Authentication (JWT) [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter7-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter7-react)
-8. Authorization (Under development) [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter8-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter8-react)
-
-Each branche builds on top of the previous one of the same type. 'react' Branches
-also contain the code from the corresponding 'api' branch.  
-
-To see the code resulting from a branch you can check out 
-the next branche of the same type. Or better: let git compare your current 
-code with the branche of the next branch so that you can see the differences right away.  
-
-You can start with any branch by checking it out and following its instructions.
-However, if you skip a chapter you need to restart docker-compose 
-to apply the migrations. When swiching back you may have to migrate back to 
-the last migration in the branch (replace <version number> with the actual number): 
+Api
+---
+Your first task is to add the Entity class 'Employee', but before you do so,
+make sure the database schema is in sync. 
+When you do docker-compose up migrations are executed automatically, but 
+you can explicitly execute those that are not yet executed: 
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate <version number>
+docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
-Then apply the DataFixtures by:
+
+Then add the Entity class 'Employee' by copying the 
+following code to a new file api/src/Entity/Employee.php:
+```php
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Class defining entities with data about an Employees
+ *
+ * @ApiResource(
+ *     attributes={"order"={"lastName", "firstName"}}
+ * )
+ * @ORM\Entity
+ */
+class Employee
+{
+    /**
+     * @var int The entity Id
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @var string
+     * @ORM\Column(nullable=true)
+     * @Assert\Length(max=20)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     * @ORM\Column
+     * @Assert\NotBlank
+     * @Assert\Length(max=80)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     * @ORM\Column
+     * @Assert\NotBlank
+     * @Assert\Length(max=40)
+     */
+    private $function;
+
+    /**
+     * @var string
+     * @ORM\Column
+     * @Assert\NotBlank
+     * @Assert\Length(max=80)
+     */
+    private $address;
+
+    /**
+     * @var string|null
+     * @ORM\Column(nullable=true)
+     * @Assert\Length(max=10)
+     */
+    private $zipcode;
+
+    /**
+     * @var string
+     * @ORM\Column
+     * @Assert\NotBlank
+     * @Assert\Length(max=40)
+     */
+    private $city;
+
+    /**
+     * @var \DateTime Date of birth
+     * @ORM\Column(type="date")
+     * @Assert\NotNull
+     */
+    private $birthDate;
+
+    /**
+     * @var \DateTime Time the employee usually arrives at work
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $arrival;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string|null $firstName
+     * @return Employee
+     */
+    public function setFirstName(?string $firstName): Employee
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     * @return Employee
+     */
+    public function setLastName(string $lastName): Employee
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFunction(): string
+    {
+        return $this->function;
+    }
+
+    /**
+     * @param string $function
+     * @return Employee
+     */
+    public function setFunction(string $function): Employee
+    {
+        $this->function = $function;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param string $address
+     * @return Employee
+     */
+    public function setAddress(string $address): Employee
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getZipcode(): ?string
+    {
+        return $this->zipcode;
+    }
+
+    /**
+     * @param string $zipcode|null
+     * @return Employee
+     */
+    public function setZipcode(?string $zipcode): Employee
+    {
+        $this->zipcode = $zipcode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     * @return Employee
+     */
+    public function setCity(string $city): Employee
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getBirthDate(): \DateTime
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * @param \DateTime $birthDate
+     * @return Employee
+     */
+    public function setBirthDate(\DateTime $birthDate): Employee
+    {
+        $this->birthDate = $birthDate;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getArrival(): ?\DateTime
+    {
+        return $this->arrival;
+    }
+
+    /**
+     * @param \DateTime|null $arrival
+     * @return Employee
+     */
+    public function setArrival(\DateTime $arrival=null): Employee
+    {
+        $this->arrival = $arrival;
+        return $this;
+    }
+
+    /**
+     * Represent the entity to the user in a single string
+     * @return string
+     */
+    function getLabel() {
+        return $this->getLastName(). ', '. $this->getFirstName();
+    }
+
+}
+```
+It's a quite common Doctrine Entity class for registering employees. 
+One thing specific to api-platform is the annotation
+```php
+  * @ApiResource(
+  *     attributes={"order"={"lastName", "firstName"}}
+  * )
+```
+This tells api-platform to make the class accessable in the api and sets 
+a default ordering for Employee by lastName, undersorting by firstName. 
+
+Now you have the new entity class you can generate a database migration:
+```shell
+docker-compose exec php ./bin/console doctrine:migrations:diff
+```
+
+And execute it by:
+```shell
+docker-compose exec php ./bin/console doctrine:migrations:migrate
+```
+
+To test the new Entity class point your browser at https://localhost:8443/. 
+You may need to make a security exception for the self-signed certificate that your
+browser may report as not safe.
+
+You should see Employee as the only model. When you try out Get /employees there should
+be an example value model like
+```json
+{
+  "hydra:member": [
+    {
+      "@context": "string",
+      "@id": "string",
+      "@type": "string",
+      "id": 0,
+      "firstName": "string",
+      "lastName": "string",
+      "function": "string",
+      "address": "string",
+      "zipcode": "string",
+      "city": "string",
+      "birthDate": "2020-02-21T14:52:39.004Z",
+      "arrival": "2020-02-21T14:52:39.004Z"
+    }
+...
+```
+
+To add data we will use the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
+You can install it from the command line:
+```shell
+docker-compose exec php composer req --dev orm-fixtures
+```
+
+Create a new file api/src/DataFixtures/EmployeeFixtures.php.
+(also create the necessary folders). Then copy the following to the file:
+
+```php
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\Employee;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Persistence\ObjectManager;
+
+class EmployeeFixtures extends Fixture
+{
+    public const HORLINGS_REFERENCE = 'Employee_Horlings';
+    public const PETERS_REFERENCE = 'Employee_Peters';
+    public const EDEN_REFERENCE = 'Employee_Eden';
+    public const JACOBS_REFERENCE = 'Employee_Jacobs';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(ObjectManager $manager)
+    {
+        // Create Employees
+        $entity = new Employee();
+        $entity->setFirstname('John')
+            ->setLastname('Horlings')
+            ->setAddress('Wezelstraat 32')
+            ->setZipcode('')
+            ->setCity('Amsterdam')
+            ->setBirthDate(new \DateTime('1971-02-18'))
+            ->setArrival(new \DateTime('08:30'))
+            ->setFunction('programmer');
+        $manager->persist($entity);
+        $this->addReference(self::HORLINGS_REFERENCE, $entity);
+
+        $entity = new Employee();
+        $entity->setFirstname('Debby')
+            ->setLastname('Peters')
+            ->setAddress('Hoofdweg 71')
+            ->setZipcode('1537 WL')
+            ->setCity('Leiden')
+            ->setBirthDate(new \DateTime('1965-09-03'))
+            ->setArrival(new \DateTime('08:00'))
+            ->setFunction('director');
+        $manager->persist($entity);
+        $this->addReference(self::PETERS_REFERENCE, $entity);
+
+        $entity = new Employee();
+        $entity->setFirstname('Nicky')
+            ->setLastname('Eden')
+            ->setAddress('Zuiderdiep 17')
+            ->setZipcode('9722 AB')
+            ->setCity('Groningen')
+            ->setBirthDate(new \DateTime('1982-01-28'))
+            ->setArrival(new \DateTime('09:30'))
+            ->setFunction('architect');
+        $manager->persist($entity);
+        $this->addReference(self::EDEN_REFERENCE, $entity);
+
+        $entity = new Employee();
+        $entity->setFirstname('Simon')
+            ->setLastname('Jacobs')
+            ->setAddress('Theresiastraat 40')
+            ->setZipcode('3214 CW')
+            ->setCity('Utrecht')
+            ->setBirthDate(new \DateTime('1958-12-16'))
+            ->setArrival(new \DateTime('12:30'))
+            ->setFunction('designer');
+        $manager->persist($entity);
+        $this->addReference(self::JACOBS_REFERENCE, $entity);
+
+        $manager->flush();
+    }
+
+}
+```
+
+To clear the database and execute the fixtures enter the following command:
 ```shell
 docker-compose exec php bin/console doctrine:fixtures:load
-```                     
-For a react branche you may need to update yarn:
-```shell
-docker-compose exec client yarn install
-docker-compose exec client yarn update
-```                     
-With chapter 4 react and higher if you still get an error on missing react-intl: 
-```shell
-docker-compose exec client yarn add react-intl
 ```
+Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
+(You will loose all data in the database of your api-platform install).
 
-
-Required knowledge
-------------------
-- PHP 7
-- Symfony 4 or 5
-- Doctrine ORM
-- ES6
-- React.js
-- Redux
-- React Router
-- maybe docker and docker-compose
-You don't need to be an expert in these domains, basic working experience should be enough. 
-
-About the admin interface
--------------------------
-
-The tutorial contains instructions with respect to the scaffolded React 'client' 
-user interface. The scaffolded React 'client' user interface is simple and insightfull 
-as all the code for the basic CRUD operations is generated as-expected,
-understanding and adapting it just requires common knowledge of ES6, react and redux
-and will add to your general experience with them. 
-
-The 'admin' user interface is based on the abstact user interface [React Admin](https://marmelab.com/react-admin/).
-Experience with [phpPeanuts](http://www.phppeanuts.org/) learns that an abstract
-user interface add considerably to the steepness of the learning curve. 
-Furthermore you will learn mostly about the specifics of React Admin,
-and less about building common applications with ES6, react and redux. 
-
-This doesn't mean the admin user interface is not interesting, it is! But for a smaller 
-audience of more experienced developers who want to get the most out of api platform.
-Therefore branches for the 'admin' user interface are left out for now, maybe they will be added later.
-
-Requirements
-------------
-The master branche that was checked out when cloning the repository contains
-an allmost unmodified (1) Api Platform Distribution. You need [Docker](https://docs.docker.com/install/) 
-(recent version with docker-compose) to run it. On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/)
- is supported. Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine is not supported out of the box.
-
-Limitations
------------
-This is a work in progess. Currently everything needs to be re-tested 
-because of the merging of changes from the upstream api platform repository
-
-This tutorial currently only supports the (scaffolded) React client user interface.  
-
-The tutorial does not support installation with Symfony Flex and Composer so you can skip that section 
-
-Install
--------
-Clone the tutorials repository using git:
-```shell
-git clone https://github.com/metaclass-nl/api-platform-tutorial.git
-```
-
-Testing your install
---------------------
-You may test the installation following the [instructions on the api platform website](https://api-platform.com/docs/distribution/#installing-the-framework).
-Just skip the part about downloading and extracting the .tar.gz file and go straight to:
-```shell
-cd api-platform-tutorial
-docker-compose pull # Download the latest versions of the pre-built images
-docker-compose up -d # Running in detached mode
-```
-
-As we did not install using Symfony Flex and Composer you can skip that section 
-and go straight to [It's Ready!](https://api-platform.com/docs/distribution/#its-ready).
-Follow the instructions to test the api.
-
-Before you can test the admin or client interface you need to visit https://localhost:8443/
-and make a security exception for the self-signed certificate, otherwise its 
-XHR requests will be blocked. You may have to do this every time after you
-have closed the browser. 
-
-To test the admin interface point your browser at https://localhost:444/. You may need to
-make an other security exception.
-
-Credits
--------
-
-The tutorial and examples are copyright (c) [MetaClass](https://www.metaclass.nl/), Groningen, 2019, 2020
-
-It is is based on the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
-created by [Kévin Dunglas](https://dunglas.fr). 
-
- 
-(1) README.md was changed obviously. Furthermore: .env files from client and admin where 
-changed to use http because FireFox CORS did not allow the https requests, i guess because
-the certificate of the api is not valid.
-
-Contribution
-------------
-Ideas and bug reports are welcome. 
-
-Please clone the repository and add branches there 
-for some other client (generation) platform there, then send a merge request. 
-However, api platform and the client platforms are changing constantly so 
-at some point you may need to update your branches to keep them up to date and
-working. Abandoned branches that are no longer functional or have security issues
-may be removed. 
+To test the new Entity class point your browser at https://localhost:8443/. 
+When you try out Get /employees the response body should contain the data of the 
+four employees.
