@@ -64,14 +64,11 @@ class List extends Component {
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th>id</th>
-              <th><FormattedMessage id="hours.nHours" default="nHours"/></th>
-              <th><FormattedMessage id="hours.start" default="start"/></th>
-              <th><FormattedMessage id="hours.onInvoice" default="onInvoice"/></th>
-              <th><FormattedMessage id="hours.description" default="description"/></th>
-              <th><FormattedMessage id="hours.employee" default="employee"/></th>
-              <th><FormattedMessage id="hours.label" default="label"/></th>
-              <th><FormattedMessage id="hours.day" default="day"/></th>
+              <th><FormattedMessage id="hours.start" defaultMessage="start"/></th>
+              <th><FormattedMessage id="hours.day" defaultMessage="day"/></th>
+              <th><FormattedMessage id="hours.description" defaultMessage="description"/></th>
+              <th><FormattedMessage id="hours.nHours" defaultMessage="nHours"/></th>
+              <th><FormattedMessage id="hours.employee" defaultMessage="employee"/></th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -81,38 +78,29 @@ class List extends Component {
                 <tr key={item['@id']}>
                   <th scope="row">
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      {item['@id']}
+                      <defined.FormattedDateTime value={item['start']} />
                     </Link>
                   </th>
                   <td>
-                  <defined.FormattedNumber value={item['nHours']}/>
-                  </td>
-                  <td>
-                  <defined.FormattedDateTime value={item['start']} />
-                  </td>
-                  <td>
-                  <defined.LocalizedBool value={item['onInvoice']} />
+                    <defined.FormattedDate value={item['start']} weekday="short"/>
                   </td>
                   <td>
                   {item['description']}
                   </td>
-                  <td><EntityLinks type="employees" items={item['employee']} /></td>
                   <td>
-                  {item['label']}
+                    <defined.FormattedNumber value={item['nHours']}/>
                   </td>
-                  <td>
-                      <defined.FormattedDate value={item['start']} weekday="short"/>
-                  </td>
+                  <td><EntityLinks type="employees" items={item['employee']} labelProp="label" /></td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only"><FormattedMessage id="show" default="Show"/></span>
+                      <span className="sr-only"><FormattedMessage id="show" defaultMessage="Show"/></span>
                     </Link>
                   </td>
                   <td>
                     <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-pencil fa-pencil-alt" aria-hidden="true" />
-                      <span className="sr-only"><FormattedMessage id="edit" default="Edit"/></span>
+                      <span className="sr-only"><FormattedMessage id="edit" defaultMessage="Edit"/></span>
                     </Link>
                   </td>
                 </tr>

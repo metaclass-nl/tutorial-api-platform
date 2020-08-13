@@ -6,6 +6,7 @@ import Form from './Form';
 import { retrieve, update, reset } from '../../actions/hours/update';
 import { del } from '../../actions/hours/delete';
 import {FormattedMessage, injectIntl} from "react-intl";
+import * as defined from '../common/intlDefined';
 
 class Update extends Component {
   static propTypes = {
@@ -46,7 +47,11 @@ class Update extends Component {
 
     return (
       <div>
-        <h1><FormattedMessage id="hours.update" defaultMessage="Edit {label}" values={ {label: item && item['@id']} }/></h1>
+        <h1><FormattedMessage
+          id="hours.update"
+          defaultMessage="Edit {start} {description}"
+          values={ {start: <defined.FormattedDateTime value={item && item['start']} />, description: item && item['description']} }
+        /></h1>
 
         {this.props.created && (
           <div className="alert alert-success" role="status">

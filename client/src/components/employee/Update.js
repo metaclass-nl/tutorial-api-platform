@@ -46,7 +46,7 @@ class Update extends Component {
 
     return (
       <div>
-        <h1><FormattedMessage id="employee.update" defaultMessage="Edit {label}" values={ {label: item && item['@id']} }/></h1>
+        <h1><FormattedMessage id="employee.update" defaultMessage="Edit {label}" values={ {label: item && item['label']} }/></h1>
 
         {this.props.created && (
           <div className="alert alert-success" role="status">

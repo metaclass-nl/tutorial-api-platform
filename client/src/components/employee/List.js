@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/employee/list';
 import {FormattedMessage} from "react-intl";
 import * as defined from '../common/intlDefined';
-import EntityLinks from '../common/EntityLinks';
 import Pagination from "../common/Pagination";
 
 class List extends Component {
@@ -64,17 +63,10 @@ class List extends Component {
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th>id</th>
-              <th><FormattedMessage id="employee.firstName" default="firstName"/></th>
-              <th><FormattedMessage id="employee.lastName" default="lastName"/></th>
+              <th><FormattedMessage id="employee.item" default="Employee"/></th>
               <th><FormattedMessage id="employee.function" default="function"/></th>
-              <th><FormattedMessage id="employee.address" default="address"/></th>
-              <th><FormattedMessage id="employee.zipcode" default="zipcode"/></th>
-              <th><FormattedMessage id="employee.city" default="city"/></th>
               <th><FormattedMessage id="employee.birthDate" default="birthDate"/></th>
               <th><FormattedMessage id="employee.arrival" default="arrival"/></th>
-              <th><FormattedMessage id="employee.hours" default="hours"/></th>
-              <th><FormattedMessage id="employee.label" default="label"/></th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -84,26 +76,11 @@ class List extends Component {
                 <tr key={item['@id']}>
                   <th scope="row">
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      {item['@id']}
+                      {item['label']}
                     </Link>
                   </th>
                   <td>
-                  {item['firstName']}
-                  </td>
-                  <td>
-                  {item['lastName']}
-                  </td>
-                  <td>
                   {item['function']}
-                  </td>
-                  <td>
-                  {item['address']}
-                  </td>
-                  <td>
-                  {item['zipcode']}
-                  </td>
-                  <td>
-                  {item['city']}
                   </td>
                   <td>
                   <defined.FormattedDate value={item['birthDate']} />
@@ -111,20 +88,16 @@ class List extends Component {
                   <td>
                   <defined.FormattedTime value={item['arrival']} />
                   </td>
-                  <td><EntityLinks type="hours" items={item['hours']} /></td>
-                  <td>
-                  {item['label']}
-                  </td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only"><FormattedMessage id="show" default="Show"/></span>
+                      <span className="sr-only"><FormattedMessage id="show" defaultMessage="Show"/></span>
                     </Link>
                   </td>
                   <td>
                     <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-pencil fa-pencil-alt" aria-hidden="true" />
-                      <span className="sr-only"><FormattedMessage id="edit" default="Edit"/></span>
+                      <span className="sr-only"><FormattedMessage id="edit" defaultMessage="Edit"/></span>
                     </Link>
                   </td>
                 </tr>

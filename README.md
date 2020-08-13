@@ -1,358 +1,631 @@
-Chapter 4: Labels - React client
+Chapter 5: Search - React client
 ================================
 
-The environment is te same as in the chapter3-react branche, except:
-- instructions from README.md of chapter3-react where applied
-- instructions from README.md of chapter4-api where applied
+The environment is te same as in the chapter4-react branche, except:
+- instructions from README.md of chapter4-react where applied
+- instructions from README.md of chapter5-api where applied
 
-This chapter replaces ids by labels and a select widget.
+This chapter adds a search form for simply searching for Hours
+with fields that contain or are equal to the values in the form.
 
-Obsolete Columns and Fields
----------------------------
 
-The table that where scaffolded for the list of employees holds a column
-for each property of Employee. This was probably done because the scaffolding script
-has no way to know what properties are important and which ones can be left out. 
-In client/src/components/employee/List.js below 
+Search Form
+-----------
+The application already contains a Form for editing Hours that
+does serveral things that would be nice for the search form too:
+- localization of numbers and datetimes,
+- selection of an Employee from a list.
+But the search form should not be entirely the same as the edit form:
+- the 'onInvoice' field should allow the user NOT to search by the value of onInvoice,
+  but the checkbox only suppors two values: checked and not checked. To keep things
+  simple the onInvoice field should be left out,
+- the 'start' field requires the user to enter an exact date and time, but it is
+  unlikely that the user knows both by head. To make it more usefull the start
+  field should only require a date to search for all Hours that start on that date
+- a field for employee.function should be added
+
+As requirements change in the future the search form may be expected to change and divert
+more and more from the edit form. It therefore is OK to simply copy the code from
+client/src/components/hours/Form.js to a new file client/src/components/hours/SearchForm.js.
+Once you have done this you need to change the class name to SearchForm:
 ```javascript jsx
-    <table className="table table-responsive table-striped table-hover">
+class SearchForm extends Component {
 ```
-columns firstName, lastName, address, zipcode, city, hours are now empty 
-because the api no longer includes these properties in the list of employees.
-They can be removed. The column label can be removed too, because
-in paragraph "Labels" you will make the label shown in the first column.
-
-The table that where scaffolded for the list of hours holds a column
-for each property of Hours. In client/src/components/hours/List.js below 
+Also adapt the export statement:
 ```javascript jsx
-    <table className="table table-responsive table-striped table-hover">
+export default reduxForm({
+  form: 'search_hours',
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true
+})(SearchForm);
 ```
-Columns onInvoice and label and their column labels can be removed. 
+Notice that the form property was also changed. This allows Redux Forms to store the values from both forms
+seperately in Redux so that values entered in one form will not mess up the values in the other form.
 
-The fields that where scaffolded for showing an Employee show the property 
-hours that is no longer present in the output of the api. It can be removed
-from client/src/components/employee/Show.js.
-
-The fields that where scaffolded for editing an Employee show the property 
-hours that is no longer present in the output of the api. It can be removed
-from client/src/components/employee/Form.js.
-
-Labels
-------
-
-In chapter4-api you added an extra tag at the label property of Employee:
-```php
-     * @ApiProperty(iri="http://schema.org/name")
-```
-
-Let's start with client/src/components/employee/List.js. below
+To allow different css styles for the form give it class name "search":
 ```javascript jsx
-    <table className="table table-responsive table-striped table-hover">
+      <form className="search" onSubmit={this.props.handleSubmit}>
 ```
-replace the header id by:
-```javascript jsx
-              <th><FormattedMessage id="employee.item" default="Employee"/></th>
-```
-and the content of the Link in tbody to
-```javascript jsx
-   {item['label']} 
-```
+You remove the onInvoice field and reorder the other fields in the folowing order:
+employee, description, start, nHours.
 
-Component hours/List.js also contains a column id, but 
-here using the label would sort off mess up the table with too much
-data in a single column. This can be solved by making the
-first column show 'start' instead of @id and reordering the other colums like in:
-```javascript jsx
-        <table className="table table-responsive table-striped table-hover">
-          <thead>
-            <tr>
-              <th><FormattedMessage id="hours.start" defaultMessage="start"/></th>
-              <th><FormattedMessage id="hours.day" defaultMessage="day"/></th>
-              <th><FormattedMessage id="hours.description" defaultMessage="description"/></th>
-              <th><FormattedMessage id="hours.nHours" defaultMessage="nHours"/></th>
-              <th><FormattedMessage id="hours.employee" defaultMessage="employee"/></th>
-              <th colSpan={2} />
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.retrieved &&
-              this.props.retrieved['hydra:member'].map(item => (
-                <tr key={item['@id']}>
-                  <th scope="row">
-                    <Link to={`show/${encodeURIComponent(item['@id'])}`}>
-                      <defined.FormattedDateTime value={item['start']} />
-                    </Link>
-                  </th>
-                  <defined.FormattedDate value={item['start']} weekday="short"/>
-(..)
-```
-(You need to reorder the column values correspondingly)
+To make the start field a date field in stead of datetime-local, change its type to "date" and
+replace the formatting and normalizing functions by their date counterparts.
 
-Then there is the link to the employee. Both List.js and Show.js use an 
-EntityLinks component to render the link. In List.js:
+To support searching by the function of the related employee, add the following field:
 ```javascript jsx
-                  <td><EntityLinks type="employees" items={item['employee']} /></td>
+        <Field
+          component={this.renderField}
+          name="employee.function"
+          type="text"
+          label=<FormattedMessage id="employee.function" defaultMessage="function" />
+          placeholder=""
+          />
+```
+But this introduces a problem: if a value is present in employee.function, 
+this results in a nested object to be the value of employee, but employee
+already may have a string value from the employee select. This can be solved
+by renaming the employee select to employee.id:
+```javascript jsx
+        <Field
+          component={this.renderField}
+          name="employee.id"
+```
+This way both employee.id and employee.function will be put together in the nested
+object in employee.
+
+Browsing history and query string utitiies
+------------------------------------------
+
+The current Hours List component renders Pagination buttons. When the user presses
+one of these buttons a new uri is added to the browsing history so that the user
+can go back to previously browsed pages. The uris contain an url-encode parameter
+holding the query string for the api. These query strings are provided by the api
+in the result of GET /hours:
+```application/ld+json
+"hydra:view": {
+    "@id": "/hours?page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/hours?page=1",
+    "hydra:last": "/hours?page=3",
+    "hydra:next": "/hours?page=2"
+  },
 ```
 
-In client/src/components/common/EntityLinks.js a property 'labelProp' is defined
-that can be passed to the EntityLinks object, specifying which property to use
-to represent the object(s) in the content of the link(s). All you need to do
-is the to add labelProp="label" in both List.js and Show.js. In List.js:
-```javascript jsx
-                  <td><EntityLinks type="employees" items={item['employee']} labelProp="label" /></td>
+All the List component has to do is decode the parameter and send the result to
+the api. If filters are used, the api even includes them in the uris it provides.
+For example the result of GET hours?description=e includes:
+```application/ld+json
+"hydra:view": {
+    "@id": "/hours?description=e&page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "/hours?description=e&page=1",
+    "hydra:last": "/hours?description=e&page=3",
+    "hydra:next": "/hours?description=e&page=2"
+  },
 ```
+This seems convenient: the pagination buttons will keep working for any search
+that the api can understand. But there is a snack: When the user presses the back button
+the Search form will no longer be in sync with the actual search sent to the api! 
+In order to restore WYSIWYG the search form will have to be updated with the values of the parameters
+from the uri that is meant for the api. And when the user enters or changes a value
+in the search form, a new uri has to be generated from the values from the form.
 
-If you test this you will see nothing shows up.
-This is caused by client/src/actions/hours/list.js and
- client/src/actions/hours/show.js containing the following line:
-```javascript jsx
-    retrieved = normalize(retrieved);
-```
-This line normalizes the retrieved data replacing any nested
-object by their @id. If you remove these lines the links to
-employees should show up with the employee label as content and
-the id used for the href.
+As long as the form values are one on one with these parameters this is quite simple. 
+But for the Hours search they are not: the date in the form for example has to be 
+transformed to two parameters: 'start[after]' and 'start[before]'. There are two more 
+parameters that need to be transformed or adapted. Because this has to work both ways,
+from the form to the uri and from the uri back to the form, it is simpeler to
+forget about the pagination buttons for now and have our own form values converted one
+to one to our own query string and back, and put those in the history. 
 
-The component employee/Show.js also shows the id of the employee in 
-its render method:
-```javascript jsx
-        <h1><FormattedMessage id="employee.show" defaultMessage="Show {label}" values={ {label: item && item['@id']} }/></h1>
-```
-You can replace @id by label, resulting in:
-```javascript jsx
-        <h1><FormattedMessage id="employee.show" defaultMessage="Show {label}" values={ {label: item && item['label']} }/></h1>
-```
-You can do the same with the component employee/Update.js 
+Decoupling the uris (including the query strings and parameters) used by the application from 
+those of the api has an other advantage: if one changes the other may stay the same and vice versa.
+With the api separating back-end from front-end one may forget that multi tier architecture was also a good practice
+in previous era's. But in those times the separation was primarily a matter of logical decoupling.
+And that is exactly what this is. IOW, it's good architectural practice.
 
-The same can be done with hours/Show.js. and hours/Update.js but here we have
-a problem: the label contains a dateTime in UTC and its format is not localized!
-Luckily FormattedMessage can also render components like FormattedDateTime passed as parameter value.
-For hours/Show.js:
+For the one on one convertions generic utility functions can be used. Add the following to
+client/src/utils/dataAccess.js:
 ```javascript jsx
-        <h1><FormattedMessage
-          id="hours.show"
-          defaultMessage="Show {start} {description}"
-          values={ {start: <defined.FormattedDateTime value={item && item['start']} />, description: item && item['description']} }
-        /></h1>
-```
-Please adapt the translations in the messages folder like the defaultMessage.
-
-For hours/Update.js first import the intlDefined components:
-```javascript jsx
-import * as defined from '../common/intlDefined';
-```
-Formatting the message is similar:
-```javascript jsx
-        <h1><FormattedMessage
-          id="hours.update"
-          defaultMessage="Edit {start} {description}"
-          values={ {start: <defined.FormattedDateTime value={item && item['start']} />, description: item && item['description']} }
-        /></h1>
-```
-Of course you need to adapt the translations in the messages folder accordingly.
-
-Select
-------
-
-All employee ids are now out of sight except for the text input 
-in client/src/components/hours/Form.js. Here is a simple Select component
-that retrieves all Employees, shows their labels and selects the @id:
-```javascript jsx
-//client/src/components/common/SelectEntity.js
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import {fetch} from "../../utils/dataAccess";
-import {FormattedMessage} from "react-intl";
+/**
+ * Build a query string portion for an url from a plain object.
+ * The object may be nested.
+ * Any value typeof "object" except null will be handled as a nested object.
+ * (values like new String("String) or new Number(12) will not be handled correctly)
+ * @param values Plain Object
+ * @param prefix string
+ * @returns string
+ */
+export function buildQuery(values, prefix) {
+  let query = "";
+  for (let key in values) {
+    const value = values[key];
+    if (value) {
+      const param = prefix ? prefix + "[" + key + "]" : key;
+      query += value !== null && typeof value === 'object'
+        ? buildQuery(value, param)
+        : "&" + param + "=" + encodeURIComponent(value);
+    }
+  }
+  return query;
+}
 
 /**
- * Simple component for selecting entities from a dropdown
- * that shows their labels
+ * Parses query string portion from uri
+ * @param queryOrUri string with max 1 level of nesting
+ * @returns Plain Object
  */
-class SelectEntity extends Component {
-  static propTypes = {
-    fetchUrl: PropTypes.string,
-    labelProp: PropTypes.string,
-    error: PropTypes.string,
-    input: PropTypes.object,
-    meta: PropTypes.object
-  };
+export function parseQuery(queryOrUri) {
+  const pathAndQuery = queryOrUri.split("?");
+  const params = new URLSearchParams(
+    pathAndQuery.length === 1 ? pathAndQuery[0] : pathAndQuery[1]
+  );
+  const values = {};
+  for (let [key, value] of params) {
+    if (!key) continue;
+    
+    const pieces = key.split("[");
+    if (pieces.length > 2) {
+      throw new Error("More then 1 level of nesting");
+    }
+    if (pieces.length === 1) {
+      values[key] = value;
+    } else {
+      if (values[pieces[0]] === undefined) {
+        values[pieces[0]] = {};
+      }
+      values[pieces[0]][pieces[1].slice(0, -1)] = value;
+    }
+  }
+  return values;
+}
+```
 
-  state = {};
-  mounted = false
+Pagination
+----------
+Forgetting about the pagination makes processing the values from the the uris simpeler, 
+but it is good practice to first refactor and then extend. This means to first adapt the 
+List component in such a way that:
+- a conventional query string is used, 
+- it is first converted to a plain object and stored for later use,
+- the object is then converted into an uri to be sent to the api.
+
+But first import the necessary funcions in client/components/hours/List.js:
+```javascript jsx
+import {buildQuery, parseQuery} from "../../utils/dataAccess";
+```
+
+Then replace the componentDidMount method by:
+```javascript jsx
+  values;
 
   componentDidMount() {
-    this.mounted = true;
+    this.values = parseQuery(this.props.location.search);
+    this.props.list("/hours?" + buildQuery({page: values.page}));
+  }
+```
 
-    fetch(this.props.fetchUrl)
-      .then(response => response.json())
-      .then(retrieved => {
-        if (this.mounted)
-          this.setState({ entities: retrieved["hydra:member"] });
-      })
-      .catch(e => {
-        if (this.mounted)
-          this.setState({ error: e });
-      });
+When the user actually presses a page button:
+- the page number is added to the stored object,
+- it is converted back to one uri that is added to the history
+
+This is implemented in the following method:
+```javascript jsx
+  /**
+   * Event handler for pagination buttons
+   * @param string page (numeric)
+   */
+  page(page) {
+    this.values.page = page;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
+  }
+```
+
+React detects this and provides new properties with the new query string. 
+To process this adapt the componentDidUpdate method like this:
+```javascript jsx
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.values = parseQuery(this.props.location.search);
+      this.props.list("/hours?" + buildQuery({page: values.page}));
+    }
+  }
+```
+
+To provide the page function to the Pagination component, replace its call at the bottom of the
+render method by: 
+```javascript jsx
+        <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)} />
+```
+
+In client/src/components/common/Pagination.js:
+```javascript jsx
+import {parseQuery} from "../../utils/dataAccess";
+```
+
+Add an onClick property to the first button: 
+```javascript jsx
+            <Link
+                to="."
+                className={`btn btn-primary${previous ? '' : ' disabled'}`}
+                onClick={ e => handleClick(e, props, first) }
+            >
+```
+Add similar onClick properties to the other buttons, replacing first with previous, next and last.
+
+Finally add the handleClick function at the bottom of the file:
+```javascript jsx
+function handleClick(event, props, uri) {
+  if (!props.onClick) return;
+  event.preventDefault();
+  props.onClick(parseQuery(uri).page)
+}
+```
+
+Because a query string is now used insead of passing the api uri as page parameter
+the following route in client/src/routes/hours.js will no longer be used and
+can be removed:
+```javascript jsx
+  <Route path="/hours/:page" component={List} exact strict key="page" />
+```
+
+You can now test the application. The pagination buttons should work and you should
+be able to go back using the browsers back button.
+
+
+Toolbar
+-------
+Below the title "Hours List"the List currently renders a paragraph with the Create button:
+```javascript jsx
+        <p>
+          <Link to="create" className="btn btn-primary">
+            <FormattedMessage id="hours.create" defaultMessage="Create"/>
+          </Link>
+        </p>
+```
+
+In order to show the Search Form replace this by the following toolbar:
+```javascript jsx
+        <div className="toolbar">
+          <SearchTool
+            query={this.props.location.search}
+            list={this.list.bind(this)}
+            history={this.props.history}
+          />
+          <div className="toolbar-buttons form-group">
+            <Link to="create" className="btn btn-primary">
+              <FormattedMessage id="hours.create" defaultMessage="Create"/>
+            </Link>
+          </div>
+        </div>
+```
+
+As you can see instead of the SearchForm a SearchTool is included. 
+This way all the plumming that is required to control the Form and the
+searching can be kept outside of the List component. The only code that 
+is needed in the List component is the list function that is called
+by the SearchTool in order to pass the values from the form and
+the query for the api:
+```javascript jsx
+list(values, apiQuery) {
+    this.values = values;
+    this.props.list("/hours?" + apiQuery);
+  }
+```
+
+The above method replaces the lifecycle methods componentDidMount
+and componentDidUpdate. Please remove them from the List component.
+
+
+SearchTool
+----------
+Create a file SearchTool.js in the client/src/components/hours folder with
+the following code:
+```javascript jsx
+import React, { Component } from 'react';
+import PropTypes from "prop-types";
+import {buildQuery, parseQuery} from "../../utils/dataAccess";
+import SearchForm from "./SearchForm";
+import isEqual from 'lodash/isEqual';
+import get from 'lodash/get';
+
+class SearchTool extends Component {
+  static propTypes = {
+    query: PropTypes.string,
+    list: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired
+  };
+
+  values;
+
+  componentDidMount() {
+    this.valuesFromQuery();
+    this.props.list(this.values, this.apiQuery());
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
+  componentDidUpdate(prevProps) {
+    if (this.props.query !== prevProps.query) {
+      this.valuesFromQuery();
+      this.props.list(this.values, this.apiQuery());
+    }
   }
 
-  optionsFromEntities() {
-    if (this.state.entities === undefined) {
-      return null;
-    }
+  apiQuery() {
+    const {page, description, employee, nHours, start} = this.values;
+    const req = {};
 
-    var items = this.state.entities.map(item => (
-      <option key={item["@id"]} value={item["@id"]}>{item[this.props.labelProp]}</option>
-    ));
-    if (!this.props.required || this.props.input.value === "") {
-      items.unshift(<option key="" value=""></option>);
+    if (page) {
+      req.page = page;
     }
-    return items;
+    if (description) {
+      req.description = description;
+    }
+    if (employee) {
+      if (employee.id) {
+        // need to strip /employees/
+        req["employee.id"] = employee.id.substring(11);
+      }
+      if (employee.function) {
+        req["employee.function"] = employee.function;
+      }
+    }
+    if (nHours) {
+      req.nHours = {gte: nHours-0.05, lt: nHours+0.05};
+    }
+    if (start) {
+      // convert local date to UTC after & before
+      const y =  parseInt(start.substring(0, 4), 10);
+      const m = parseInt(start.substring(5, 7), 10) - 1;
+      const d = parseInt(start.substring(8, 10), 10);
+      req.start = {
+        after: new Date(y, m, d, 0, 0, 0).toISOString(),
+        before: new Date(y, m, d, 23, 59, 59).toISOString()
+      }
+    }
+    return buildQuery(req);
+  }
+
+  shouldProcessChange(values, oldValues) {
+    if (get(values, 'employee.id') !== get(oldValues, 'employee.id')) return true;
+    if (values.start !== oldValues.start
+      && (!values.start || values.start.substring(0, 4) > "1900")
+    ) return true;
+    return false;
+  }
+
+  /**
+   * Set values from the query string
+   */
+  valuesFromQuery() {
+    this.values = parseQuery(this.props.query);
+    if (this.values.nHours)
+      this.values.nHours = parseFloat(this.values.nHours);
+  }
+
+  /**
+   * Event handler for changes in the search form.
+   * Reset page.
+   * Only process changes from fields that do not react to Enter key.
+   * @param {} values
+   */
+  formChange(values) {
+    if (this.shouldProcessChange(values, this.values)) {
+      values.page=undefined;
+      this.props.history.push(
+        "?" + buildQuery(values)
+      );
+    }
+  }
+
+  /**
+   * Event handler for submission of the search form.
+   * If values have changed, reset page and push query to history.
+   * @param {} values
+   */
+  formSubmit(values) {
+    if (isEqual(values, this.values)) return;
+
+    values.page=undefined;
+    this.props.history.push(
+      "?" + buildQuery(values)
+    );
   }
 
   render() {
-    if (this.state.error !== undefined) {
-      return <div>{this.state.error.toString()}</div>;
-    }
-    if (this.state.entities === undefined) {
-      return <div><FormattedMessage id="loading" defaultMessage="Loading..."/></div>;
-    }
     return (
-      <select
-        {...this.props.input}
-        required={this.props.required}
-        id={this.props.meta.form + "_" + this.props.input.name}
-      >
-        {this.optionsFromEntities()}
-      </select>
+      <SearchForm
+        onSubmit={values => this.formSubmit(values)}
+        onChange={values => this.formChange(values)}
+        initialValues={ this.values }
+      />
     );
   }
 }
 
-export default SelectEntity;
+export default SearchTool;
 ```
-Of course this select has its limitations: 
-- it does not cache its contents, so the entities may be retrieved from the api more often then necessary,
-- it does not subscribe with mercure for changes to the entities, so they may get outdated,
 
-Both limitations sort of compensate for one another, but it would be nice if it only retrieved entities 
-the user searches for, and displays them 'as you type'. But this would require a more sophisticated widget. 
-In chapter 7 with react widgets this will be resolved so that the above SelectEntity component can be kept simple
-for now.
+Starting at the bottom: The tool only renders the SearchForm that you 
+created earlier. If the form is submitted the values are passed to the 
+formSubmit method. This method clears the page value to allways show
+the first page of a new search result. Then it pushes an uri with a 
+query string from the values on to the history.
 
-But how can it be rendered? The form passes this.renderField to each Redux Field component,
-renderField allways returns a ReduxFormRow that renders an input! A simple solution could be to make renderField
-display the select if data.input.name == 'employee'. But it would be more flexible if one
-could freely specify the widget to use.  For this you need to adapt 
-client/src/components/common/ReduxFormRow.js. As the first lines of funcion ReduxFormRow add:
+In reaction to this React will call the lifecylce method componentDidUpdate:
 ```javascript jsx
-    const Widget = data.widget ? data.widget : ReduxFieldInput;
-    const widgetData = {...data};
-    widgetData.label = undefined;
-
+componentDidUpdate(prevProps) {
+    if (this.props.query !== prevProps.query) {
+      this.valuesFromQuery();
+      this.props.list(this.values, this.apiQuery());
+    }
+  }
 ```
-And below the label component in the return statement replace 
+This method is much like the corrensponding method of the List component.
+If the query string has changed, it also sets the values property, but this 
+is done by valuesFromQuery method:
 ```javascript jsx
-            <ReduxFieldInput {...data}/>
+  /**
+   * Set values from the query string
+   */
+  valuesFromQuery() {
+    this.values = parseQuery(this.props.query);
+    if (this.values.nHours)
+      this.values.nHours = parseFloat(this.values.nHours);
+  }
 ```
-by:
+Of course this method starts with parsing the query string, but it 
+adds an application specific detail: the value of nHours is parsed as a float,
+so that the SearchForm gets what it expects.
+
+Back to the lifecycle method: It passes the values to the List component
+together with a query string for the api. This is how the query string is created:
 ```javascript jsx
-            <Widget {...data}/>
+  apiQuery() {
+    const {page, description, employee, nHours, start} = this.values;
+    const req = {};
+
+    if (page) {
+      req.page = page;
+    }
+    if (description) {
+      req.description = description;
+    }
+    if (employee) {
+      if (employee.id) {
+        // need to strip /employees/
+        req.employee = employee.id.substring(11);
+      }
+      if (employee.function) {
+        req["employee.function"] = employee.function;
+      }
+    }
+    if (nHours) {
+      req.nHours = {gte: nHours-0.05, lt: nHours+0.05};
+    }
+    if (start) {
+      // convert local date to UTC after & before
+      const y =  parseInt(start.substring(0, 4), 10);
+      const m = parseInt(start.substring(5, 7), 10) - 1;
+      const d = parseInt(start.substring(8, 10), 10);
+      req.start = {
+        after: new Date(y, m, d, 0, 0, 0).toISOString(),
+        before: new Date(y, m, d, 23, 59, 59).toISOString()
+      }
+    }
+    return buildQuery(req);
+  }
 ```
 
-This way ReduxFormRow looks for its 'widget' property. If it is specified, it assigns it to constant Widget,
-if it is not specified it assigns ReduxFieldInput instead. In the return it renders the Widget constant.
-Eventual content of the label property is already rendered by ReduxFormRow itself.
-
-
-Back in client/src/components/hours/Form.js you need to import SelectEntity:
+There is one more method that handles a form event:
 ```javascript jsx
-import SelectEntity from '../common/SelectEntity.js';
-```
+  /**
+   * Event handler for changes in the search form.
+   * Reset page.
+   * Only process changes from fields that do not react to Enter key.
+   * @param {} values
+   */
+  formChange(values) {
+    if (this.shouldProcessChange(values, this.values)) {
+      values.page=undefined;
+      this.props.history.push(
+        "?" + buildQuery(values)
+      );
+    }
+  }
 
-Now the Redux form Field for employee can be adapted like this:
+```
+Instead of allways updating the list, this method ignores
+character level changes to the description and nHours field.
+Processing changes for each character is nice for a search suggestion
+dropdown, but the Search Form does not have one. The list 
+holds much more information then a earch suggestion
+dropdown, and it is not directly relevant to the task the
+user is performing: typing a search term. It is therefore better
+to wait for the user to press Enter so that the form is submitted. 
+
+But not with all fields the Enter key submits the form. 
+The following method is used to decide if a change should
+be processed:
 ```javascript jsx
-        <Field
-          component={this.renderField}
-          name="employee"
-          placeholder=""
-          required={true}
-          widget={SelectEntity}
-	  labelProp="label"
-          fetchUrl="employees?pagination=false"
-          label=<FormattedMessage id="hours.employee" defaultMessage="employee" />
-        />
+  shouldProcessChange(values, oldValues) {
+    if (get(values, 'employee.id') !== get(oldValues, 'employee.id')) return true;
+    if (values.start !== oldValues.start
+      && (!values.start || values.start.substring(0, 4) > "1900")
+    ) return true;
+    return false;
+  }
 ```
-Three properties where added to this Field:
-- widget specifies the SelectEntity class to be used for the widget
-- fetchUrl tells the SelectEntity where to get its entity data
-- labelProp tells the SelectEntity which property to use to represent the entities to the user
 
-Field passes all its properties except 'component' to the forms renderField method.
-This method passes them to ReduxFormRow but adds the error from the Form properties.
-Finally the render method renders the constant Widget, once again passing the properties.
-To prevent React from getting confused by an in the context of Widget useless label property 
-holding another component, it is set undefined before the properties are passed to Widget.
+You can now test the application. Its layout needs impovement,
+but each of the search fields should work to
+change the list and they should all work together through AND.
+The page buttons should only change the page. When the 
+form is changed and submitted you should get the first page.
 
-A little styling
-----------------
+You may have noticed that if the search result fits on a single
+page the pagination buttons are present but all disabled. This is not
+consistent with the Employee list, where they disappear when 
+all Employees fit on the first page. In order to make the 
+buttons disappear instead, add the following to client/src/components/common/Pagination.js
+above the return statement:
+```javascript jsx
+    if (first===undefined && last===undefined) return null;
 
-To make the layout look a little better on desktops, add a file main.css to the client/src folder 
-with the following content:
+```
+The buttons should now disappear as expected.
+
+Style 
+-----
+
+To make the form fields smaller and display in line, and to make the
+submit button disappear (like in the admin interface), add the following
+to client/src/main.css:
 ```css
-/* styles common for the entire app */
-
-.bg-lightGrey {
-    background: #f2f2f2;
+.search .btn-success {
+    display: none;
 }
-@media (min-width: 768px) {
-    .mainContainer {
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+.search .form-group {
+    display: inline-block;
+    width: 180px;
+    vertical-align: top;
 }
-@media (min-width: 668px) {
-    .form-control-label, .form-control {
-        display: inline-block;
-        vertical-align: top;
-    }
-
-    .form-control-label {
-        width: 30%;
-    }
-
-    .form-control {
-        width: 70%;
-    }
+.search .form-control {
+    display: block;
+    width: 98%;
+}
+.search .form-control-label {
+    width: 98%;
+    display: block;
+}
+.search, .toolbar-buttons {
+    display: table-cell;
+    vertical-align: bottom;
+}
+.toolbar-buttons {
+    padding-left: 5px;
+    padding-bottom: 1rem;
 }
 ```
-
-Then import it in client/src/index.js:
-```javascript jsx
-import './main.css';
-```
+The form should now look like [this](/resources/HoursSearch.png). 
 
 Scaffolding your own application
 --------------------------------
-
-Templates that where adapted for the use of labels instead of @ids and a select widget
-for a single reference are available in [branch tutorial-chapter4 of
-metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter4).
+Templates that where adapted for the use a search tool as well as sorting like is
+described in chapter 6 are available in [branch tutorial-chapter6 of
+metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter6).
 They are provided for scaffolding your own application 
 (after scaffolding you still need to make some adaptations manually).
 
-Be aware that the code scaffolded by these templates needs data from
-the api to contain label properties to be typed as http://schema.org/name
-and labels of referred entities to be included (possible by serialization groups). 
-Because the generator only has access to the metadata of the single type for which it is scaffolding,
-it assumes all referred types label properties have the same name. If this assumption is wrong
-you need to correct the scaffolded code.
+Data about the filters offered by the api is currently not included in the JSON-LD documentation
+generated by api platform that is used by the client generator. Therefore the 
+client generator can only scaffold a search tool for all immediate properties. Because 
+read-only properties are often not persistent, the writable properties are used.
+These are the same properties that are used to generate the Form component.
 
-Finally, if your application needs the user to edit references to multiple
-entities, the scaffolded entryfield will only be usable if you show the @ids
-of the entities somewhere in the application, for example in the List component.
+Because of this the application developer probably needs to adapt the search tool and
+form to make it work properly. Therefore the search tool is not used by default 
+in the scaffolded List components. 
+

@@ -79,14 +79,6 @@ class Form extends Component {
           format={inputLoc.formatTime}
           normalize={inputLoc.normalizeTime}
           />
-        <Field
-          component={this.renderField}
-          name="hours"
-          type="text"
-          label=<FormattedMessage id="employee.hours" defaultMessage="hours" />
-          placeholder=""
-          normalize={v => (v === '' ? [] : v.split(','))}
-          />
 
         <button type="submit" className="btn btn-success">
           <FormattedMessage id="submit" defaultMessage="Submit"/>

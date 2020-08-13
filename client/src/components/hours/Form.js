@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as inputLoc from '../../utils/inputLocalization';
 import {FormattedMessage} from 'react-intl';
 import ReduxFormRow from '../common/ReduxFormRow.js';
+import SelectEntity from '../common/SelectEntity.js';
 import getIntl from "../../utils/intlProvider";
 
 class Form extends Component {
@@ -57,10 +58,12 @@ class Form extends Component {
         <Field
           component={this.renderField}
           name="employee"
-          type="text"
           label=<FormattedMessage id="hours.employee" defaultMessage="employee" />
           placeholder=""
           required={true}
+          widget={SelectEntity}
+          labelProp="label"
+          fetchUrl="employees?pagination=false"
           />
 
         <button type="submit" className="btn btn-success">

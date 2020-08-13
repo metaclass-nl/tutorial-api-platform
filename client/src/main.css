@@ -1,0 +1,28 @@
+/* styles common for the entire app */
+
+.bg-lightGrey {
+    background: #f2f2f2;
+}
+@media (min-width: 768px) {
+    .mainContainer {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+@media (min-width: 668px) {
+    .form-control-label, .form-control {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .form-control-label {
+        width: 30%;
+    }
+
+    .form-control {
+        width: 70%;
+    }
+}
+

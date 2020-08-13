@@ -6,7 +6,6 @@ import { retrieve, reset } from '../../actions/employee/show';
 import { del } from '../../actions/employee/delete';
 import {FormattedMessage, injectIntl} from "react-intl";
 import * as defined from '../common/intlDefined';
-import EntityLinks from '../common/EntityLinks';
 
 class Show extends Component {
   static propTypes = {
@@ -43,7 +42,7 @@ class Show extends Component {
 
     return (
       <div>
-        <h1><FormattedMessage id="employee.show" defaultMessage="Show {label}" values={ {label: item && item['@id']} }/></h1>
+        <h1><FormattedMessage id="employee.show" defaultMessage="Show {label}" values={ {label: item && item['label']} }/></h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
@@ -119,10 +118,6 @@ class Show extends Component {
                 <td>
                     <defined.FormattedTime value={item['arrival']} />
                 </td>
-              </tr>
-              <tr>
-                <th scope="row"><FormattedMessage id="employee.hours" defaultMessage="hours"/></th>
-                <td><EntityLinks type="hours" items={item['hours']} up={true} /></td>
               </tr>
               <tr>
                 <th scope="row"><FormattedMessage id="employee.label" defaultMessage="label"/></th>

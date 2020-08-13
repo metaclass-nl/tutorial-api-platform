@@ -10,9 +10,10 @@ export default {
   "employee.arrival": "Arrival time",
   "employee.arrival.placeholder": "Time the employee usually arrives at work",
   "employee.hours": "Hours",
-  "employee.label": "Label",
+  "employee.label": "Name",
   "employee.label.placeholder": "Represent the entity to the user in a single string",
 
+  "employee.item": "Employee",
   "employee.list": "Employee List",
   "employee.new": "New Employee",
   "employee.show": "Show {label}",

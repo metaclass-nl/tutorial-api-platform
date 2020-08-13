@@ -14,6 +14,10 @@ function ReduxFieldInput(data) {
 }
 
 export default function ReduxFormRow(data) {
+  const Widget = data.widget ? data.widget : ReduxFieldInput;
+  const widgetData = { ...data };
+  widgetData.label = undefined;
+
   data.input.className = "form-control";
 
   const isInvalid = data.meta.touched && !!data.meta.error;
@@ -34,7 +38,7 @@ export default function ReduxFormRow(data) {
       >
         {data.label === undefined ? data.input.name : data.label}
       </label>
-      <ReduxFieldInput {...data} />
+      <Widget {...widgetData} />
       {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
     </div>
   );

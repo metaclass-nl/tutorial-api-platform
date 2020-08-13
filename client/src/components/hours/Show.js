@@ -43,7 +43,11 @@ class Show extends Component {
 
     return (
       <div>
-        <h1><FormattedMessage id="hours.show" defaultMessage="Show {label}" values={ {label: item && item['@id']} }/></h1>
+        <h1><FormattedMessage
+          id="hours.showX"
+          defaultMessage="Show {start} {description}"
+          values={ {start: <defined.FormattedDateTime value={item && item['start']} />, description: item && item['description']} }
+        /></h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
@@ -98,7 +102,7 @@ class Show extends Component {
               </tr>
               <tr>
                 <th scope="row"><FormattedMessage id="hours.employee" defaultMessage="employee"/></th>
-                <td><EntityLinks type="employees" items={item['employee']} up={true} /></td>
+                <td><EntityLinks type="employees" items={item['employee']} labelProp="label" up={true} /></td>
               </tr>
               <tr>
                 <th scope="row"><FormattedMessage id="hours.label" defaultMessage="label"/></th>

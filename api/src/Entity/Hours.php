@@ -7,6 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
  * Registration of time worked by an Employee on a day
@@ -19,7 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get"={
  *              "normalization_context"={"groups"={"hours_get"}}
  *          },
- *          "patch",
+ *          "put",
  *          "delete"
  *     },
  *     collectionOperations={
@@ -29,6 +33,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "post"
  *     }
  * )
+ * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
+ * @ApiFilter(DateFilter::class, properties={"start"})
+ * @ApiFilter(RangeFilter::class, properties={"nHours"})
  * @ORM\Entity
  */
 class Hours

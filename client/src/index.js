@@ -18,6 +18,7 @@ import Navigation from './components/Navigation.js';
 import {RawIntlProvider} from 'react-intl';
 import getIntl, {initIntl} from './utils/intlProvider';
 import messages from "./messages/all";
+import './main.css';
 
 // Import your reducers and routes here
 import Welcome from './Welcome';

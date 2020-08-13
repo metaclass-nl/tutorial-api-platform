@@ -13,6 +13,7 @@ export default {
     "employee.label": "Naam",
     "employee.label.placeholder": "Toon de entiteit aan de gebruiker in een enkele string",
 
+    "employee.item": "Medewerker",
     "employee.list": "Lijst van medewerkers",
     "employee.new": "Nieuwe medewerker",
     "employee.show": "Toon {label}",
