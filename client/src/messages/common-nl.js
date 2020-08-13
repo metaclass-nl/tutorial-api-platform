@@ -17,5 +17,12 @@ export default {
     "navigation.toggle": "Toon/verberg navigatie",
     "navigation.home": "Start",
     "navigation.employees": "Medewerkers",
-    "navigation.hours": "Uren"
+    "navigation.hours": "Uren",
+    "navigation.login": "Log in",
+
+    "login.title": "Log in",
+    "login.email": "Email",
+    "login.password": "Wachtwoord",
+    "login.submit": "Inloggen",
+    "login.error.unauthorized": "Inloggen mislukt"
 }

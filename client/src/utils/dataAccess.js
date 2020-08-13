@@ -6,22 +6,44 @@ import mapValues from 'lodash/mapValues';
 
 const MIME_TYPE = 'application/ld+json';
 
+let token = null;
+const errorHandlers = [];
+
+/**
+ * @param string|null newToken JWT token
+ * Will be used for ALL fetch calls
+ */
+export function setToken(newToken) {
+  token = newToken;
+}
+
+/**
+ * @param function handler
+ */
+export function onFetchError(handler) {
+  errorHandlers.push(handler);
+}
+
 export function fetch(id, options = {}) {
   if ('undefined' === typeof options.headers) options.headers = new Headers();
+
+  if (token)
+    options.headers.set('Authorization', 'Bearer ' + token);
   if (null === options.headers.get('Accept'))
     options.headers.set('Accept', MIME_TYPE);
-
   if (
     'undefined' !== options.body &&
     !(options.body instanceof FormData) &&
     null === options.headers.get('Content-Type')
   )
-    options.headers.set('Content-Type', MIME_TYPE);
+  options.headers.set('Content-Type', MIME_TYPE);
 
   return global.fetch(new URL(id, ENTRYPOINT), options).then(response => {
     if (response.ok) return response;
 
     return response.json().then(json => {
+      errorHandlers.forEach(handler => handler(response.status, json, id, options));
+
       const error = json['hydra:description'] || response.statusText;
       if (!json.violations) throw Error(error);
 
@@ -122,3 +144,4 @@ export function parseQuery(queryOrUri) {
   }
   return values;
 }
+

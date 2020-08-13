@@ -19,6 +19,9 @@ import {RawIntlProvider} from 'react-intl';
 import getIntl, {initIntl} from './utils/intlProvider';
 import messages from "./messages/all";
 import './main.css';
+import AuthController from './components/common/AuthController';
+import Login from './components/common/Login';
+
 
 // Import your reducers and routes here
 import Welcome from './Welcome';
@@ -26,6 +29,7 @@ import employee from './reducers/employee/';
 import employeeRoutes from './routes/employee';
 import hours from './reducers/hours/';
 import hoursRoutes from './routes/hours';
+import login from './reducers/login';
 
 const history = createBrowserHistory();
 const store = createStore(
@@ -33,6 +37,7 @@ const store = createStore(
         router: connectRouter(history),
         form,
         /* Add your reducers here */
+        login,
         employee,
         hours,
     }),
@@ -45,18 +50,21 @@ ReactDOM.render(
     <RawIntlProvider value={getIntl()}>
         <Provider store={store}>
             <ConnectedRouter history={history}>
+              <AuthController>
                 <div>
                     <Navigation/>
                     <div className="mainContainer">
                         <Switch>
                             <Route path="/" component={Welcome} strict={true} exact={true}/>
                                 {/* Add your routes here */}
+                                <Route path="/login/" component={Login} strict={true} exact={true}/>
                                 {employeeRoutes}
                                 {hoursRoutes}
                             <Route render={() => <h1>Not Found</h1>} />
                         </Switch>
                     </div>
                 </div>
+              </AuthController>
             </ConnectedRouter>
         </Provider>
     </RawIntlProvider>,

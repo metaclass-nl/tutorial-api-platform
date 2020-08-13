@@ -17,5 +17,12 @@ export default {
     "navigation.toggle": "Toggle navigation",
     "navigation.home": "Home",
     "navigation.employees": "Employees",
-    "navigation.hours": "Hours"
+    "navigation.hours": "Hours",
+    "navigation.login": "Log in",
+
+    "login.title": "Please log in",
+    "login.email": "Email",
+    "login.password": "Password",
+    "login.submit": "Log in",
+    "login.error.unauthorized": "Log in has failed"
 }
