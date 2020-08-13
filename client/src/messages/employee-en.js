@@ -1,0 +1,25 @@
+export default {
+  "employee.firstName": "First Name",
+  "employee.lastName": "Surname",
+  "employee.function": "Function",
+  "employee.address": "Address",
+  "employee.zipcode": "Zipcode",
+  "employee.city": "City",
+  "employee.birthDate": "Date of birth",
+  "employee.birthDate.placeholder": "Date of birth",
+  "employee.arrival": "Arrival time",
+  "employee.arrival.placeholder": "Time the employee usually arrives at work",
+  "employee.hours": "Hours",
+  "employee.label": "Label",
+  "employee.label.placeholder": "Represent the entity to the user in a single string",
+
+  "employee.list": "Employee List",
+  "employee.new": "New Employee",
+  "employee.show": "Show {label}",
+  "employee.create": "Create",
+  "employee.update": "Edit {label}",
+  "employee.delete.confirm": "Are you sure you want to delete this Employee?",
+  "employee.created": "{label} created.",
+  "employee.updated": "{label} updated.",
+  "employee.mercure_deleted": "{label} has been deleted by another user."
+}

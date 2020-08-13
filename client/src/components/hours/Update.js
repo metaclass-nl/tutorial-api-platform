@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Form from './Form';
-import { retrieve, update, reset } from '../../actions/{{{lc}}}/update';
-import { del } from '../../actions/{{{lc}}}/delete';
-import {FormattedMessage, injectIntl} from "react-intl";
+import { retrieve, update, reset } from '../../actions/hours/update';
+import { del } from '../../actions/hours/delete';
 
 class Update extends Component {
   static propTypes = {
@@ -34,8 +33,7 @@ class Update extends Component {
   }
 
   del = () => {
-    const {intl} = this.props;
-    if (window.confirm(intl.formatMessage({id:"{{{lc}}}.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"})))
+    if (window.confirm('Are you sure you want to delete this item?'))
       this.props.del(this.props.retrieved);
   };
 
@@ -46,23 +44,23 @@ class Update extends Component {
 
     return (
       <div>
-        <h1><FormattedMessage id="{{{lc}}}.update" defaultMessage="Edit {label}" values={ {label: item && item['@id']} }/></h1>
+        <h1>Edit {item && item['@id']}</h1>
 
         {this.props.created && (
           <div className="alert alert-success" role="status">
-            <FormattedMessage id="{{{lc}}}.created" defaultMessage="{label} created." values={ {label: this.props.created['@id']} } />
+            {this.props.created['@id']} created.
           </div>
         )}
         {this.props.updated && (
           <div className="alert alert-success" role="status">
-            <FormattedMessage id="{{{lc}}}.updated" defaultMessage="{label} updated." values={ {label: this.props.updated['@id']} } />
+            {this.props.updated['@id']} updated.
           </div>
         )}
         {(this.props.retrieveLoading ||
           this.props.updateLoading ||
           this.props.deleteLoading) && (
           <div className="alert alert-info" role="status">
-            <FormattedMessage id="loading" defaultMessage="Loading..."/>
+            Loading...
           </div>
         )}
         {this.props.retrieveError && (
@@ -91,10 +89,10 @@ class Update extends Component {
           />
         )}
         <Link to=".." className="btn btn-primary">
-          <FormattedMessage id="backToList" defaultMessage="Back to list"/>
+          Back to list
         </Link>
         <button onClick={this.del} className="btn btn-danger">
-          <FormattedMessage id="delete" defaultMessage="Delete"/>
+          Delete
         </button>
       </div>
     );
@@ -102,17 +100,17 @@ class Update extends Component {
 }
 
 const mapStateToProps = state => ({
-  retrieved: state.{{{lc}}}.update.retrieved,
-  retrieveError: state.{{{lc}}}.update.retrieveError,
-  retrieveLoading: state.{{{lc}}}.update.retrieveLoading,
-  updateError: state.{{{lc}}}.update.updateError,
-  updateLoading: state.{{{lc}}}.update.updateLoading,
-  deleteError: state.{{{lc}}}.del.error,
-  deleteLoading: state.{{{lc}}}.del.loading,
-  eventSource: state.{{{lc}}}.update.eventSource,
-  created: state.{{{lc}}}.create.created,
-  deleted: state.{{{lc}}}.del.deleted,
-  updated: state.{{{lc}}}.update.updated
+  retrieved: state.hours.update.retrieved,
+  retrieveError: state.hours.update.retrieveError,
+  retrieveLoading: state.hours.update.retrieveLoading,
+  updateError: state.hours.update.updateError,
+  updateLoading: state.hours.update.updateLoading,
+  deleteError: state.hours.del.error,
+  deleteLoading: state.hours.del.loading,
+  eventSource: state.hours.update.eventSource,
+  created: state.hours.create.created,
+  deleted: state.hours.del.deleted,
+  updated: state.hours.update.updated
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -122,4 +120,7 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Update));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Update);

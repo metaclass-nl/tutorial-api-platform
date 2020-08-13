@@ -33,7 +33,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('unit tests invoice generator')
             ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
             ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-14T14:30:00'))
+            ->setStart(new \DateTime('2019-09-16T14:30:00'))
             ->setOnInvoice(false);
         $manager->persist($entity);
 
@@ -41,7 +41,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('new requirements invoice generator')
             ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
             ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-15T10:10:00'))
+            ->setStart(new \DateTime('2019-09-17T10:10:00'))
             ->setOnInvoice(false);
         $manager->persist($entity);
 
@@ -49,7 +49,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('debugging invoice generator')
             ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
             ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-16T13:12:00'))
+            ->setStart(new \DateTime('2019-09-18T13:12:00'))
             ->setOnInvoice(false);
         $manager->persist($entity);
 
@@ -97,7 +97,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('architecture for coolkids')
             ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
             ->setNHours(6.00)
-            ->setStart(new \DateTime('2019-09-16T09:09:00'))
+            ->setStart(new \DateTime('2019-09-18T09:09:00'))
             ->setOnInvoice(true);
         $manager->persist($entity);
 
@@ -105,7 +105,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('conference on Kubernetes')
             ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
             ->setNHours(2.00)
-            ->setStart(new \DateTime('2019-09-16T08:16:00'))
+            ->setStart(new \DateTime('2019-09-18T08:16:00'))
             ->setOnInvoice(true);
         $manager->persist($entity);
 
@@ -121,7 +121,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('architecture for coolkids')
             ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
             ->setNHours(8.00)
-            ->setStart(new \DateTime('2019-09-19T08:47:00'))
+            ->setStart(new \DateTime('2019-09-20T08:47:00'))
             ->setOnInvoice(true);
         $manager->persist($entity);
 
@@ -177,7 +177,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('design eco shop')
             ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
             ->setNHours(8.00)
-            ->setStart(new \DateTime('2019-09-14T09:30:00'))
+            ->setStart(new \DateTime('2019-09-16T09:30:00'))
             ->setOnInvoice(false);
         $manager->persist($entity);
 
@@ -185,7 +185,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
         $entity->setDescription('wireframe for coolkids')
             ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
             ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-15T14:54:00'))
+            ->setStart(new \DateTime('2019-09-17T14:54:00'))
             ->setOnInvoice(true);
         $manager->persist($entity);
 

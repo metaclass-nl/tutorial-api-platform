@@ -1,16 +1,14 @@
 import { combineReducers } from 'redux';
-import getIntl from '../../utils/intlProvider';
 
 export function error(state = null, action) {
   switch (action.type) {
-    case '{{{uc}}}_LIST_ERROR':
+    case 'HOURS_LIST_ERROR':
       return action.error;
 
-    case '{{{uc}}}_LIST_MERCURE_DELETED':
-      const intl = getIntl();
-      return intl.formatMessage({id:"employee.mercure_deleted", defaultMessage:"{label} has been deleted by another user."}, {label: action.retrieved['@id']});
+    case 'HOURS_LIST_MERCURE_DELETED':
+      return `${action.retrieved['@id']} has been deleted by another user.`;
 
-    case '{{{uc}}}_LIST_RESET':
+    case 'HOURS_LIST_RESET':
       return null;
 
     default:
@@ -20,10 +18,10 @@ export function error(state = null, action) {
 
 export function loading(state = false, action) {
   switch (action.type) {
-    case '{{{uc}}}_LIST_LOADING':
+    case 'HOURS_LIST_LOADING':
       return action.loading;
 
-    case '{{{uc}}}_LIST_RESET':
+    case 'HOURS_LIST_RESET':
       return false;
 
     default:
@@ -33,13 +31,13 @@ export function loading(state = false, action) {
 
 export function retrieved(state = null, action) {
   switch (action.type) {
-    case '{{{uc}}}_LIST_SUCCESS':
+    case 'HOURS_LIST_SUCCESS':
       return action.retrieved;
 
-    case '{{{uc}}}_LIST_RESET':
+    case 'HOURS_LIST_RESET':
       return null;
 
-    case '{{{uc}}}_LIST_MERCURE_MESSAGE':
+    case 'HOURS_LIST_MERCURE_MESSAGE':
       return {
         ...state,
         'hydra:member': state['hydra:member'].map(item =>
@@ -47,7 +45,7 @@ export function retrieved(state = null, action) {
         )
       };
 
-    case '{{{uc}}}_LIST_MERCURE_DELETED':
+    case 'HOURS_LIST_MERCURE_DELETED':
       return {
         ...state,
         'hydra:member': state['hydra:member'].filter(
@@ -62,10 +60,10 @@ export function retrieved(state = null, action) {
 
 export function eventSource(state = null, action) {
   switch (action.type) {
-    case '{{{uc}}}_LIST_MERCURE_OPEN':
+    case 'HOURS_LIST_MERCURE_OPEN':
       return action.eventSource;
 
-    case '{{{uc}}}_LIST_RESET':
+    case 'HOURS_LIST_RESET':
       return null;
 
     default:

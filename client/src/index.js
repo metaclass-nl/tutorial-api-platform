@@ -14,10 +14,14 @@ import {
 import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import * as serviceWorker from './serviceWorker';
+import Navigation from './components/Navigation.js';
+
 // Import your reducers and routes here
 import Welcome from './Welcome';
 import employee from './reducers/employee/';
 import employeeRoutes from './routes/employee';
+import hours from './reducers/hours/';
+import hoursRoutes from './routes/hours';
 
 const history = createBrowserHistory();
 const store = createStore(
@@ -26,22 +30,29 @@ const store = createStore(
         form,
         /* Add your reducers here */
         employee,
+        hours,
     }),
     applyMiddleware(routerMiddleware(history), thunk)
 );
 
 ReactDOM.render(
-<Provider store={store}>
-    <ConnectedRouter history={history}>
-    <Switch>
-    <Route path="/" component={Welcome} strict={true} exact={true}/>
-{/* Add your routes here */}
-{employeeRoutes}
-<Route render={() => <h1>Not Found</h1>} />
-</Switch>
-</ConnectedRouter>
-</Provider>,
-document.getElementById('root')
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <div>
+                <Navigation/>
+                <div className="mainContainer">
+                    <Switch>
+                        <Route path="/" component={Welcome} strict={true} exact={true}/>
+                        {/* Add your routes here */}
+                        {employeeRoutes}
+                        {hoursRoutes}
+                        <Route render={() => <h1>Not Found</h1>} />
+                    </Switch>
+                </div>
+            </div>
+        </ConnectedRouter>
+    </Provider>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

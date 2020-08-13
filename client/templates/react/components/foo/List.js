@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/{{{lc}}}/list';
+import {FormattedMessage} from "react-intl";
+import * as defined from '../common/intlDefined';
+import EntityLinks from '../common/EntityLinks';
+import Pagination from "../common/Pagination";
 
 class List extends Component {
   static propTypes = {
@@ -37,14 +41,14 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>{{{title}}} List</h1>
+        <h1><FormattedMessage id="{{{lc}}}.list" defaultMessage="{{{title}}} List"/></h1>
 
         {this.props.loading && (
-          <div className="alert alert-info">Loading...</div>
+          <div className="alert alert-info"><FormattedMessage id="loading" defaultMessage="Loading..."/></div>
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
-            {this.props.deletedItem['@id']} deleted.
+            <FormattedMessage id="{{{lc}}}.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['@id']} }/>
           </div>
         )}
         {this.props.error && (
@@ -53,7 +57,7 @@ class List extends Component {
 
         <p>
           <Link to="create" className="btn btn-primary">
-            Create
+            <FormattedMessage id="{{{lc}}}.create" defaultMessage="Create"/>
           </Link>
         </p>
 
@@ -62,7 +66,7 @@ class List extends Component {
             <tr>
               <th>id</th>
 {{#each fields}}
-              <th>{{name}}</th>
+              <th><FormattedMessage id="{{{../lc}}}.{{{name}}}" default="{{{name}}}"/></th>
 {{/each}}
               <th colSpan={2} />
             </tr>
@@ -77,18 +81,43 @@ class List extends Component {
                     </Link>
                   </th>
 {{#each fields}}
-                  <td>{{#if reference}}{this.renderLinks('{{{reference.name}}}', item['{{{name}}}'])}{{else}}{item['{{{name}}}']}{{/if}}</td>
+                  <td>{{#if reference}}<EntityLinks type="{{{reference.name}}}" items={item['{{{name}}}']} />{{else}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#date" }}
+                  <defined.FormattedDate value={item['{{{name}}}']} />
+                  {{/compare}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#time" }}
+                  <defined.FormattedTime value={item['{{{name}}}']} />
+                  {{/compare}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#dateTime" }}
+                  <defined.FormattedDateTime value={item['{{{name}}}']} />
+                  {{/compare}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#boolean" }}
+                  <defined.LocalizedBool value={item['{{{name}}}']} />
+                  {{/compare}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#integer" }}
+                  <defined.FormattedNumber value={item['{{{name}}}']}/>
+                  {{/compare}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#decimal" }}
+                  <defined.FormattedNumber value={item['{{{name}}}']}/>
+                  {{/compare}}
+                  {{#compare range "==" "http://www.w3.org/2001/XMLSchema#string" }}
+                  {item['{{{name}}}']}
+                  {{/compare}}
+                  {{#compare range "==" "http://schema.org/name" }}
+                  {item['{{{name}}}']}
+                  {{/compare}}
+                  {{/if}}</td>
 {{/each}}
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only">Show</span>
+                      <span className="sr-only"><FormattedMessage id="show" default="Show"/></span>
                     </Link>
                   </td>
                   <td>
                     <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-pencil" aria-hidden="true" />
-                      <span className="sr-only">Edit</span>
+                      <span className="fa fa-pencil fa-pencil-alt" aria-hidden="true" />
+                      <span className="sr-only"><FormattedMessage id="edit" default="Edit"/></span>
                     </Link>
                   </td>
                 </tr>
@@ -96,65 +125,11 @@ class List extends Component {
           </tbody>
         </table>
 
-        {this.pagination()}
+        <Pagination retrieved={this.props.retrieved} />
       </div>
     );
   }
 
-  pagination() {
-    const view = this.props.retrieved && this.props.retrieved['hydra:view'];
-    if (!view || !view['hydra:first']) return;
-
-    const {
-      'hydra:first': first,
-      'hydra:previous': previous,
-      'hydra:next': next,
-      'hydra:last': last
-    } = view;
-
-    return (
-      <nav aria-label="Page navigation">
-        <Link
-          to="."
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&lArr;</span> First
-        </Link>
-        <Link
-          to={
-            !previous || previous === first ? '.' : encodeURIComponent(previous)
-          }
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&larr;</span> Previous
-        </Link>
-        <Link
-          to={next ? encodeURIComponent(next) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Next <span aria-hidden="true">&rarr;</span>
-        </Link>
-        <Link
-          to={last ? encodeURIComponent(last) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Last <span aria-hidden="true">&rArr;</span>
-        </Link>
-      </nav>
-    );
-  }
-
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
-    }
-
-    return (
-      <Link to={`../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
-    );
-  };
 }
 
 const mapStateToProps = state => {

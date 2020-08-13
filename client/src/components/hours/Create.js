@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Form from './Form';
-import { create, reset } from '../../actions/{{{lc}}}/create';
-import {FormattedMessage} from "react-intl";
+import { create, reset } from '../../actions/hours/create';
 
 class Create extends Component {
   static propTypes = {
@@ -29,11 +28,11 @@ class Create extends Component {
 
     return (
       <div>
-        <h1><FormattedMessage id="{{{lc}}}.new" defaultMessage="New {{{title}}}"/></h1>
+        <h1>New Hours</h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
-            <FormattedMessage id="loading" defaultMessage="Loading..."/>
+            Loading...
           </div>
         )}
         {this.props.error && (
@@ -45,7 +44,7 @@ class Create extends Component {
 
         <Form onSubmit={this.props.create} values={this.props.item} />
         <Link to="." className="btn btn-primary">
-          <FormattedMessage id="backToList" defaultMessage="Back to list"/>
+          Back to list
         </Link>
       </div>
     );
@@ -53,7 +52,7 @@ class Create extends Component {
 }
 
 const mapStateToProps = state => {
-  const { created, error, loading } = state.{{{lc}}}.create;
+  const { created, error, loading } = state.hours.create;
   return { created, error, loading };
 };
 
@@ -62,4 +61,7 @@ const mapDispatchToProps = dispatch => ({
   reset: () => dispatch(reset())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Create);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Create);

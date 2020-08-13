@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
+import * as inputLoc from '../../utils/inputLocalization';
+import {FormattedMessage} from 'react-intl';
+import ReduxFormRow from '../common/ReduxFormRow.js';
+import getIntl from "../../utils/intlProvider";
 
 class Form extends Component {
   static propTypes = {
@@ -8,58 +12,43 @@ class Form extends Component {
     error: PropTypes.string
   };
 
-  renderField = data => {
-    data.input.className = 'form-control';
-
-    const isInvalid = data.meta.touched && !!data.meta.error;
-    if (isInvalid) {
-      data.input.className += ' is-invalid';
-      data.input['aria-invalid'] = true;
+    renderField = data => {
+      return <ReduxFormRow {...data} apiError={this.props.error}/>;
     }
-
-    if (this.props.error && data.meta.touched && !data.meta.error) {
-      data.input.className += ' is-valid';
-    }
-
-    return (
-      <div className={`form-group`}>
-        <label
-          htmlFor={`{{{lc}}}_${data.input.name}`}
-          className="form-control-label"
-        >
-          {data.input.name}
-        </label>
-        <input
-          {...data.input}
-          type={data.type}
-          step={data.step}
-          required={data.required}
-          placeholder={data.placeholder}
-          id={`{{{lc}}}_${data.input.name}`}
-        />
-        {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
-      </div>
-    );
-  };
 
   render() {
+    const intl = getIntl();
     return (
       <form onSubmit={this.props.handleSubmit}>
 {{#each formFields}}
         <Field
           component={this.renderField}
           name="{{{name}}}"
-          type="{{{type}}}"{{#if step}}
+          type="{{#compare type "==" "dateTime" }}datetime-local{{else}}{{{type}}}{{/compare}}"
+          label=<FormattedMessage id="{{{../lc}}}.{{{name}}}" defaultMessage="{{{name}}}" />{{#if step}}
           step="{{{step}}}"{{/if}}
-          placeholder="{{{description}}}"{{#if required}}
+          placeholder={{#if description}}{intl.formatMessage({id:"{{{../lc}}}.{{{name}}}.placeholder", defaultMessage:"{{{description}}}"}) }{{else}}""{{/if}}{{#if required}}
           required={true}{{/if}}{{#if reference}}{{#unless maxCardinality}}
-          normalize={v => (v === '' ? [] : v.split(','))}{{/unless}}{{/if}}{{#if number}}
-          normalize={v => parseFloat(v)}{{/if}}
-        />
+          normalize={v => (v === '' ? [] : v.split(','))}{{/unless}}
+          {{/if}}{{#if number}}
+          format={inputLoc.formatNumber}
+          normalize={inputLoc.normalizeNumber}
+          {{/if}}
+          {{#compare type "==" "date" }}
+
+          format={inputLoc.formatDate}
+          normalize={inputLoc.normalizeDate}
+          {{/compare}}{{#compare type "==" "time" }}
+          format={inputLoc.formatTime}
+          normalize={inputLoc.normalizeTime}
+          {{/compare}}{{#compare type "==" "dateTime" }}
+          format={inputLoc.formatDateTime}
+          normalize={inputLoc.normalizeDateTime}
+          {{/compare}}/>
 {{/each}}
 
         <button type="submit" className="btn btn-success">
-          Submit
+          <FormattedMessage id="submit" defaultMessage="Submit"/>
         </button>
       </form>
     );

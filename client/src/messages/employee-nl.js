@@ -1,0 +1,25 @@
+export default {
+    "employee.firstName": "Voornaam",
+    "employee.lastName": "Achternaam",
+    "employee.function": "Functie",
+    "employee.address": "Adres",
+    "employee.zipcode": "Postcode",
+    "employee.city": "Woonplaats",
+    "employee.birthDate": "Geboortedatum",
+    "employee.birthDate.placeholder": " ",
+    "employee.arrival": "Aankomsttijd",
+    "employee.arrival.placeholder": "Tijd dat de medewerker gewoonlijk op het werk verschijnt",
+    "employee.hours": "Uren",
+    "employee.label": "Naam",
+    "employee.label.placeholder": "Toon de entiteit aan de gebruiker in een enkele string",
+
+    "employee.list": "Lijst van medewerkers",
+    "employee.new": "Nieuwe medewerker",
+    "employee.show": "Toon {label}",
+    "employee.create": "Maak nieuwe",
+    "employee.update": "Bewerk {label}",
+    "employee.delete.confirm": "Weet u zeker dat u deze medewerker wilt verwijderen?",
+    "employee.created": "{label} is aangemaakt.",
+    "employee.updated": "{label} is gewijzigd.",
+    "employee.mercure_deleted": "{label} is verwijderd door een andere gebruiker."
+}
