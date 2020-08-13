@@ -1,494 +1,165 @@
-Chapter 2: Hours registration
+Chapter 3: Localization - api
 =============================
 
-The environment is te same as in the chapter1-api branche, except:
-- instructions from README.md of chapter1-api where applied
+The environment is te same as in the chapter2-api branche, except:
+- instructions from README.md of chapter2-api where applied
 
-This chapter adds an entity class Hours that has an n to 1 relation with Employee and adds a menu (client only).  
+This chapter adds Localization.
 
-Api
----
-Before you add the Entity class 'Hours', make sure the database schema is in sync. 
-When you do docker-compose up migrations are executed automatically, but 
-you can explicitly execute those that are not yet executed: 
-```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
-```
+Hints
+-----
 
-Then add the Entity class 'Hours' by copying the 
-following code to a new file api/src/Entity/Employee.php:
+Most of the work has to be done on the client, but the api can provide some hints
+for the client (generator) in the jsonld metadata.
+
+To see the metadata without the hints point your browser at [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
+Under property "hydra:supportedClass" at index 0 (@id: "#Employee") 
+under its property "hydra:supportedProperty: at index 6 (hydra:title: "birthDate") 
+under its property "hydra:property": you find
+"range": "xmls:dateTime".
+This makes the client generator produce a form with an input type "dateTime" for arrival. But 
+according to the ORM the property only contains a date:
 ```php
-<?php
+     * @ORM\Column(type="date")
+'''
 
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * Registration of time worked by an Employee on a day
- *
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"}
- * })
- * @ORM\Entity
- */
-class Hours
-{
-    /**
-     * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @var float number of hours
-     * @ORM\Column(type="float")
-     * @Assert\NotNull
-     * @Assert\GreaterThanOrEqual(0.1)
-     */
-    private $nHours = 1.0;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     * @Assert\NotNull
-     */
-    private $start;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $onInvoice = true;
-
-    /**
-     * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=255)
-     */
-    private $description;
-
-    /**
-     * @var Employee
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
-     * @Assert\NotNull
-     */
-    private $employee;
-
-    public function __construct()
-    {
-        // initialize start on now
-        $this->setStart(new \DateTime());
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return float
-     */
-    public function getNHours(): float
-    {
-        return $this->nHours;
-    }
-
-    /**
-     * @param float $nHours
-     * @return Hours
-     */
-    public function setNHours(float $nHours): Hours
-    {
-        $this->nHours = $nHours;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getStart(): \DateTime
-    {
-        return $this->start;
-    }
-
-    /**
-     * @param \DateTime $start
-     * @return Hours
-     */
-    public function setStart(\DateTime $start): Hours
-    {
-        $this->start = $start;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOnInvoice(): bool
-    {
-        return $this->onInvoice;
-    }
-
-    /**
-     * @param bool|null $onInvoice
-     * @return Hours
-     */
-    public function setOnInvoice(?bool $onInvoice): Hours
-    {
-        $this->onInvoice = (bool) $onInvoice;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     * @return Hours
-     */
-    public function setDescription(string $description): Hours
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return Employee|null
-     */
-    public function getEmployee(): ? Employee
-    {
-        return $this->employee;
-    }
-
-    /**
-     * @param Employee $employee
-     * @return Hours
-     */
-    public function setEmployee(Employee $employee)
-    {
-        $this->employee = $employee;
-        return $this;
-    }
-
-
-    /** Represent the entity to the user in a single string
-     * @return string
-     */
-    public function getLabel() {
-        return $this->getStart()->format('Y-m-d H:i:s')
-            . ' '. $this->getDescription();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDay() {
-        return $this->getStart()->format('D');
-    }
-}
-```
-It's another quite common Doctrine Entity class. To see the pagination
-buttons in the client an ApiResource attribute "pagination_items_per_page" was added:
+In order to get an input type "date", in Entity Employee at the field doc above private $birthDate add:
 ```php
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"date": "DESC", "description": "ASC"}
- * })
+     * @ApiProperty(
+     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#date"}
+     * )
 ```
-Once again the attribute "order" specifies the defailt order
-
-A Doctrine annotation defines the relationship with Employee: 
+You also need to add a use statement for ApiProperty above the class statement:
 ```php
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
+use ApiPlatform\Core\Annotation\ApiProperty;
 ```
 
-It also refers to a property 'hours' on Employee you need to add to Employee:
+Now refresh [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
+At the same position you should now find
+"range": "http://www.w3.org/2001/XMLSchema#date".
+
+To change the corresponding range of property $arrival add the following to its method doc:
 ```php
-    /**
-     * @var Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
-     */
-    private $hours;
-```
-And of course the corresponding methods:
-```php
-    /**
-     * @return Collection
-     */
-    public function getHours(): Collection
-    {
-        return $this->hours;
-    }
-
-    /**
-     * @param mixed $hours
-     * @return Employee
-     */
-    public function setHours($hours)
-    {
-        $this->hours = $hours;
-        return $this;
-    }
+     * @ApiProperty(
+     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#time"}
+     * )
 ```
 
-Now you have the new entity class you can generate a database migration:
-```shell
-docker-compose exec php ./bin/console doctrine:migrations:diff
-```
+Now refresh [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
+Under "hydra:supportedProperty: at index 7 (hydra:title: "arrival") you should now find
+"range": "http://www.w3.org/2001/XMLSchema#time".
 
-And execute it by:
-```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
-```
-
-To test the new Hours class point your browser at https://localhost:8443/. 
-You should see a new model Hours. When you try out Get /hours there should
-be an example value model like
+For more clarity here is the json of the two properties:
 ```json
-{
-  "hydra:member": [
-    {
-      "@context": "string",
-      "@id": "string",
-      "@type": "string",
-      "id": 0,
-      "NHours": 0,
-      "start": "2020-02-21T16:34:31.774Z",
-      "onInvoice": true,
-      "description": "string",
-      "employee": "string",
-      "label": "string",
-      "day": "string"
-    },
+{ "@type":"hydra:SupportedProperty",
+  "hydra:property":{
+    "@id":"#Employee\/birthDate",
+    "@type":"rdf:Property",
+    "rdfs:label":"birthDate",
+    "domain":"#Employee",
+    "range":"http:\/\/www.w3.org\/2001\/XMLSchema#date"},
+  "hydra:title":"birthDate",
+  "hydra:required":true,
+  "hydra:readable":true,
+  "hydra:writable":true,
+  "hydra:description":"Date of birth"},
+{ "@type":"hydra:SupportedProperty",
+  "hydra:property":{
+    "@id":"http:\/\/schema.org\/Time",
+    "@type":"rdf:Property",
+    "rdfs:label":"arrival",
+    "domain":"#Employee",
+    "range":"http:\/\/www.w3.org\/2001\/XMLSchema#time"},
+  "hydra:title":"arrival",
+  "hydra:required":false,
+  "hydra:readable":true,
+  "hydra:writable":true,
+  "hydra:description":"Time the employee usually arrives at work"},
 ```
 
-To add data create a new file api/src/DataFixtures/HoursFixtures.php.
-(also create the necessary folders). Then copy the following to the file:
+Translation of error messages
+-----------------------------
 
+All error messages of api platform are in English, but the messages 
+from validators can be translated by the translation service of Symfony.
+The validation error messages are already available in many languages,
+so you will probably not have to create any translation files yourself.
+
+To install the translation service:
+```shell
+docker-compose exec php composer require symfony/translation
+```
+
+The following file will be added, you need to add it to git:
+```yaml
+# config/packages/translation.yaml
+framework:
+    default_locale: en
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - en
+
+```
+This activates and configures the translation service. It sets
+the default locale to 'en'. 
+
+In order to get the translator to translate to the language of the client 
+the locale of the client must be set into the http request before it is processed.
+This can be done by adding an Event Subscriber. First create a new folder
+'EventSubscriber' in folder api/src. Then add a file LocaleSubscriber.php
+to that new folder with the following:
 ```php
 <?php
+// api/src/EventSubscriber/LocaleSubscriber.php
 
-namespace App\DataFixtures;
+namespace App\EventSubscriber;
 
-use App\Entity\Hours;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\HeaderUtils;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
-class HoursFixtures extends Fixture implements DependentFixtureInterface
+class LocaleSubscriber implements EventSubscriberInterface
 {
-    public function getDependencies()
+
+    public function onKernelRequest(RequestEvent $event)
     {
-        return array(
-            EmployeeFixtures::class,
-        );
+        $request = $event->getRequest();
+        $accept_language = $request->headers->get("accept-language");
+        if (empty($accept_language)) {
+            return;
+        }
+        $arr = HeaderUtils::split($accept_language, ',;');
+        if (empty($arr[0][0])) {
+            return;
+        }
+
+        // Symfony expects underscore instead of dash in locale
+        $locale = str_replace('-', '_', $arr[0][0]);
+
+        $request->setLocale($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load(ObjectManager $manager)
+    public static function getSubscribedEvents()
     {
-        $entity = new Hours();
-        $entity->setDescription('developoment invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(6.15)
-            ->setStart(new \DateTime('2019-09-13T09:30:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('unit tests invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-16T14:30:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('new requirements invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-17T10:10:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('debugging invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-18T13:12:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('starting project coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(9.00)
-            ->setStart(new \DateTime('2019-09-10T08:54:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('meeting with customer')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-12T22:09:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('handling issues with invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(6.00)
-            ->setStart(new \DateTime('2019-09-11T07:37:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('bookkeeper')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-12T15:01:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('presentation invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(10.00)
-            ->setStart(new \DateTime('2019-09-13T10:21:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('architecture for coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(6.00)
-            ->setStart(new \DateTime('2019-09-18T09:09:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('conference on Kubernetes')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(2.00)
-            ->setStart(new \DateTime('2019-09-18T08:16:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('lecture on package design')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(2.00)
-            ->setStart(new \DateTime('2019-09-13T16:33:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('architecture for coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(8.00)
-            ->setStart(new \DateTime('2019-09-20T08:47:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('architecture for invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-10T10:27:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('meeting with customer')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(5.00)
-            ->setStart(new \DateTime('2019-09-12T11:18:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('study')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-11T14:15:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-11T05:18:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(9.00)
-            ->setStart(new \DateTime('2019-09-12T08:34:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('adapting layout of invoices')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(5.00)
-            ->setStart(new \DateTime('2019-09-13T12:27:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(8.00)
-            ->setStart(new \DateTime('2019-09-16T09:30:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('wireframe for coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-17T14:54:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-13T15:03:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-        $manager->flush();
+        return [
+            // must be registered before (i.e. with a higher priority than) the default Locale listener
+            KernelEvents::REQUEST => [['onKernelRequest', 20]],
+        ];
     }
 }
 ```
 
-To clear the database and execute the fixtures enter the following command:
+It should be picked up automatically by Symfony. You can test it like this:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+curl -X POST "https://localhost:8443/employees" -H  "accept-language: nl-NL" -H  "accept: application/ld+json" -H  "Content-Type: application/ld+json" -d "{\"firstName\":\"abcdefghijklmnopqrstuvwxyz\"}" -k
 ```
-Say yes to "Careful, database "api" will be purged. Do you want to continue?"
-(You will loose all data in the database of your api-platform install).
 
-To test the new Entity class point your browser at https://localhost:8443/. 
-When you try out Get /hours the response body should contain the data of the hours.
+If you still get validation errors in English, make a to change a config file of Symfony
+or run 
+```shell
+docker-compose exec php ./bin/console cache:clear
+```
+
+Then try again the curl command.

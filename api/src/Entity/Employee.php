@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class defining entities with data about an Employees
@@ -16,6 +18,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Employee
 {
+    public function __construct()
+    {
+        $this->hours = new ArrayCollection();
+    }
+
     /**
      * @var int The entity Id
      *
@@ -79,11 +86,16 @@ class Employee
     private $birthDate;
 
     /**
-     * @var \DateTime Tite the employee usually arrives at work
+     * @var \DateTime Time the employee usually arrives at work
      * @ORM\Column(type="time", nullable=true)
-     * @Assert\Time()
      */
     private $arrival;
+
+    /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
+     */
+    private $hours;
 
     public function getId(): int
     {
@@ -217,20 +229,38 @@ class Employee
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getArrival(): \DateTime
+    public function getArrival(): ?\DateTime
     {
         return $this->arrival;
     }
 
     /**
-     * @param \DateTime $arrival
+     * @param \DateTime|null $arrival
      * @return Employee
      */
-    public function setArrival(\DateTime $arrival): Employee
+    public function setArrival(\DateTime $arrival=null): Employee
     {
         $this->arrival = $arrival;
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getHours(): Collection
+    {
+        return $this->hours;
+    }
+
+    /**
+     * @param mixed $hours
+     * @return Employee
+     */
+    public function setHours($hours)
+    {
+        $this->hours = $hours;
         return $this;
     }
 
