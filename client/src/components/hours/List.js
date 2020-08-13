@@ -9,6 +9,7 @@ import EntityLinks from '../common/EntityLinks';
 import Pagination from "../common/Pagination";
 import SearchTool from "./SearchTool";
 import {buildQuery} from "../../utils/dataAccess";
+import ThSort from "../common/ThSort";
 
 class List extends Component {
   static propTypes = {
@@ -38,6 +39,17 @@ class List extends Component {
    */
   page(page) {
     this.values.page = page;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
+  }
+
+  /**
+   * Event handler for sort headers
+   * @param {} order
+   */
+  order(order) {
+    this.values.order = order;
     this.props.history.push(
       "?" + buildQuery(this.values)
     );
@@ -76,11 +88,21 @@ class List extends Component {
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th><FormattedMessage id="hours.start" defaultMessage="start"/></th>
-              <th><FormattedMessage id="hours.day" defaultMessage="day"/></th>
-              <th><FormattedMessage id="hours.description" defaultMessage="description"/></th>
-              <th><FormattedMessage id="hours.nHours" defaultMessage="nHours"/></th>
-              <th><FormattedMessage id="hours.employee" defaultMessage="employee"/></th>
+              <ThSort orderBy={ {"start": "desc"} } isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.start" defaultMessage="start"/>
+              </ThSort>
+              <th>
+                <FormattedMessage id="hours.day" defaultMessage="day"/>
+              </th>
+              <ThSort orderBy={ {"description": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.description" defaultMessage="description"/>
+              </ThSort>
+              <ThSort orderBy={ {"nHours": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.nHours" defaultMessage="nHours"/>
+              </ThSort>
+              <ThSort orderBy={ {"employee.lastName": "asc", "employee.firstName": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.employee" defaultMessage="employee"/>
+              </ThSort>
               <th colSpan={2} />
             </tr>
           </thead>

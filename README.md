@@ -1,437 +1,403 @@
-Chapter 6: Sorting and Simple Search- React client
-==================================================
+Chapter 7: Authentication - React
+=================================
 
-The environment is te same as in the chapter5-react branche, except:
-- instructions from README.md of chapter5-react where applied
-- instructions from README.md of chapter6-api where applied
+The environment is te same as in the chapter6-react branche, except:
+- instructions from README.md of chapter6-react where applied
+- instructions from README.md of chapter7-api where applied
 
-This chapter adds support for sorting both the Employee and the
-Hours list by clicking on a column header and a custom Filter service
-for searching with a single text input in several fields.
+This chapter adds JWT authentication
 
-ListTool
---------
-In chapter 5 searching was added to the Hours list, it was first refactored
-to make pagination work with a conventional query string. Sorting needs to use
-the same query string, so the Employee list needs to be refactored too. 
-To make it similar with Hours List and to make it easy to add searching later on, 
-a ListTool could be factored out from the Hours SearchTool. 
+Login Form
+----------
 
-Create a file client/src/components/common/ListTool.js with the following content:
-```javascript jsx
-import { Component } from 'react';
-import PropTypes from "prop-types";
-import {buildQuery, parseQuery} from "../../utils/dataAccess";
-
-class ListTool extends Component {
-  static propTypes = {
-    query: PropTypes.string,
-    list: PropTypes.func.isRequired
-  };
-
-  values = {};
-
-  componentDidMount() {
-    this.valuesFromQuery();
-    this.props.list(this.values, buildQuery(this.apiRequest()));
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.query !== prevProps.query) {
-      this.valuesFromQuery();
-      this.props.list(this.values, buildQuery(this.apiRequest()));
-    }
-  }
-
-  /**
-   * Set values from the query string
-   */
-  valuesFromQuery() {
-    this.values = parseQuery(this.props.query);
-  }
-
-  apiRequest() {
-    const {pageParameterName="page", orderParameterName="order"} = this.props;
-    const req = {};
-    req[pageParameterName] = this.values.page;
-    req[orderParameterName] = this.values.order;
-
-    return req;
-  }
-
-  render() {
-    return null;
-  }
-}
-
-export default ListTool;
+In chapter8-api a route was declared for /authentication_token. 
+It expects a POST with a body like 
+```json
+{"email":"d.peters@leiden.nl","password":"d.peters_password"}
+```
+and will return a response like:
+{"token":"the actual token"}
 ```
 
-In the client/src/components/hours/SearchTool.js replace:
-```javascript jsx
-import React, { Component } from 'react';
-```
-by:
-```javascript jsx
-import React from "react";
-import ListTool from "../common/ListTool";
-```
-Then make the class extend ListTool, remove the values property and
-the methods componentDidMount and componentDidUpdate. Afterwards the Hours
-List should work as it did before.
+So the user needs a form with two text inputs: email and password
+and a submit button. The token will be needed by other components,
+so it would be convenient if it where stored in redux.
 
-In the Employee list component Add the imports:
-```javascript jsx
-import {buildQuery} from "../../utils/dataAccess";
-import ListTool from "../common/ListTool";
-```
-
-Replace the methods componentDidMount and componentDidUpdate by:
-```javascript jsx
-   values = {};
-
-  list(values, apiQuery) {
-    this.values = values;
-    this.props.list("/employees?" + apiQuery);
-  }
-
-  /**
-   * Event handler for pagination buttons
-   * @param string page (numeric)
-   */
-  page(page) {
-    this.values.page = page;
-    this.props.history.push(
-      "?" + buildQuery(this.values)
-    );
-  }
-```
-
-To render the (invisible) ListTool replace the paragraph with the Link to "create" by:
-```javascript jsx
-        <div className="toolbar">
-          <ListTool
-            query={this.props.location.search}
-            list={this.list.bind(this)}
-          />
-          <div className="toolbar-buttons form-group">
-            <Link to="create" className="btn btn-primary">
-              <FormattedMessage id="employee.create" defaultMessage="Create"/>
-            </Link>
-          </div>
-        </div>
-```
-
-Finally add the onClick to the Pagination component in the render method:
-```javascript jsx
-        <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)} />
-```
-
-Test the Employee list and its pagination buttons.
-
-
-Sort Headers
-------------
-Sorting the table by a single click on a table column header seems simple, 
-but it gets more complicated when the second click on the header should reverse 
-the sort. And it would be nice to see in wich direction the table is actually sorted
-by the values of which column, so for a header there is the choice of showing one of two icons or 
-no icon at all. 
-
-Furthermore if the user has just arrived on the page and not yet clicked
-on any column header, it may already be sorted by default. It would be nice it that 
-order is the same as the order if a column is clicked, the column shows the
-right icon too. And when the column is clicked, reverses the default order.
-
-All this functionality is pritty much the same for each column header, so its
-typically something for a component. The component would need to know 
-- the current order. This will be present as a nested object in the current values of the List.
-- how to order. This object will replace the nested object in the current values of the List.
-- Wheather how this column orders is the default ordering
-
-Create a file client/src/components/common/ThSort.js
+To create the form add a file client/src/components/common/Login.js
 with the following content:
+
 ```javascript jsx
 import React from 'react';
-import isEqual from "lodash/isEqual";
-import mapValues from "lodash/mapValues";
-
-const icons = [
-  <span className="fa fa-angle-up" aria-hidden="true"/>,
-  <span className="fa fa-angle-down" aria-hidden="true"/>
-];
-
-/**
- * @param {} props
- *   order {} current sorting order
- *   orderBy {} How to order (reverse if already ordered like this)
- *   isDefault boolean Wheather orderBy is the default ordering
- * @returns {*} Table header with onClick and eventual sort direction icon
- * @constructor
- */
-export default function ThSort(props) {
-  const { order, orderBy, isDefault=false} = props;
-  const orderByKeys = Object.keys(orderBy);
-  const orderByIcon = orderBy[orderByKeys[0]].toLowerCase() === "asc" ? 0 : 1;
-  const reverseOrderBy = reverseOrder(orderBy);
-  let icon = null;
-  let clickedOrdersBy = orderBy;
-  if (order) {
-    if (isEqual(Object.keys(order), Object.keys(orderBy))) {
-      if (isEqual(order, orderBy)) {
-        icon = icons[orderByIcon];
-        clickedOrdersBy = reverseOrderBy;
-      }
-      if (isEqual(order, reverseOrderBy)) {
-        icon = icons[Math.abs(orderByIcon-1)]; // reverseOrderByIcon
-        clickedOrdersBy = orderBy;
-      }
-    }
-  } else if (isDefault) {
-    icon = icons[orderByIcon];
-    clickedOrdersBy = reverseOrderBy;
-  }
-  return (
-    <th  className="sort" onClick={e=>props.onClick(clickedOrdersBy)}><span>{props.children}</span>{icon}</th>
-  );
-}
-
-function reverseOrder(orderBy) {
-  return mapValues(orderBy, value =>
-      value.toLowerCase() === "asc" ? "desc" : "asc"
-  );
-}
-```
-With the ThSort component comes a little addition to client/src/main.css:
-```css
-th .fa-sort-down, th .fa {
-    margin-left: 5px;
-}
-```
-
-Sorting the Employee list
--------------------------
-Import the component in the Employee list:
-```javascript jsx
-import ThSort from "../common/ThSort";
-```
-
-When the ThSort is clicked it will call a function. Add this to the List component:
-```javascript jsx
-  /**
-   * Call back for sort headers
-   * @param {} order
-   */
-  order(order) {
-    this.values.order = order;
-    this.props.history.push(
-      "?" + buildQuery(this.values)
-    );
-  }
-```
-
-Because it is simpeler, start with replacing the second column header:
-```javascript jsx
-              <ThSort orderBy={ {"function": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="employee.function" default="function"/>
-              </ThSort>
-```
-
-The first colomn contains the labels of Employees. These are made up from lastName and fistName, so the first
-column header needs to sort by two properties:
-```javascript jsx
-              <ThSort orderBy={ {"lastName": "asc", "firstName": "asc"} }  isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="employee.item" default="Employee"/>
-              </ThSort>
-```
-Furthermore, lastName: "asc", firstName: "asc" is the default order of Employees, specified in api/src/entities.Employee.php.
-But the ThSort does not know that, it has to be told by the property isDefault={true}.
-
-The last two columns are pritty much like the first one:
-```javascript jsx
-              <ThSort orderBy={ {"birthDate": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="employee.birthDate" default="birthDate"/>
-              </ThSort>
-              <ThSort orderBy={ {"arrival": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="employee.arrival" default="arrival"/>
-              </ThSort>
-
-```
-
-Test the Employee list column headers and its pagination buttons.
-
-Sorting the Hours list
-----------------------
-
-Import the component in the Hours list:
-```javascript jsx
-import ThSort from "../common/ThSort";
-```
-
-When the ThSort is clicked it will call a function. Add this to the List component:
-```javascript jsx
-  /**
-   * Call back for sort headers
-   * @param {} order
-   */
-  order(order) {
-    this.values.order = order;
-    this.props.history.push(
-      "?" + buildQuery(this.values)
-    );
-  }
-```
-
-Replace the column headers by:
-```javascript jsx
-              <ThSort orderBy={ {"start": "desc"} } isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="hours.start" defaultMessage="start"/>
-              </ThSort>
-              <th>
-                <FormattedMessage id="hours.day" defaultMessage="day"/>
-              </th>
-              <ThSort orderBy={ {"description": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="hours.description" defaultMessage="description"/>
-              </ThSort>
-              <ThSort orderBy={ {"nHours": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="hours.nHours" defaultMessage="nHours"/>
-              </ThSort>
-              <ThSort orderBy={ {"employee.lastName": "asc", "employee.firstName": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="hours.employee" defaultMessage="employee"/>
-              </ThSort>
-              <th colSpan={2} />
-```
-Notice that ordering by properties on a related object is NOT specified by a nested object like:
-```javascript jsx
-{"employee {lastName": "asc", "firstName": "asc"} }
-```
-instead a flat object with paths as keys is used:
-```javascript jsx
-{"employee.lastName": "asc", "employee.firstName": "asc"}
-```
-
-Test the Hours list column headers, pagination buttons and search form. The sort order should be retained when
-the search is changed, but the pagination should be reset.
-
-SimpleSearch
-------------
-
-SimpleSearch allows the user to type all terms in a single input. 
-It searches each term in all properties specified, combining per term the resulting query expressions through OR,
-but combining the terms through AND. For an entity to be found it must contain all 
-search terms but it does not matter in which of the properties specified.
-
-In the api branche of this chapter a new filter class was added that implements this, 
-and an @ApiFilter annotation was added to entity class Employee that makes it react
-to query parameter "search". 
-
-To let the user use this the Employee list component's ListTool needs to be replaced
-by a SearchTool that contains a form with a single text input. The SearchTool can inherit
-the retrieval of values from the query string and calling back the List component from
-ListTool. Create a new file client/src/components/employee/SearchTool.js with the following content:
-```javascript jsx
-import React from 'react';
-import ListTool from "../common/ListTool";
-import PropTypes from "prop-types";
-import {buildQuery} from "../../utils/dataAccess";
 import {FormattedMessage} from "react-intl";
+import PropTypes from "prop-types";
+import { connect } from 'react-redux';
+import { login, error } from '../../actions/login';
 
-class SearchTool extends ListTool {
+
+class Login extends React.Component {
   static propTypes = {
-    query: PropTypes.string,
-    list: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    token: PropTypes.string,
+    error: PropTypes.string
   };
 
-  searchInput;
+  loading = false;
 
-  apiRequest() {
-    const req = super.apiRequest();
-    req.search = this.values.search;
-    return req;
+  constructor(props) {
+    super(props);
+    this.state = { email: '', password: '' };
   }
 
-  /**
-   * Event handler for submission of the search form.
-   * If values have changed, reset page and push query to history.
-   * @param {} e event from form submit
-   */
-  formSubmit(e) {
+  componentDidUpdate() {
+    if (this.loading && !this.props.error) {
+      if (this.props.location.state && this.props.location.state.back === true)
+        this.props.history.goBack();
+      else
+        this.props.history.push("/");
+    }
+
+    this.loading = false;
+  }
+
+  componentWillUnmount() {
+    this.props.clearError();
+  }
+
+  handleChanged(e) {
+    this.props.clearError();
+    const values = {...this.state};
+    values[e.target.name] = e.target.value;
+    this.setState(values);
+  }
+
+  handleSubmit(e) {
     e.preventDefault();
-
-    if (this.searchInput.value === this.values.search) return;
-
-    this.values.search = this.searchInput.value;
-    this.values.page=undefined;
-    this.props.history.push(
-      "?" + buildQuery(this.values)
-    );
+    this.loading = true;
+    this.props.login(this.state);
   }
 
   render() {
     return (
-      <form className="search" onSubmit={this.formSubmit.bind(this)}>
-        <div className={`form-group`}>
-          <input type="text" name="search" defaultValue={this.values.search} className="form-control" ref={ref=>this.searchInput=ref} id="search_employees_search"/>
-        </div>
-        <button type="submit" className="btn btn-success">
-          <FormattedMessage id="submit" defaultMessage="Submit"/>
-        </button>
-      </form>
+      <div>
+        <h1><FormattedMessage id="login.title" defaultMessage="Please log in" /></h1>
+        {this.props.error && (
+          <div className="alert alert-danger" role="alert">
+            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+            {this.props.error === "Unauthorized"
+              ? <FormattedMessage id="login.error.unauthorized" defaultMessage="Unauthorized" />
+              : this.props.error}
+          </div>
+        )}
+
+        <form className="login" onSubmit={this.handleSubmit.bind(this)}>
+          <div className="form-group">
+            <label htmlFor="login_email" className="form-control-label">
+              <FormattedMessage id="login.email" defaultMessage="Email" />
+            </label>
+            <input type="text" name="email" value={this.state.email} id="login_email" onChange={this.handleChanged.bind(this)} required={true}/>
+          </div>
+          <div className="form-group">
+            <label htmlFor="login_password" className="form-control-label">
+              <FormattedMessage id="login.password" defaultMessage="Password" />
+            </label>
+            <input type="password" name="password" value={this.state.password} id="login_password" onChange={this.handleChanged.bind(this)} required={true}/>
+          </div>
+          <button type="submit" className="btn btn-success">
+            <FormattedMessage id="login.submit" defaultMessage="Submit"/>
+          </button>
+        </form>
+      </div>
     );
   }
 }
 
-export default SearchTool;
-```
-The form is so simple that it would be overkill to use Redux Forms. An uncontrolled text input 
-is used because for this purpose it makes the form behave more like a form using Redux Forms: 
-The internal state of the form is separate from the state of the SearchTool, only if the
-form is submitted the onSubmit event handler method 'formSubmit'on the SearchTool 
-processes the state of the input into a new query string and pushes it on the history.
+const mapStateToProps = state => {
+  const { token, error } = state.login;
+  return { token, error };
+};
 
-To use the SearchTool in the Employee List the import of the ListTool needs to be replaced by:
+const mapDispatchToProps = dispatch => ({
+  login: (values) => dispatch(login(values)),
+  clearError: ignoored => dispatch(error(null))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+
+```
+As you can see quite a common Redux-connected class. It receives
+token and error props from redux. It also needs the history to send the user back to the previous page
+when login has succeeded and the location state indicates so, or otherwise to the home page.
+
+However, the form itself is not connect through Redux Forms. Instead the form keeps
+the value of the two inputs in its internal state. Furthermore it keeps track of
+its loading status in a property. Both where done because there is no need for other
+components to share this data and with respect to the loading property, it does not 
+need to trigger rendering. This does make the form a little more complicated but
+it eliminates a seperate connected form component and simplifies the actions in client/src/actions/login.js:
 ```javascript jsx
-import SearchTool from "./SearchTool";
+import {fetch} from "../utils/dataAccess";
+
+export function token(token) {
+  return { type: 'LOGIN_TOKEN', token };
+}
+
+export function error(error) {
+  return { type: 'LOGIN_ERROR', error };
+}
+
+export function login(credentials) {
+  return dispatch => {
+    dispatch(error(null));
+
+    fetch("authentication_token", {method: 'POST', body: JSON.stringify(credentials)})
+      .then(response => response.json())
+      .then(retrieved => {
+        dispatch(token(retrieved.token));
+      })
+      .catch(e => {
+        dispatch(error(e.message));
+      });
+  }
+}
+
+export function forgetToken() {
+  return token(null);
+}
 ```
-And in the render method the ListTool component should be replaced by:
+
+And the reducers in client/src/reducers/login.js:
 ```javascript jsx
-          <SearchTool
-            query={this.props.location.search}
-            list={this.list.bind(this)}
-            history={this.props.history}
-          />
+import { combineReducers } from 'redux';
 
+export function token(state = null, action) {
+  switch (action.type) {
+    case 'LOGIN_TOKEN':
+      return action.token;
+
+    default:
+      return state;
+  }
+}
+
+export function error(state = null, action) {
+  switch (action.type) {
+    case 'LOGIN_ERROR':
+      return action.error
+
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ token, error });
 ```
-Notify that the component has an extra property 'history'.
 
-You can not test the Employee list. Sorting should
-still work. If the form is submitted the Sorting should remain the 
-same. If the Soring is changed the search input should not change
-and the same search should be performed.
+Of course the login form needs a route too:
+```javascript jsx
+import AuthController from './components/common/AuthController';
+```
+and in client/src/index.js below {/* Add your routes here */}:
+```javascript jsx
+                            <Route path="/login/" component={Login} strict={true} exact={true}/>
+```
+This Route component passes the history prop that is required by the Login class.
 
-Be aware that the search includes Employee properties that are
-not visible in the list. For example if you search for '9722'
-it should find Eden, Nicky by its zipcode. If you think this 
-is counter intuitive you could add some columns to the page and/or
-remove some properties from the @ApiFilter annotation on the
-Employee entity class.
+And message translations. Add the following to client/src/messages/common-en.js:
+```javascript jsx
+    "login.title": "Please log in",
+    "login.email": "Email",
+    "login.password": "Password",
+    "login.submit": "Log in",
+    "login.error.unauthorized": "Log in has failed"
+```
+Don´t forget to add a comma behind the line above.
+Add the following to client/src/messages/common-nl.js:
+```javascript jsx
+    "login.title": "Log in",
+    "login.email": "Email",
+    "login.password": "Wachtwoord",
+    "login.submit": "Inloggen",
+    "login.error.unauthorized": "Inloggen mislukt"```
+And once again the comma.
 
-Scaffolding your own application
+You can now test the login form by pointing your browser to https://localhost/login/
+If you submit the wrong credentials you should see the message "Log in has failed".
+If you log in sucessfully you may find yourself back on the page you where before,
+you typed https://localhost/login/, or if you openend a new window or tab, still
+on the log in page.
+
+Extending the dataAccess utility
 --------------------------------
-Templates that where adapted for the use a list- or search tool as well as sorting are available 
-in [branch tutorial-chapter6 of metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter6).
-They are provided for scaffolding your own application. The scaffolded code does not include simple search.
 
-Data about the filters offered by the api is currently not included in the JSON-LD documentation
-generated by api platform that is used by the client generator. Therefore the application
-generator scaffolds sort headers for all columns. The application developer
-is expected to correct this manually. This also includes setting ThSort property "isDefault"
-to true on the column whose orderBy is the default sort order.
+Once a token is available it must be included in each request the app sends to the api.
+This would be easy if client/src/utils/dataAccess.js where a react comonent that could
+be connected to Redux. But it isn't. Furthermore if the token has become invalid the
+api will return a response with http status 401. If dataAccess where connected to 
+redux it could dispatch a message with respect to the error, but it can't. 
 
-For the same reason the client generator can only scaffold a search tool and search form for all
-immediate properties. Because read-only properties are often not persistent, the writable properties are used.
+One solution would be to replace the dataAccess utility by a React component,
+but that would require all actions and components code that performs a fetch to be adapted.
+Furthermore, the new DataAccess component would have to be made available to all other components,
+for example by a Higher Order Component or so and that is beyond the scope of this turorial.
 
-Because of this the application developer probably needs to adapt the search tool and
-search form to make it work properly. Therefore the search tool is not used by default 
-in the scaffolded List components. 
+Another solution could be to pass the token explicitly to the dataAccess fetch function
+and handle the 401 errors from the actions by dispatching a message with respect to the error.
+But that would also require all actions and components code that performs a fetch to be adapted
+even more because of the error handling. 
+
+A less conventional solution would be to make the dataAccess module behave like an object.
+IOW set an internal state and use that state from the fetch function. The former can be done
+by adding the following to client/src/utils/dataAccess.js:
+```javascript jsx
+let token = null;
+const errorHandlers = [];
+
+/**
+ * @param string|null newToken JWT token
+ */
+export function setToken(newToken) {
+  token = newToken;
+}
+
+/**
+ * @param function handler
+ */
+export function onFetchError(handler) {
+  errorHandlers.push(handler);
+}
+```
+This adds two "properties" to the module, one to store the token and another to
+store error handlers for fetch errors. It also adds two functions, one
+for setting the token, the other for adding an error handler.
+
+To actually use the token during fetch add the following on the second line
+of the fetch function:
+```javascript jsx
+  if (token)
+    options.headers.set('Authorization', 'Bearer ' + token);
+```
+
+And to call the error handlers below: 
+```javascript jsx
+    return response.json().then(json => {
+```
+add:
+```javascript jsx
+      errorHandlers.forEach(handler => handler(response.status, json, id, options));
+```
+
+SECURITY WARNNIG: Be aware that the token is sent with ALL fetch calls made
+with the dataAccess utility. Normally this is no problem because the fetch function
+only makes calls to the same hard-coded entry point, but if the entrypoint offers access
+to multiple applications the token may be sent to the wrong application. 
+DO NOT make the entrypoint variable!
+
+
+Authentication Controller
+-------------------------
+
+OK, there is a login form that sets a token into Redux, the dataAccess utility
+can use the token and can call error handlers on fetch errors. Now it all needs
+to be combined so that whenever something happens that is relevant to the 
+authentication, the proper actions are taken. Typically a task for a Controller.
+
+Create a new file client/src/components/common/AuthController.js with the
+following content:
+```javascript jsx
+import React from 'react';
+import { connect } from 'react-redux';
+import {onFetchError, setToken} from "../../utils/dataAccess";
+import PropTypes from 'prop-types';
+import {forgetToken} from "../../actions/login";
+import { withRouter } from 'react-router-dom';
+
+/** Forwards the user to the login page if unauthenticated */
+class AuthController extends React.Component {
+  static propTypes = {
+    state: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    loginPath: PropTypes.string
+  };
+
+  componentDidMount() {
+    onFetchError(this.handleFetchError.bind(this));
+    this.processProps();
+  }
+
+  componentDidUpdate() {
+    this.processProps();
+  }
+
+  handleFetchError(status, json) {
+    // alert('Fetch error' + status + ': ' + JSON.stringify(json))
+
+    // forget the token if it is rejected by the api
+    if (status === 401 && json.message !== "Invalid credentials.")
+      this.props.forgetToken();
+  }
+
+  processProps() {
+    const {loginPath = "/login/"} = this.props;
+
+    // update token of dataAccess
+    setToken(this.props.token);
+
+    // Do not forward twice
+    if (this.props.location.pathname === loginPath) return;
+
+    // If we have a token the user is authenticated, otherwise forward to login
+    if (!this.props.token)
+      this.props.history.push(loginPath, {back: true});
+
+  }
+
+  render() {
+    return this.props.children;
+  }
+}
+
+const mapStateToProps = state => {
+  const { token } = state.login;
+  const {location} = state.router;
+  return { token, location };
+};
+
+const mapDispatchToProps = dispatch => ({
+  forgetToken: ignoored => dispatch(forgetToken())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AuthController));
+```
+This component receives the token from redux so that it can detect if
+a JWT token is available. It allways set the token on the dataAccess module
+so that the module it allways up to date. 
+
+If no token, it pushes "/login/" onto the history unless the current location
+pathname already is "/login/". With login state {back: true} is passed to indicate
+that the login form should move the browser back in history after a successfull login.
+
+As soon as possible it registers an error handler with the dataAccess module.
+If an error with status 401 occurs it calls the forgetToken action, unless 
+the error is "Invalid credentials.", that is just to be handled by the login form.
+
+To import the AuthController add the following to client/src/index.js:
+```javascript jsx
+import AuthController from './components/common/AuthController';
+```
+And below ConnectedRouter add
+```javascript jsx
+              <AuthController>
+```
+and add a corrsponding </AuthController> above </ConnectedRouter>.
+
+You can now test the app. After succussfully logging in 
+you should be retured to the page you requested. For example if you
+started with https://localhost/employees/ that should be the page
+you see after logging in successfully.
+
+Of couse everything should work normally once logged in. 
+If you start with https://localhost/login/ you should see the 
+Welcome page after logging in.
+

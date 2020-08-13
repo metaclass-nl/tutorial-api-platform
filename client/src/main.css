@@ -50,3 +50,13 @@
     padding-left: 5px;
     padding-bottom: 1rem;
 }
+
+th .fa-sort-down, th .fa {
+    padding-left: 5px;
+}
+th.sort:hover {
+    cursor: pointer;
+}
+th.sort span {
+    display: table-cell;
+}

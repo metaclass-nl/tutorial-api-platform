@@ -6,6 +6,9 @@ import { list, reset } from '../../actions/employee/list';
 import {FormattedMessage} from "react-intl";
 import * as defined from '../common/intlDefined';
 import Pagination from "../common/Pagination";
+import {buildQuery} from "../../utils/dataAccess";
+import SearchTool from "./SearchTool";
+import ThSort from "../common/ThSort";
 
 class List extends Component {
   static propTypes = {
@@ -18,23 +21,37 @@ class List extends Component {
     reset: PropTypes.func.isRequired
   };
 
-  componentDidMount() {
-    this.props.list(
-      this.props.match.params.page &&
-        decodeURIComponent(this.props.match.params.page)
-    );
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.match.params.page !== prevProps.match.params.page)
-      this.props.list(
-        this.props.match.params.page &&
-          decodeURIComponent(this.props.match.params.page)
-      );
-  }
+  values = {};
 
   componentWillUnmount() {
     this.props.reset(this.props.eventSource);
+  }
+
+  list(values, apiQuery) {
+    this.values = values;
+    this.props.list("/employees?" + apiQuery);
+  }
+
+  /**
+   * Call back for pagination buttons
+   * @param string page (numeric)
+   */
+  page(page) {
+    this.values.page = page;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
+  }
+
+  /**
+   * Call back for sort headers
+   * @param {} order
+   */
+  order(order) {
+    this.values.order = order;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
   }
 
   render() {
@@ -54,19 +71,34 @@ class List extends Component {
           <div className="alert alert-danger">{this.props.error}</div>
         )}
 
-        <p>
-          <Link to="create" className="btn btn-primary">
-            <FormattedMessage id="employee.create" defaultMessage="Create"/>
-          </Link>
-        </p>
+        <div className="toolbar">
+          <SearchTool
+            query={this.props.location.search}
+            list={this.list.bind(this)}
+            history={this.props.history}
+          />
+          <div className="toolbar-buttons form-group">
+            <Link to="create" className="btn btn-primary">
+              <FormattedMessage id="employee.create" defaultMessage="Create"/>
+            </Link>
+          </div>
+        </div>
 
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th><FormattedMessage id="employee.item" default="Employee"/></th>
-              <th><FormattedMessage id="employee.function" default="function"/></th>
-              <th><FormattedMessage id="employee.birthDate" default="birthDate"/></th>
-              <th><FormattedMessage id="employee.arrival" default="arrival"/></th>
+              <ThSort orderBy={ {"lastName": "asc", "firstName": "asc"} }  isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.item" default="Employee"/>
+              </ThSort>
+              <ThSort orderBy={ {"function": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.function" default="function"/>
+              </ThSort>
+              <ThSort orderBy={ {"birthDate": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.birthDate" default="birthDate"/>
+              </ThSort>
+              <ThSort orderBy={ {"arrival": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.arrival" default="arrival"/>
+              </ThSort>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -105,7 +137,7 @@ class List extends Component {
           </tbody>
         </table>
 
-        <Pagination retrieved={this.props.retrieved} />
+        <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)} />
       </div>
     );
   }

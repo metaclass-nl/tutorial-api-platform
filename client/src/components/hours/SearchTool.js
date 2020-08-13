@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
+import ListTool from "../common/ListTool";
 import PropTypes from "prop-types";
 import { buildQuery, parseQuery } from "../../utils/dataAccess";
 import SearchForm from "./SearchForm";
@@ -6,32 +7,20 @@ import isEqual from "lodash/isEqual";
 import get from "lodash/get";
 
 const pageParameterName="page";
+const orderParameterName="order";
 
-class SearchTool extends Component {
+class SearchTool extends ListTool {
   static propTypes = {
     query: PropTypes.string,
     list: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired
   };
 
-  values = {};
-
-  componentDidMount() {
-    this.valuesFromQuery();
-    this.props.list( this.values, buildQuery(this.apiRequest()) );
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.query !== prevProps.query) {
-      this.valuesFromQuery();
-      this.props.list( this.values, buildQuery(this.apiRequest()) );
-    }
-  }
-
   apiRequest() {
-    const {page, description, employee, nHours, start} = this.values;
+    const {page, order, description, employee, nHours, start} = this.values;
     const req = {};
     req[pageParameterName] = page;
+    req[orderParameterName] = order;
 
     req.description = description;
     if (employee) {
