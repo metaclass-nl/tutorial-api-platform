@@ -5,14 +5,30 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Registration of time worked by an Employee on a day
  *
  * @ApiResource(attributes={
  *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"}
- * })
+ *     "order"={"start": "DESC", "description": "ASC"},
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"hours_get"}}
+ *          },
+ *          "patch",
+ *          "delete"
+ *     },
+ *     collectionOperations={
+ *         "get"={
+ *              "normalization_context"={"groups"={"hours_list"}}
+ *          },
+ *          "post"
+ *     }
+ * )
  * @ORM\Entity
  */
 class Hours
@@ -31,6 +47,7 @@ class Hours
      * @ORM\Column(type="float")
      * @Assert\NotNull
      * @Assert\GreaterThanOrEqual(0.1)
+     * @Groups({"hours_get", "hours_list"})
      */
     private $nHours = 1.0;
 
@@ -39,12 +56,14 @@ class Hours
      *
      * @ORM\Column(type="datetime")
      * @Assert\NotNull
+     * @Groups({"hours_get", "hours_list"})
      */
     private $start;
 
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"hours_get"})
      */
     private $onInvoice = true;
 
@@ -53,6 +72,7 @@ class Hours
      * @ORM\Column
      * @Assert\NotBlank
      * @Assert\Length(max=255)
+     * @Groups({"hours_get", "hours_list"})
      */
     private $description;
 
@@ -60,6 +80,7 @@ class Hours
      * @var Employee
      * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
      * @Assert\NotNull
+     * @Groups({"hours_get", "hours_list"})
      */
     private $employee;
 
@@ -166,6 +187,8 @@ class Hours
 
 
     /** Represent the entity to the user in a single string
+     * @ApiProperty(iri="http://schema.org/name")
+     * @Groups({"hours_get", "hours_list"})
      * @return string
      */
     public function getLabel() {
@@ -175,6 +198,7 @@ class Hours
 
     /**
      * @return string
+     * @Groups({"hours_get", "hours_list"})
      */
     public function getDay() {
         return $this->getStart()->format('D');

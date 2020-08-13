@@ -4,6 +4,9 @@ import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/hours/show';
 import { del } from '../../actions/hours/delete';
+import {FormattedMessage, injectIntl} from "react-intl";
+import * as defined from '../common/intlDefined';
+import EntityLinks from '../common/EntityLinks';
 
 class Show extends Component {
   static propTypes = {
@@ -28,7 +31,8 @@ class Show extends Component {
   }
 
   del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
+    const {intl} = this.props;
+    if (window.confirm(intl.formatMessage({id:"hours.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"})))
       this.props.del(this.props.retrieved);
   };
 
@@ -39,11 +43,11 @@ class Show extends Component {
 
     return (
       <div>
-        <h1>Show {item && item['@id']}</h1>
+        <h1><FormattedMessage id="hours.show" defaultMessage="Show {label}" values={ {label: item && item['@id']} }/></h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
-            Loading...
+              <FormattedMessage id="loading" defaultMessage="Loading..."/>
           </div>
         )}
         {this.props.error && (
@@ -63,70 +67,69 @@ class Show extends Component {
           <table className="table table-responsive table-striped table-hover">
             <thead>
               <tr>
-                <th>Field</th>
-                <th>Value</th>
+                <th><FormattedMessage id="field" defaultMessage="Field"/></th>
+                <th><FormattedMessage id="value" defaultMessage="Value"/></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">nHours</th>
-                <td>{item['nHours']}</td>
+                <th scope="row"><FormattedMessage id="hours.nHours" defaultMessage="nHours"/></th>
+                <td>
+                    <defined.FormattedNumber value={item['nHours']}/>
+                </td>
               </tr>
               <tr>
-                <th scope="row">start</th>
-                <td>{item['start']}</td>
+                <th scope="row"><FormattedMessage id="hours.start" defaultMessage="start"/></th>
+                <td>
+                    <defined.FormattedDateTime value={item['start']} />
+                </td>
               </tr>
               <tr>
-                <th scope="row">onInvoice</th>
-                <td>{item['onInvoice']}</td>
+                <th scope="row"><FormattedMessage id="hours.onInvoice" defaultMessage="onInvoice"/></th>
+                <td>
+                    <defined.LocalizedBool value={item['onInvoice']} />
+                </td>
               </tr>
               <tr>
-                <th scope="row">description</th>
-                <td>{item['description']}</td>
+                <th scope="row"><FormattedMessage id="hours.description" defaultMessage="description"/></th>
+                <td>
+                    {item['description']}
+                </td>
               </tr>
               <tr>
-                <th scope="row">employee</th>
-                <td>{this.renderLinks('employees', item['employee'])}</td>
+                <th scope="row"><FormattedMessage id="hours.employee" defaultMessage="employee"/></th>
+                <td><EntityLinks type="employees" items={item['employee']} up={true} /></td>
               </tr>
               <tr>
-                <th scope="row">label</th>
-                <td>{item['label']}</td>
+                <th scope="row"><FormattedMessage id="hours.label" defaultMessage="label"/></th>
+                <td>
+                    {item['label']}
+                </td>
               </tr>
               <tr>
-                <th scope="row">day</th>
-                <td>{item['day']}</td>
+                <th scope="row"><FormattedMessage id="hours.day" defaultMessage="day"/></th>
+                <td>
+                    <defined.FormattedDate value={item['start']} weekday="short"/>
+                </td>
               </tr>
             </tbody>
           </table>
         )}
         <Link to=".." className="btn btn-primary">
-          Back to list
+          <FormattedMessage id="backToList" defaultMessage="Back to list" />
         </Link>
         {item && (
           <Link to={`/hours/edit/${encodeURIComponent(item['@id'])}`}>
-            <button className="btn btn-warning">Edit</button>
+            <button className="btn btn-warning"><FormattedMessage id="edit" defaultMessage="Edit"/></button>
           </Link>
         )}
         <button onClick={this.del} className="btn btn-danger">
-          Delete
+          <FormattedMessage id="delete" defaultMessage="Delete"/>
         </button>
       </div>
     );
   }
 
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
-    }
-
-    return (
-      <Link to={`../../${type}/show/${encodeURIComponent(items)}`}>
-        {items}
-      </Link>
-    );
-  };
 }
 
 const mapStateToProps = state => ({
@@ -145,7 +148,4 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Show);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Show));

@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
+import * as inputLoc from '../../utils/inputLocalization';
+import {FormattedMessage} from 'react-intl';
+import ReduxFormRow from '../common/ReduxFormRow.js';
+import getIntl from "../../utils/intlProvider";
 
 class Form extends Component {
   static propTypes = {
@@ -8,99 +12,84 @@ class Form extends Component {
     error: PropTypes.string
   };
 
-  renderField = data => {
-    data.input.className = 'form-control';
-
-    const isInvalid = data.meta.touched && !!data.meta.error;
-    if (isInvalid) {
-      data.input.className += ' is-invalid';
-      data.input['aria-invalid'] = true;
+    renderField = data => {
+      return <ReduxFormRow {...data} apiError={this.props.error}/>;
     }
-
-    if (this.props.error && data.meta.touched && !data.meta.error) {
-      data.input.className += ' is-valid';
-    }
-
-    return (
-      <div className={`form-group`}>
-        <label
-          htmlFor={`employee_${data.input.name}`}
-          className="form-control-label"
-        >
-          {data.input.name}
-        </label>
-        <input
-          {...data.input}
-          type={data.type}
-          step={data.step}
-          required={data.required}
-          placeholder={data.placeholder}
-          id={`employee_${data.input.name}`}
-        />
-        {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
-      </div>
-    );
-  };
 
   render() {
+    const intl = getIntl();
     return (
       <form onSubmit={this.props.handleSubmit}>
         <Field
           component={this.renderField}
           name="firstName"
           type="text"
-          placeholder=""
-        />
+          label=<FormattedMessage id="employee.firstName" defaultMessage="firstName" />
+          placeholder=""/>
         <Field
           component={this.renderField}
           name="lastName"
           type="text"
+          label=<FormattedMessage id="employee.lastName" defaultMessage="lastName" />
           placeholder=""
-          required={true}
-        />
+          required={true}/>
         <Field
           component={this.renderField}
           name="function"
           type="text"
+          label=<FormattedMessage id="employee.function" defaultMessage="function" />
           placeholder=""
-          required={true}
-        />
+          required={true}/>
         <Field
           component={this.renderField}
           name="address"
           type="text"
+          label=<FormattedMessage id="employee.address" defaultMessage="address" />
           placeholder=""
-          required={true}
-        />
+          required={true}/>
         <Field
           component={this.renderField}
           name="zipcode"
           type="text"
-          placeholder=""
-        />
+          label=<FormattedMessage id="employee.zipcode" defaultMessage="zipcode" />
+          placeholder=""/>
         <Field
           component={this.renderField}
           name="city"
           type="text"
+          label=<FormattedMessage id="employee.city" defaultMessage="city" />
           placeholder=""
-          required={true}
-        />
+          required={true}/>
         <Field
           component={this.renderField}
           name="birthDate"
-          type="dateTime"
-          placeholder="Date of birth"
+          type="date"
+          label=<FormattedMessage id="employee.birthDate" defaultMessage="birthDate" />
+          placeholder={intl.formatMessage({id:"employee.birthDate.placeholder", defaultMessage:"Date of birth"}) }
           required={true}
-        />
+          format={inputLoc.formatDate}
+          normalize={inputLoc.normalizeDate}
+          />
         <Field
           component={this.renderField}
           name="arrival"
-          type="dateTime"
-          placeholder="Tite the employee usually arrives at work"
-        />
+          type="time"
+          label=<FormattedMessage id="employee.arrival" defaultMessage="arrival" />
+          placeholder={intl.formatMessage({id:"employee.arrival.placeholder", defaultMessage:"Time the employee usually arrives at work"}) }
+          format={inputLoc.formatTime}
+          normalize={inputLoc.normalizeTime}
+          />
+        <Field
+          component={this.renderField}
+          name="hours"
+          type="text"
+          label=<FormattedMessage id="employee.hours" defaultMessage="hours" />
+          placeholder=""
+          normalize={v => (v === '' ? [] : v.split(','))}
+          />
 
         <button type="submit" className="btn btn-success">
-          Submit
+          <FormattedMessage id="submit" defaultMessage="Submit"/>
         </button>
       </form>
     );

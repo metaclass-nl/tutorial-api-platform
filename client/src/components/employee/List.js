@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/employee/list';
+import {FormattedMessage} from "react-intl";
+import * as defined from '../common/intlDefined';
+import EntityLinks from '../common/EntityLinks';
+import Pagination from "../common/Pagination";
 
 class List extends Component {
   static propTypes = {
@@ -26,7 +30,7 @@ class List extends Component {
     if (this.props.match.params.page !== prevProps.match.params.page)
       this.props.list(
         this.props.match.params.page &&
-        decodeURIComponent(this.props.match.params.page)
+          decodeURIComponent(this.props.match.params.page)
       );
   }
 
@@ -37,14 +41,14 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Employee List</h1>
+        <h1><FormattedMessage id="employee.list" defaultMessage="Employee List"/></h1>
 
         {this.props.loading && (
-          <div className="alert alert-info">Loading...</div>
+          <div className="alert alert-info"><FormattedMessage id="loading" defaultMessage="Loading..."/></div>
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
-            {this.props.deletedItem['@id']} deleted.
+            <FormattedMessage id="employee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['@id']} }/>
           </div>
         )}
         {this.props.error && (
@@ -53,7 +57,7 @@ class List extends Component {
 
         <p>
           <Link to="create" className="btn btn-primary">
-            Create
+            <FormattedMessage id="employee.create" defaultMessage="Create"/>
           </Link>
         </p>
 
@@ -61,11 +65,16 @@ class List extends Component {
           <thead>
             <tr>
               <th>id</th>
-              <th>firstName</th>
-              <th>lastName</th>
-              <th>function</th>
-              <th>birthDate</th>
-              <th>arrival</th>
+              <th><FormattedMessage id="employee.firstName" default="firstName"/></th>
+              <th><FormattedMessage id="employee.lastName" default="lastName"/></th>
+              <th><FormattedMessage id="employee.function" default="function"/></th>
+              <th><FormattedMessage id="employee.address" default="address"/></th>
+              <th><FormattedMessage id="employee.zipcode" default="zipcode"/></th>
+              <th><FormattedMessage id="employee.city" default="city"/></th>
+              <th><FormattedMessage id="employee.birthDate" default="birthDate"/></th>
+              <th><FormattedMessage id="employee.arrival" default="arrival"/></th>
+              <th><FormattedMessage id="employee.hours" default="hours"/></th>
+              <th><FormattedMessage id="employee.label" default="label"/></th>
               <th colSpan={2} />
             </tr>
           </thead>
@@ -78,21 +87,44 @@ class List extends Component {
                       {item['@id']}
                     </Link>
                   </th>
-                  <td>{item['firstName']}</td>
-                  <td>{item['lastName']}</td>
-                  <td>{item['function']}</td>
-                  <td>{item['birthDate']}</td>
-                  <td>{item['arrival']}</td>
+                  <td>
+                  {item['firstName']}
+                  </td>
+                  <td>
+                  {item['lastName']}
+                  </td>
+                  <td>
+                  {item['function']}
+                  </td>
+                  <td>
+                  {item['address']}
+                  </td>
+                  <td>
+                  {item['zipcode']}
+                  </td>
+                  <td>
+                  {item['city']}
+                  </td>
+                  <td>
+                  <defined.FormattedDate value={item['birthDate']} />
+                  </td>
+                  <td>
+                  <defined.FormattedTime value={item['arrival']} />
+                  </td>
+                  <td><EntityLinks type="hours" items={item['hours']} /></td>
+                  <td>
+                  {item['label']}
+                  </td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only">Show</span>
+                      <span className="sr-only"><FormattedMessage id="show" default="Show"/></span>
                     </Link>
                   </td>
                   <td>
                     <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
-                      <span className="fa fa-pencil" aria-hidden="true" />
-                      <span className="sr-only">Edit</span>
+                      <span className="fa fa-pencil fa-pencil-alt" aria-hidden="true" />
+                      <span className="sr-only"><FormattedMessage id="edit" default="Edit"/></span>
                     </Link>
                   </td>
                 </tr>
@@ -100,65 +132,11 @@ class List extends Component {
           </tbody>
         </table>
 
-        {this.pagination()}
+        <Pagination retrieved={this.props.retrieved} />
       </div>
     );
   }
 
-  pagination() {
-    const view = this.props.retrieved && this.props.retrieved['hydra:view'];
-    if (!view) return;
-
-    const {
-      'hydra:first': first,
-      'hydra:previous': previous,
-      'hydra:next': next,
-      'hydra:last': last
-    } = view;
-
-    return (
-      <nav aria-label="Page navigation">
-        <Link
-          to="."
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&lArr;</span> First
-        </Link>
-        <Link
-          to={
-            !previous || previous === first ? '.' : encodeURIComponent(previous)
-          }
-          className={`btn btn-primary${previous ? '' : ' disabled'}`}
-        >
-          <span aria-hidden="true">&larr;</span> Previous
-        </Link>
-        <Link
-          to={next ? encodeURIComponent(next) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Next <span aria-hidden="true">&rarr;</span>
-        </Link>
-        <Link
-          to={last ? encodeURIComponent(last) : '#'}
-          className={`btn btn-primary${next ? '' : ' disabled'}`}
-        >
-          Last <span aria-hidden="true">&rArr;</span>
-        </Link>
-      </nav>
-    );
-  }
-
-  renderLinks = (type, items) => {
-    if (Array.isArray(items)) {
-      return items.map((item, i) => (
-        <div key={i}>{this.renderLinks(type, item)}</div>
-      ));
-    }
-
-    return (
-      <Link to={`../${type}/show/${encodeURIComponent(items)}`}>{items}</Link>
-    );
-  };
 }
 
 const mapStateToProps = state => {
@@ -177,7 +155,4 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(List);
+export default connect(mapStateToProps, mapDispatchToProps)(List);

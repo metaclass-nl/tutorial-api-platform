@@ -4,6 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/hours/create';
+import {FormattedMessage} from "react-intl";
 
 class Create extends Component {
   static propTypes = {
@@ -28,11 +29,11 @@ class Create extends Component {
 
     return (
       <div>
-        <h1>New Hours</h1>
+        <h1><FormattedMessage id="hours.new" defaultMessage="New Hours"/></h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
-            Loading...
+            <FormattedMessage id="loading" defaultMessage="Loading..."/>
           </div>
         )}
         {this.props.error && (
@@ -44,7 +45,7 @@ class Create extends Component {
 
         <Form onSubmit={this.props.create} values={this.props.item} />
         <Link to="." className="btn btn-primary">
-          Back to list
+          <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
       </div>
     );
@@ -61,7 +62,4 @@ const mapDispatchToProps = dispatch => ({
   reset: () => dispatch(reset())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Create);
+export default connect(mapStateToProps, mapDispatchToProps)(Create);

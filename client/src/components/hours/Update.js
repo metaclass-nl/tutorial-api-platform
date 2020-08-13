@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Form from './Form';
 import { retrieve, update, reset } from '../../actions/hours/update';
 import { del } from '../../actions/hours/delete';
+import {FormattedMessage, injectIntl} from "react-intl";
 
 class Update extends Component {
   static propTypes = {
@@ -33,7 +34,8 @@ class Update extends Component {
   }
 
   del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
+    const {intl} = this.props;
+    if (window.confirm(intl.formatMessage({id:"hours.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"})))
       this.props.del(this.props.retrieved);
   };
 
@@ -44,23 +46,23 @@ class Update extends Component {
 
     return (
       <div>
-        <h1>Edit {item && item['@id']}</h1>
+        <h1><FormattedMessage id="hours.update" defaultMessage="Edit {label}" values={ {label: item && item['@id']} }/></h1>
 
         {this.props.created && (
           <div className="alert alert-success" role="status">
-            {this.props.created['@id']} created.
+            <FormattedMessage id="hours.created" defaultMessage="{label} created." values={ {label: this.props.created['@id']} } />
           </div>
         )}
         {this.props.updated && (
           <div className="alert alert-success" role="status">
-            {this.props.updated['@id']} updated.
+            <FormattedMessage id="hours.updated" defaultMessage="{label} updated." values={ {label: this.props.updated['@id']} } />
           </div>
         )}
         {(this.props.retrieveLoading ||
           this.props.updateLoading ||
           this.props.deleteLoading) && (
           <div className="alert alert-info" role="status">
-            Loading...
+            <FormattedMessage id="loading" defaultMessage="Loading..."/>
           </div>
         )}
         {this.props.retrieveError && (
@@ -89,10 +91,10 @@ class Update extends Component {
           />
         )}
         <Link to=".." className="btn btn-primary">
-          Back to list
+          <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
         <button onClick={this.del} className="btn btn-danger">
-          Delete
+          <FormattedMessage id="delete" defaultMessage="Delete"/>
         </button>
       </div>
     );
@@ -120,7 +122,4 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Update);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Update));

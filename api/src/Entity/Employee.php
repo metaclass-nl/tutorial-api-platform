@@ -8,13 +8,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class defining entities with data about an Employees
  *
  * @ApiResource(
- *     attributes={"order"={"lastName", "firstName"}}
+ *     attributes={"order"={"lastName", "firstName"}},
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"employee_get"}}
+ *          },
+ *          "put",
+ *          "patch",
+ *          "delete"
+ *     },
+ *     collectionOperations={
+ *         "get"={
+ *              "normalization_context"={"groups"={"employee_list"}}
+ *          },
+ *          "post"
+ *     }
  * )
  * @ORM\Entity
  */
@@ -38,6 +52,7 @@ class Employee
      * @var string
      * @ORM\Column(nullable=true)
      * @Assert\Length(max=20)
+     * @Groups({"employee_get"})
      */
     private $firstName;
 
@@ -46,6 +61,7 @@ class Employee
      * @ORM\Column
      * @Assert\NotBlank
      * @Assert\Length(max=80)
+     * @Groups({"employee_get"})
      */
     private $lastName;
 
@@ -54,6 +70,7 @@ class Employee
      * @ORM\Column
      * @Assert\NotBlank
      * @Assert\Length(max=40)
+     * @Groups({"employee_get", "employee_list"})
      */
     private $function;
 
@@ -62,6 +79,7 @@ class Employee
      * @ORM\Column
      * @Assert\NotBlank
      * @Assert\Length(max=80)
+     * @Groups({"employee_get"})
      */
     private $address;
 
@@ -69,6 +87,7 @@ class Employee
      * @var string|null
      * @ORM\Column(nullable=true)
      * @Assert\Length(max=10)
+     * @Groups({"employee_get"})
      */
     private $zipcode;
 
@@ -77,6 +96,7 @@ class Employee
      * @ORM\Column
      * @Assert\NotBlank
      * @Assert\Length(max=40)
+     * @Groups({"employee_get"})
      */
     private $city;
 
@@ -87,6 +107,7 @@ class Employee
      * @ApiProperty(
      *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#date"}
      * )
+     * @Groups({"employee_get", "employee_list"})
      */
     private $birthDate;
 
@@ -96,6 +117,7 @@ class Employee
      * @ApiProperty(
      *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#time"}
      * )
+     * @Groups({"employee_get", "employee_list"})
      */
     private $arrival;
 
@@ -275,6 +297,8 @@ class Employee
     /**
      * Represent the entity to the user in a single string
      * @return string
+     * @ApiProperty(iri="http://schema.org/name")
+     * @Groups({"employee_get", "employee_list", "hours_get", "hours_list"})
      */
     function getLabel() {
         return $this->getLastName(). ', '. $this->getFirstName();

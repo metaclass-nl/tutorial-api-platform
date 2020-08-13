@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
+import * as inputLoc from '../../utils/inputLocalization';
+import {FormattedMessage} from 'react-intl';
+import ReduxFormRow from '../common/ReduxFormRow.js';
+import getIntl from "../../utils/intlProvider";
 
 class Form extends Component {
   static propTypes = {
@@ -8,81 +12,59 @@ class Form extends Component {
     error: PropTypes.string
   };
 
-  renderField = data => {
-    data.input.className = 'form-control';
-
-    const isInvalid = data.meta.touched && !!data.meta.error;
-    if (isInvalid) {
-      data.input.className += ' is-invalid';
-      data.input['aria-invalid'] = true;
+    renderField = data => {
+      return <ReduxFormRow {...data} apiError={this.props.error}/>;
     }
-
-    if (this.props.error && data.meta.touched && !data.meta.error) {
-      data.input.className += ' is-valid';
-    }
-
-    return (
-      <div className={`form-group`}>
-        <label
-          htmlFor={`hours_${data.input.name}`}
-          className="form-control-label"
-        >
-          {data.input.name}
-        </label>
-        <input
-          {...data.input}
-          type={data.type}
-          step={data.step}
-          required={data.required}
-          placeholder={data.placeholder}
-          id={`hours_${data.input.name}`}
-        />
-        {isInvalid && <div className="invalid-feedback">{data.meta.error}</div>}
-      </div>
-    );
-  };
 
   render() {
+    const intl = getIntl();
     return (
       <form onSubmit={this.props.handleSubmit}>
         <Field
           component={this.renderField}
           name="nHours"
           type="number"
+          label=<FormattedMessage id="hours.nHours" defaultMessage="nHours" />
           step="0.1"
-          placeholder=""
-          normalize={v => parseFloat(v)}
-        />
+          placeholder={ intl.formatMessage({id:"hours.nHours.placeholder", defaultMessage:"Mumber"}) }
+          required={true}
+          format={inputLoc.formatNumber}
+          normalize={inputLoc.normalizeNumber}
+          />
         <Field
           component={this.renderField}
           name="start"
-          type="dateTime"
+          type="datetime-local"
+          label=<FormattedMessage id="hours.start" defaultMessage="start" />
           placeholder=""
           required={true}
-        />
+          format={inputLoc.formatDateTime}
+          normalize={inputLoc.normalizeDateTime}
+          />
         <Field
           component={this.renderField}
           name="onInvoice"
           type="checkbox"
-          placeholder=""
-        />
+          label=<FormattedMessage id="hours.onInvoice" defaultMessage="onInvoice" />
+          placeholder=""/>
         <Field
           component={this.renderField}
           name="description"
           type="text"
+          label=<FormattedMessage id="hours.description" defaultMessage="description" />
           placeholder=""
-          required={true}
-        />
+          required={true}/>
         <Field
           component={this.renderField}
           name="employee"
           type="text"
+          label=<FormattedMessage id="hours.employee" defaultMessage="employee" />
           placeholder=""
           required={true}
-        />
+          />
 
         <button type="submit" className="btn btn-success">
-          Submit
+          <FormattedMessage id="submit" defaultMessage="Submit"/>
         </button>
       </form>
     );

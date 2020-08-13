@@ -15,6 +15,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import * as serviceWorker from './serviceWorker';
 import Navigation from './components/Navigation.js';
+import {RawIntlProvider} from 'react-intl';
+import getIntl, {initIntl} from './utils/intlProvider';
+import messages from "./messages/all";
 
 // Import your reducers and routes here
 import Welcome from './Welcome';
@@ -35,23 +38,27 @@ const store = createStore(
     applyMiddleware(routerMiddleware(history), thunk)
 );
 
+initIntl(navigator.language, messages);
+
 ReactDOM.render(
-    <Provider store={store}>
-        <ConnectedRouter history={history}>
-            <div>
-                <Navigation/>
-                <div className="mainContainer">
-                    <Switch>
-                        <Route path="/" component={Welcome} strict={true} exact={true}/>
-                        {/* Add your routes here */}
-                        {employeeRoutes}
-                        {hoursRoutes}
-                        <Route render={() => <h1>Not Found</h1>} />
-                    </Switch>
+    <RawIntlProvider value={getIntl()}>
+        <Provider store={store}>
+            <ConnectedRouter history={history}>
+                <div>
+                    <Navigation/>
+                    <div className="mainContainer">
+                        <Switch>
+                            <Route path="/" component={Welcome} strict={true} exact={true}/>
+                                {/* Add your routes here */}
+                                {employeeRoutes}
+                                {hoursRoutes}
+                            <Route render={() => <h1>Not Found</h1>} />
+                        </Switch>
+                    </div>
                 </div>
-            </div>
-        </ConnectedRouter>
-    </Provider>,
+            </ConnectedRouter>
+        </Provider>
+    </RawIntlProvider>,
     document.getElementById('root')
 );
 
