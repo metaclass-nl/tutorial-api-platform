@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 
 /**
@@ -17,6 +19,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Employee
 {
+    public function __construct()
+    {
+        $this->hours = new ArrayCollection();
+    }
+
     /**
      * @var int The entity Id
      *
@@ -84,6 +91,12 @@ class Employee
      * @ORM\Column(type="time", nullable=true)
      */
     private $arrival;
+
+    /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
+     */
+    private $hours;
 
     public function getId(): int
     {
@@ -231,6 +244,24 @@ class Employee
     public function setArrival(\DateTime $arrival=null): Employee
     {
         $this->arrival = $arrival;
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getHours(): Collection
+    {
+        return $this->hours;
+    }
+
+    /**
+     * @param mixed $hours
+     * @return Employee
+     */
+    public function setHours($hours)
+    {
+        $this->hours = $hours;
         return $this;
     }
 
