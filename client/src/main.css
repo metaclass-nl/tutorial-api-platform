@@ -26,3 +26,27 @@
     }
 }
 
+.search .btn-success {
+    display: none;
+}
+.search .form-group {
+    display: inline-block;
+    width: 180px;
+    vertical-align: top;
+}
+.search .form-control {
+    display: block;
+    width: 98%;
+}
+.search .form-control-label {
+    width: 98%;
+    display: block;
+}
+.search, .toolbar-buttons {
+    display: table-cell;
+    vertical-align: bottom;
+}
+.toolbar-buttons {
+    padding-left: 5px;
+    padding-bottom: 1rem;
+}

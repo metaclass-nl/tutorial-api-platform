@@ -1,217 +1,100 @@
-Chapter 5: Search - React client
-================================
+Chapter 6: Sorting and Simple Search- React client
+==================================================
 
-The environment is te same as in the chapter4-react branche, except:
-- instructions from README.md of chapter4-react where applied
-- instructions from README.md of chapter5-api where applied
+The environment is te same as in the chapter5-react branche, except:
+- instructions from README.md of chapter5-react where applied
+- instructions from README.md of chapter6-api where applied
 
-This chapter adds a search form for simply searching for Hours
-with fields that contain or are equal to the values in the form.
+This chapter adds support for sorting both the Employee and the
+Hours list by clicking on a column header and a custom Filter service
+for searching with a single text input in several fields.
 
+ListTool
+--------
+In chapter 5 searching was added to the Hours list, it was first refactored
+to make pagination work with a conventional query string. Sorting needs to use
+the same query string, so the Employee list needs to be refactored too. 
+To make it similar with Hours List and to make it easy to add searching later on, 
+a ListTool could be factored out from the Hours SearchTool. 
 
-Search Form
------------
-The application already contains a Form for editing Hours that
-does serveral things that would be nice for the search form too:
-- localization of numbers and datetimes,
-- selection of an Employee from a list.
-But the search form should not be entirely the same as the edit form:
-- the 'onInvoice' field should allow the user NOT to search by the value of onInvoice,
-  but the checkbox only suppors two values: checked and not checked. To keep things
-  simple the onInvoice field should be left out,
-- the 'start' field requires the user to enter an exact date and time, but it is
-  unlikely that the user knows both by head. To make it more usefull the start
-  field should only require a date to search for all Hours that start on that date
-- a field for employee.function should be added
-
-As requirements change in the future the search form may be expected to change and divert
-more and more from the edit form. It therefore is OK to simply copy the code from
-client/src/components/hours/Form.js to a new file client/src/components/hours/SearchForm.js.
-Once you have done this you need to change the class name to SearchForm:
+Create a file client/src/components/common/ListTool.js with the following content:
 ```javascript jsx
-class SearchForm extends Component {
-```
-Also adapt the export statement:
-```javascript jsx
-export default reduxForm({
-  form: 'search_hours',
-  enableReinitialize: true,
-  keepDirtyOnReinitialize: true
-})(SearchForm);
-```
-Notice that the form property was also changed. This allows Redux Forms to store the values from both forms
-seperately in Redux so that values entered in one form will not mess up the values in the other form.
-
-To allow different css styles for the form give it class name "search":
-```javascript jsx
-      <form className="search" onSubmit={this.props.handleSubmit}>
-```
-You remove the onInvoice field and reorder the other fields in the folowing order:
-employee, description, start, nHours.
-
-To make the start field a date field in stead of datetime-local, change its type to "date" and
-replace the formatting and normalizing functions by their date counterparts.
-
-To support searching by the function of the related employee, add the following field:
-```javascript jsx
-        <Field
-          component={this.renderField}
-          name="employee.function"
-          type="text"
-          label=<FormattedMessage id="employee.function" defaultMessage="function" />
-          placeholder=""
-          />
-```
-But this introduces a problem: if a value is present in employee.function, 
-this results in a nested object to be the value of employee, but employee
-already may have a string value from the employee select. This can be solved
-by renaming the employee select to employee.id:
-```javascript jsx
-        <Field
-          component={this.renderField}
-          name="employee.id"
-```
-This way both employee.id and employee.function will be put together in the nested
-object in employee.
-
-Browsing history and query string utitiies
-------------------------------------------
-
-The current Hours List component renders Pagination buttons. When the user presses
-one of these buttons a new uri is added to the browsing history so that the user
-can go back to previously browsed pages. The uris contain an url-encode parameter
-holding the query string for the api. These query strings are provided by the api
-in the result of GET /hours:
-```application/ld+json
-"hydra:view": {
-    "@id": "/hours?page=1",
-    "@type": "hydra:PartialCollectionView",
-    "hydra:first": "/hours?page=1",
-    "hydra:last": "/hours?page=3",
-    "hydra:next": "/hours?page=2"
-  },
-```
-
-All the List component has to do is decode the parameter and send the result to
-the api. If filters are used, the api even includes them in the uris it provides.
-For example the result of GET hours?description=e includes:
-```application/ld+json
-"hydra:view": {
-    "@id": "/hours?description=e&page=1",
-    "@type": "hydra:PartialCollectionView",
-    "hydra:first": "/hours?description=e&page=1",
-    "hydra:last": "/hours?description=e&page=3",
-    "hydra:next": "/hours?description=e&page=2"
-  },
-```
-This seems convenient: the pagination buttons will keep working for any search
-that the api can understand. But there is a snack: When the user presses the back button
-the Search form will no longer be in sync with the actual search sent to the api! 
-In order to restore WYSIWYG the search form will have to be updated with the values of the parameters
-from the uri that is meant for the api. And when the user enters or changes a value
-in the search form, a new uri has to be generated from the values from the form.
-
-As long as the form values are one on one with these parameters this is quite simple. 
-But for the Hours search they are not: the date in the form for example has to be 
-transformed to two parameters: 'start[after]' and 'start[before]'. There are two more 
-parameters that need to be transformed or adapted. Because this has to work both ways,
-from the form to the uri and from the uri back to the form, it is simpeler to
-forget about the pagination buttons for now and have our own form values converted one
-to one to our own query string and back, and put those in the history. 
-
-Decoupling the uris (including the query strings and parameters) used by the application from 
-those of the api has an other advantage: if one changes the other may stay the same and vice versa.
-With the api separating back-end from front-end one may forget that multi tier architecture was also a good practice
-in previous era's. But in those times the separation was primarily a matter of logical decoupling.
-And that is exactly what this is. IOW, it's good architectural practice.
-
-For the one on one convertions generic utility functions can be used. Add the following to
-client/src/utils/dataAccess.js:
-```javascript jsx
-/**
- * Build a query string portion for an url from a plain object.
- * The object may be nested.
- * Any value typeof "object" except null will be handled as a nested object.
- * (values like new String("String) or new Number(12) will not be handled correctly)
- * @param values Plain Object
- * @param prefix string
- * @returns string
- */
-export function buildQuery(values, prefix) {
-  let query = "";
-  for (let key in values) {
-    const value = values[key];
-    if (value) {
-      const param = prefix ? prefix + "[" + key + "]" : key;
-      query += value !== null && typeof value === 'object'
-        ? buildQuery(value, param)
-        : "&" + param + "=" + encodeURIComponent(value);
-    }
-  }
-  return query;
-}
-
-/**
- * Parses query string portion from uri
- * @param queryOrUri string with max 1 level of nesting
- * @returns Plain Object
- */
-export function parseQuery(queryOrUri) {
-  const pathAndQuery = queryOrUri.split("?");
-  const params = new URLSearchParams(
-    pathAndQuery.length === 1 ? pathAndQuery[0] : pathAndQuery[1]
-  );
-  const values = {};
-  for (let [key, value] of params) {
-    if (!key) continue;
-    
-    const pieces = key.split("[");
-    if (pieces.length > 2) {
-      throw new Error("More then 1 level of nesting");
-    }
-    if (pieces.length === 1) {
-      values[key] = value;
-    } else {
-      if (values[pieces[0]] === undefined) {
-        values[pieces[0]] = {};
-      }
-      values[pieces[0]][pieces[1].slice(0, -1)] = value;
-    }
-  }
-  return values;
-}
-```
-
-Pagination
-----------
-Forgetting about the pagination makes processing the values from the the uris simpeler, 
-but it is good practice to first refactor and then extend. This means to first adapt the 
-List component in such a way that:
-- a conventional query string is used, 
-- it is first converted to a plain object and stored for later use,
-- the object is then converted into an uri to be sent to the api.
-
-But first import the necessary funcions in client/components/hours/List.js:
-```javascript jsx
+import { Component } from 'react';
+import PropTypes from "prop-types";
 import {buildQuery, parseQuery} from "../../utils/dataAccess";
-```
 
-Then replace the componentDidMount method by:
-```javascript jsx
-  values;
+class ListTool extends Component {
+  static propTypes = {
+    query: PropTypes.string,
+    list: PropTypes.func.isRequired
+  };
+
+  values = {};
 
   componentDidMount() {
-    this.values = parseQuery(this.props.location.search);
-    this.props.list("/hours?" + buildQuery({page: values.page}));
+    this.valuesFromQuery();
+    this.props.list(this.values, buildQuery(this.apiRequest()));
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.query !== prevProps.query) {
+      this.valuesFromQuery();
+      this.props.list(this.values, buildQuery(this.apiRequest()));
+    }
+  }
+
+  /**
+   * Set values from the query string
+   */
+  valuesFromQuery() {
+    this.values = parseQuery(this.props.query);
+  }
+
+  apiRequest() {
+    const {pageParameterName="page", orderParameterName="order"} = this.props;
+    const req = {};
+    req[pageParameterName] = this.values.page;
+    req[orderParameterName] = this.values.order;
+
+    return req;
+  }
+
+  render() {
+    return null;
+  }
+}
+
+export default ListTool;
 ```
 
-When the user actually presses a page button:
-- the page number is added to the stored object,
-- it is converted back to one uri that is added to the history
-
-This is implemented in the following method:
+In the client/src/components/hours/SearchTool.js replace:
 ```javascript jsx
+import React, { Component } from 'react';
+```
+by:
+```javascript jsx
+import React from "react";
+import ListTool from "../common/ListTool";
+```
+Then make the class extend ListTool, remove the values property and
+the methods componentDidMount and componentDidUpdate. Afterwards the Hours
+List should work as it did before.
+
+In the Employee list component Add the imports:
+```javascript jsx
+import {buildQuery} from "../../utils/dataAccess";
+import ListTool from "../common/ListTool";
+```
+
+Replace the methods componentDidMount and componentDidUpdate by:
+```javascript jsx
+   values = {};
+
+  list(values, apiQuery) {
+    this.values = values;
+    this.props.list("/employees?" + apiQuery);
+  }
+
   /**
    * Event handler for pagination buttons
    * @param string page (numeric)
@@ -224,408 +107,331 @@ This is implemented in the following method:
   }
 ```
 
-React detects this and provides new properties with the new query string. 
-To process this adapt the componentDidUpdate method like this:
-```javascript jsx
-  componentDidUpdate(prevProps) {
-    if (this.props.location.search !== prevProps.location.search) {
-      this.values = parseQuery(this.props.location.search);
-      this.props.list("/hours?" + buildQuery({page: values.page}));
-    }
-  }
-```
-
-To provide the page function to the Pagination component, replace its call at the bottom of the
-render method by: 
-```javascript jsx
-        <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)} />
-```
-
-In client/src/components/common/Pagination.js:
-```javascript jsx
-import {parseQuery} from "../../utils/dataAccess";
-```
-
-Add an onClick property to the first button: 
-```javascript jsx
-            <Link
-                to="."
-                className={`btn btn-primary${previous ? '' : ' disabled'}`}
-                onClick={ e => handleClick(e, props, first) }
-            >
-```
-Add similar onClick properties to the other buttons, replacing first with previous, next and last.
-
-Finally add the handleClick function at the bottom of the file:
-```javascript jsx
-function handleClick(event, props, uri) {
-  if (!props.onClick) return;
-  event.preventDefault();
-  props.onClick(parseQuery(uri).page)
-}
-```
-
-Because a query string is now used insead of passing the api uri as page parameter
-the following route in client/src/routes/hours.js will no longer be used and
-can be removed:
-```javascript jsx
-  <Route path="/hours/:page" component={List} exact strict key="page" />
-```
-
-You can now test the application. The pagination buttons should work and you should
-be able to go back using the browsers back button.
-
-
-Toolbar
--------
-Below the title "Hours List"the List currently renders a paragraph with the Create button:
-```javascript jsx
-        <p>
-          <Link to="create" className="btn btn-primary">
-            <FormattedMessage id="hours.create" defaultMessage="Create"/>
-          </Link>
-        </p>
-```
-
-In order to show the Search Form replace this by the following toolbar:
+To render the (invisible) ListTool replace the paragraph with the Link to "create" by:
 ```javascript jsx
         <div className="toolbar">
-          <SearchTool
+          <ListTool
             query={this.props.location.search}
             list={this.list.bind(this)}
-            history={this.props.history}
           />
           <div className="toolbar-buttons form-group">
             <Link to="create" className="btn btn-primary">
-              <FormattedMessage id="hours.create" defaultMessage="Create"/>
+              <FormattedMessage id="employee.create" defaultMessage="Create"/>
             </Link>
           </div>
         </div>
 ```
 
-As you can see instead of the SearchForm a SearchTool is included. 
-This way all the plumming that is required to control the Form and the
-searching can be kept outside of the List component. The only code that 
-is needed in the List component is the list function that is called
-by the SearchTool in order to pass the values from the form and
-the query for the api:
+Finally add the onClick to the Pagination component in the render method:
 ```javascript jsx
-list(values, apiQuery) {
-    this.values = values;
-    this.props.list("/hours?" + apiQuery);
+        <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)} />
+```
+
+Test the Employee list and its pagination buttons.
+
+
+Sort Headers
+------------
+Sorting the table by a single click on a table column header seems simple, 
+but it gets more complicated when the second click on the header should reverse 
+the sort. And it would be nice to see in wich direction the table is actually sorted
+by the values of which column, so for a header there is the choice of showing one of two icons or 
+no icon at all. 
+
+Furthermore if the user has just arrived on the page and not yet clicked
+on any column header, it may already be sorted by default. It would be nice it that 
+order is the same as the order if a column is clicked, the column shows the
+right icon too. And when the column is clicked, reverses the default order.
+
+All this functionality is pritty much the same for each column header, so its
+typically something for a component. The component would need to know 
+- the current order. This will be present as a nested object in the current values of the List.
+- how to order. This object will replace the nested object in the current values of the List.
+- Wheather how this column orders is the default ordering
+
+Create a file client/src/components/common/ThSort.js
+with the following content:
+```javascript jsx
+import React from 'react';
+import isEqual from "lodash/isEqual";
+import mapValues from "lodash/mapValues";
+
+const icons = [
+  <span className="fa fa-angle-up" aria-hidden="true"/>,
+  <span className="fa fa-angle-down" aria-hidden="true"/>
+];
+
+/**
+ * @param {} props
+ *   order {} current sorting order
+ *   orderBy {} How to order (reverse if already ordered like this)
+ *   isDefault boolean Wheather orderBy is the default ordering
+ * @returns {*} Table header with onClick and eventual sort direction icon
+ * @constructor
+ */
+export default function ThSort(props) {
+  const { order, orderBy, isDefault=false} = props;
+  const orderByKeys = Object.keys(orderBy);
+  const orderByIcon = orderBy[orderByKeys[0]].toLowerCase() === "asc" ? 0 : 1;
+  const reverseOrderBy = reverseOrder(orderBy);
+  let icon = null;
+  let clickedOrdersBy = orderBy;
+  if (order) {
+    if (isEqual(Object.keys(order), Object.keys(orderBy))) {
+      if (isEqual(order, orderBy)) {
+        icon = icons[orderByIcon];
+        clickedOrdersBy = reverseOrderBy;
+      }
+      if (isEqual(order, reverseOrderBy)) {
+        icon = icons[Math.abs(orderByIcon-1)]; // reverseOrderByIcon
+        clickedOrdersBy = orderBy;
+      }
+    }
+  } else if (isDefault) {
+    icon = icons[orderByIcon];
+    clickedOrdersBy = reverseOrderBy;
+  }
+  return (
+    <th  className="sort" onClick={e=>props.onClick(clickedOrdersBy)}><span>{props.children}</span>{icon}</th>
+  );
+}
+
+function reverseOrder(orderBy) {
+  return mapValues(orderBy, value =>
+      value.toLowerCase() === "asc" ? "desc" : "asc"
+  );
+}
+```
+With the ThSort component comes a little addition to client/src/main.css:
+```css
+th .fa-sort-down, th .fa {
+    margin-left: 5px;
+}
+```
+
+Sorting the Employee list
+-------------------------
+Import the component in the Employee list:
+```javascript jsx
+import ThSort from "../common/ThSort";
+```
+
+When the ThSort is clicked it will call a function. Add this to the List component:
+```javascript jsx
+  /**
+   * Call back for sort headers
+   * @param {} order
+   */
+  order(order) {
+    this.values.order = order;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
   }
 ```
 
-The above method replaces the lifecycle methods componentDidMount
-and componentDidUpdate. Please remove them from the List component.
-
-
-SearchTool
-----------
-Create a file SearchTool.js in the client/src/components/hours folder with
-the following code:
+Because it is simpeler, start with replacing the second column header:
 ```javascript jsx
-import React, { Component } from 'react';
-import PropTypes from "prop-types";
-import {buildQuery, parseQuery} from "../../utils/dataAccess";
-import SearchForm from "./SearchForm";
-import isEqual from 'lodash/isEqual';
-import get from 'lodash/get';
+              <ThSort orderBy={ {"function": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.function" default="function"/>
+              </ThSort>
+```
 
-class SearchTool extends Component {
+The first colomn contains the labels of Employees. These are made up from lastName and fistName, so the first
+column header needs to sort by two properties:
+```javascript jsx
+              <ThSort orderBy={ {"lastName": "asc", "firstName": "asc"} }  isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.item" default="Employee"/>
+              </ThSort>
+```
+Furthermore, lastName: "asc", firstName: "asc" is the default order of Employees, specified in api/src/entities.Employee.php.
+But the ThSort does not know that, it has to be told by the property isDefault={true}.
+
+The last two columns are pritty much like the first one:
+```javascript jsx
+              <ThSort orderBy={ {"birthDate": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.birthDate" default="birthDate"/>
+              </ThSort>
+              <ThSort orderBy={ {"arrival": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.arrival" default="arrival"/>
+              </ThSort>
+
+```
+
+Test the Employee list column headers and its pagination buttons.
+
+Sorting the Hours list
+----------------------
+
+Import the component in the Hours list:
+```javascript jsx
+import ThSort from "../common/ThSort";
+```
+
+When the ThSort is clicked it will call a function. Add this to the List component:
+```javascript jsx
+  /**
+   * Call back for sort headers
+   * @param {} order
+   */
+  order(order) {
+    this.values.order = order;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
+  }
+```
+
+Replace the column headers by:
+```javascript jsx
+              <ThSort orderBy={ {"start": "desc"} } isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.start" defaultMessage="start"/>
+              </ThSort>
+              <th>
+                <FormattedMessage id="hours.day" defaultMessage="day"/>
+              </th>
+              <ThSort orderBy={ {"description": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.description" defaultMessage="description"/>
+              </ThSort>
+              <ThSort orderBy={ {"nHours": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.nHours" defaultMessage="nHours"/>
+              </ThSort>
+              <ThSort orderBy={ {"employee.lastName": "asc", "employee.firstName": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="hours.employee" defaultMessage="employee"/>
+              </ThSort>
+              <th colSpan={2} />
+```
+Notice that ordering by properties on a related object is NOT specified by a nested object like:
+```javascript jsx
+{"employee {lastName": "asc", "firstName": "asc"} }
+```
+instead a flat object with paths as keys is used:
+```javascript jsx
+{"employee.lastName": "asc", "employee.firstName": "asc"}
+```
+
+Test the Hours list column headers, pagination buttons and search form. The sort order should be retained when
+the search is changed, but the pagination should be reset.
+
+SimpleSearch
+------------
+
+SimpleSearch allows the user to type all terms in a single input. 
+It searches each term in all properties specified, combining per term the resulting query expressions through OR,
+but combining the terms through AND. For an entity to be found it must contain all 
+search terms but it does not matter in which of the properties specified.
+
+In the api branche of this chapter a new filter class was added that implements this, 
+and an @ApiFilter annotation was added to entity class Employee that makes it react
+to query parameter "search". 
+
+To let the user use this the Employee list component's ListTool needs to be replaced
+by a SearchTool that contains a form with a single text input. The SearchTool can inherit
+the retrieval of values from the query string and calling back the List component from
+ListTool. Create a new file client/src/components/employee/SearchTool.js with the following content:
+```javascript jsx
+import React from 'react';
+import ListTool from "../common/ListTool";
+import PropTypes from "prop-types";
+import {buildQuery} from "../../utils/dataAccess";
+import {FormattedMessage} from "react-intl";
+
+class SearchTool extends ListTool {
   static propTypes = {
     query: PropTypes.string,
     list: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired
   };
 
-  values;
+  searchInput;
 
-  componentDidMount() {
-    this.valuesFromQuery();
-    this.props.list(this.values, this.apiQuery());
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.query !== prevProps.query) {
-      this.valuesFromQuery();
-      this.props.list(this.values, this.apiQuery());
-    }
-  }
-
-  apiQuery() {
-    const {page, description, employee, nHours, start} = this.values;
-    const req = {};
-
-    if (page) {
-      req.page = page;
-    }
-    if (description) {
-      req.description = description;
-    }
-    if (employee) {
-      if (employee.id) {
-        // need to strip /employees/
-        req["employee.id"] = employee.id.substring(11);
-      }
-      if (employee.function) {
-        req["employee.function"] = employee.function;
-      }
-    }
-    if (nHours) {
-      req.nHours = {gte: nHours-0.05, lt: nHours+0.05};
-    }
-    if (start) {
-      // convert local date to UTC after & before
-      const y =  parseInt(start.substring(0, 4), 10);
-      const m = parseInt(start.substring(5, 7), 10) - 1;
-      const d = parseInt(start.substring(8, 10), 10);
-      req.start = {
-        after: new Date(y, m, d, 0, 0, 0).toISOString(),
-        before: new Date(y, m, d, 23, 59, 59).toISOString()
-      }
-    }
-    return buildQuery(req);
-  }
-
-  shouldProcessChange(values, oldValues) {
-    if (get(values, 'employee.id') !== get(oldValues, 'employee.id')) return true;
-    if (values.start !== oldValues.start
-      && (!values.start || values.start.substring(0, 4) > "1900")
-    ) return true;
-    return false;
-  }
-
-  /**
-   * Set values from the query string
-   */
-  valuesFromQuery() {
-    this.values = parseQuery(this.props.query);
-    if (this.values.nHours)
-      this.values.nHours = parseFloat(this.values.nHours);
-  }
-
-  /**
-   * Event handler for changes in the search form.
-   * Reset page.
-   * Only process changes from fields that do not react to Enter key.
-   * @param {} values
-   */
-  formChange(values) {
-    if (this.shouldProcessChange(values, this.values)) {
-      values.page=undefined;
-      this.props.history.push(
-        "?" + buildQuery(values)
-      );
-    }
+  apiRequest() {
+    const req = super.apiRequest();
+    req.search = this.values.search;
+    return req;
   }
 
   /**
    * Event handler for submission of the search form.
    * If values have changed, reset page and push query to history.
-   * @param {} values
+   * @param {} e event from form submit
    */
-  formSubmit(values) {
-    if (isEqual(values, this.values)) return;
+  formSubmit(e) {
+    e.preventDefault();
 
-    values.page=undefined;
+    if (this.searchInput.value === this.values.search) return;
+
+    this.values.search = this.searchInput.value;
+    this.values.page=undefined;
     this.props.history.push(
-      "?" + buildQuery(values)
+      "?" + buildQuery(this.values)
     );
   }
 
   render() {
     return (
-      <SearchForm
-        onSubmit={values => this.formSubmit(values)}
-        onChange={values => this.formChange(values)}
-        initialValues={ this.values }
-      />
+      <form className="search" onSubmit={this.formSubmit.bind(this)}>
+        <div className={`form-group`}>
+          <input type="text" name="search" defaultValue={this.values.search} className="form-control" ref={ref=>this.searchInput=ref} id="search_employees_search"/>
+        </div>
+        <button type="submit" className="btn btn-success">
+          <FormattedMessage id="submit" defaultMessage="Submit"/>
+        </button>
+      </form>
     );
   }
 }
 
 export default SearchTool;
 ```
+The form is so simple that it would be overkill to use Redux Forms. An uncontrolled text input 
+is used because for this purpose it makes the form behave more like a form using Redux Forms: 
+The internal state of the form is separate from the state of the SearchTool, only if the
+form is submitted the onSubmit event handler method 'formSubmit'on the SearchTool 
+processes the state of the input into a new query string and pushes it on the history.
 
-Starting at the bottom: The tool only renders the SearchForm that you 
-created earlier. If the form is submitted the values are passed to the 
-formSubmit method. This method clears the page value to allways show
-the first page of a new search result. Then it pushes an uri with a 
-query string from the values on to the history.
-
-In reaction to this React will call the lifecylce method componentDidUpdate:
+To use the SearchTool in the Employee List the import of the ListTool needs to be replaced by:
 ```javascript jsx
-componentDidUpdate(prevProps) {
-    if (this.props.query !== prevProps.query) {
-      this.valuesFromQuery();
-      this.props.list(this.values, this.apiQuery());
-    }
-  }
+import SearchTool from "./SearchTool";
 ```
-This method is much like the corrensponding method of the List component.
-If the query string has changed, it also sets the values property, but this 
-is done by valuesFromQuery method:
+And in the render method the ListTool component should be replaced by:
 ```javascript jsx
-  /**
-   * Set values from the query string
-   */
-  valuesFromQuery() {
-    this.values = parseQuery(this.props.query);
-    if (this.values.nHours)
-      this.values.nHours = parseFloat(this.values.nHours);
-  }
-```
-Of course this method starts with parsing the query string, but it 
-adds an application specific detail: the value of nHours is parsed as a float,
-so that the SearchForm gets what it expects.
-
-Back to the lifecycle method: It passes the values to the List component
-together with a query string for the api. This is how the query string is created:
-```javascript jsx
-  apiQuery() {
-    const {page, description, employee, nHours, start} = this.values;
-    const req = {};
-
-    if (page) {
-      req.page = page;
-    }
-    if (description) {
-      req.description = description;
-    }
-    if (employee) {
-      if (employee.id) {
-        // need to strip /employees/
-        req.employee = employee.id.substring(11);
-      }
-      if (employee.function) {
-        req["employee.function"] = employee.function;
-      }
-    }
-    if (nHours) {
-      req.nHours = {gte: nHours-0.05, lt: nHours+0.05};
-    }
-    if (start) {
-      // convert local date to UTC after & before
-      const y =  parseInt(start.substring(0, 4), 10);
-      const m = parseInt(start.substring(5, 7), 10) - 1;
-      const d = parseInt(start.substring(8, 10), 10);
-      req.start = {
-        after: new Date(y, m, d, 0, 0, 0).toISOString(),
-        before: new Date(y, m, d, 23, 59, 59).toISOString()
-      }
-    }
-    return buildQuery(req);
-  }
-```
-
-There is one more method that handles a form event:
-```javascript jsx
-  /**
-   * Event handler for changes in the search form.
-   * Reset page.
-   * Only process changes from fields that do not react to Enter key.
-   * @param {} values
-   */
-  formChange(values) {
-    if (this.shouldProcessChange(values, this.values)) {
-      values.page=undefined;
-      this.props.history.push(
-        "?" + buildQuery(values)
-      );
-    }
-  }
+          <SearchTool
+            query={this.props.location.search}
+            list={this.list.bind(this)}
+            history={this.props.history}
+          />
 
 ```
-Instead of allways updating the list, this method ignores
-character level changes to the description and nHours field.
-Processing changes for each character is nice for a search suggestion
-dropdown, but the Search Form does not have one. The list 
-holds much more information then a earch suggestion
-dropdown, and it is not directly relevant to the task the
-user is performing: typing a search term. It is therefore better
-to wait for the user to press Enter so that the form is submitted. 
+Notify that the component has an extra property 'history'.
 
-But not with all fields the Enter key submits the form. 
-The following method is used to decide if a change should
-be processed:
-```javascript jsx
-  shouldProcessChange(values, oldValues) {
-    if (get(values, 'employee.id') !== get(oldValues, 'employee.id')) return true;
-    if (values.start !== oldValues.start
-      && (!values.start || values.start.substring(0, 4) > "1900")
-    ) return true;
-    return false;
-  }
-```
+You can not test the Employee list. Sorting should
+still work. If the form is submitted the Sorting should remain the 
+same. If the Soring is changed the search input should not change
+and the same search should be performed.
 
-You can now test the application. Its layout needs impovement,
-but each of the search fields should work to
-change the list and they should all work together through AND.
-The page buttons should only change the page. When the 
-form is changed and submitted you should get the first page.
-
-You may have noticed that if the search result fits on a single
-page the pagination buttons are present but all disabled. This is not
-consistent with the Employee list, where they disappear when 
-all Employees fit on the first page. In order to make the 
-buttons disappear instead, add the following to client/src/components/common/Pagination.js
-above the return statement:
-```javascript jsx
-    if (first===undefined && last===undefined) return null;
-
-```
-The buttons should now disappear as expected.
-
-Style 
------
-
-To make the form fields smaller and display in line, and to make the
-submit button disappear (like in the admin interface), add the following
-to client/src/main.css:
-```css
-.search .btn-success {
-    display: none;
-}
-.search .form-group {
-    display: inline-block;
-    width: 180px;
-    vertical-align: top;
-}
-.search .form-control {
-    display: block;
-    width: 98%;
-}
-.search .form-control-label {
-    width: 98%;
-    display: block;
-}
-.search, .toolbar-buttons {
-    display: table-cell;
-    vertical-align: bottom;
-}
-.toolbar-buttons {
-    padding-left: 5px;
-    padding-bottom: 1rem;
-}
-```
-The form should now look like [this](/resources/HoursSearch.png). 
+Be aware that the search includes Employee properties that are
+not visible in the list. For example if you search for '9722'
+it should find Eden, Nicky by its zipcode. If you think this 
+is counter intuitive you could add some columns to the page and/or
+remove some properties from the @ApiFilter annotation on the
+Employee entity class.
 
 Scaffolding your own application
 --------------------------------
-Templates that where adapted for the use a search tool as well as sorting like is
-described in chapter 6 are available in [branch tutorial-chapter6 of
-metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter6).
-They are provided for scaffolding your own application 
-(after scaffolding you still need to make some adaptations manually).
+Templates that where adapted for the use a list- or search tool as well as sorting are available 
+in [branch tutorial-chapter6 of metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter6).
+They are provided for scaffolding your own application. The scaffolded code does not include simple search.
 
 Data about the filters offered by the api is currently not included in the JSON-LD documentation
-generated by api platform that is used by the client generator. Therefore the 
-client generator can only scaffold a search tool for all immediate properties. Because 
-read-only properties are often not persistent, the writable properties are used.
-These are the same properties that are used to generate the Form component.
+generated by api platform that is used by the client generator. Therefore the application
+generator scaffolds sort headers for all columns. The application developer
+is expected to correct this manually. This also includes setting ThSort property "isDefault"
+to true on the column whose orderBy is the default sort order.
+
+For the same reason the client generator can only scaffold a search tool and search form for all
+immediate properties. Because read-only properties are often not persistent, the writable properties are used.
 
 Because of this the application developer probably needs to adapt the search tool and
-form to make it work properly. Therefore the search tool is not used by default 
+search form to make it work properly. Therefore the search tool is not used by default 
 in the scaffolded List components. 
-

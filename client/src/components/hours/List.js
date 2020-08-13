@@ -7,6 +7,8 @@ import {FormattedMessage} from "react-intl";
 import * as defined from '../common/intlDefined';
 import EntityLinks from '../common/EntityLinks';
 import Pagination from "../common/Pagination";
+import SearchTool from "./SearchTool";
+import {buildQuery} from "../../utils/dataAccess";
 
 class List extends Component {
   static propTypes = {
@@ -19,23 +21,26 @@ class List extends Component {
     reset: PropTypes.func.isRequired
   };
 
-  componentDidMount() {
-    this.props.list(
-      this.props.match.params.page &&
-        decodeURIComponent(this.props.match.params.page)
-    );
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.match.params.page !== prevProps.match.params.page)
-      this.props.list(
-        this.props.match.params.page &&
-          decodeURIComponent(this.props.match.params.page)
-      );
-  }
+  values = {};
 
   componentWillUnmount() {
     this.props.reset(this.props.eventSource);
+  }
+
+  list(values, apiQuery) {
+    this.values = values;
+    this.props.list("/hours?" + apiQuery);
+  }
+
+  /**
+   * Event handler for pagination buttons
+   * @param string page (numeric)
+   */
+  page(page) {
+    this.values.page = page;
+    this.props.history.push(
+      "?" + buildQuery(this.values)
+    );
   }
 
   render() {
@@ -55,11 +60,18 @@ class List extends Component {
           <div className="alert alert-danger">{this.props.error}</div>
         )}
 
-        <p>
-          <Link to="create" className="btn btn-primary">
-            <FormattedMessage id="hours.create" defaultMessage="Create"/>
-          </Link>
-        </p>
+        <div className="toolbar">
+          <SearchTool
+            query={this.props.location.search}
+            list={this.list.bind(this)}
+            history={this.props.history}
+          />
+          <div className="toolbar-buttons form-group">
+            <Link to="create" className="btn btn-primary">
+              <FormattedMessage id="hours.create" defaultMessage="Create"/>
+            </Link>
+          </div>
+        </div>
 
         <table className="table table-responsive table-striped table-hover">
           <thead>
@@ -108,7 +120,7 @@ class List extends Component {
           </tbody>
         </table>
 
-        <Pagination retrieved={this.props.retrieved} />
+        <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)}/>
       </div>
     );
   }

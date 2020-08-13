@@ -69,3 +69,56 @@ export function extractHubURL(response) {
 
   return matches && matches[1] ? new URL(matches[1], ENTRYPOINT) : null;
 }
+
+/**
+ * Build a query string portion for an url from a plain object.
+ * The object may be nested.
+ * Any value typeof "object" except null will be handled as a nested object.
+ * (values like new String("String) or new Number(12) will not be handled correctly)
+ * @param values Plain Object
+ * @param prefix string
+ * @returns string
+ */
+export function buildQuery(values, prefix) {
+  let query = "";
+  for (let key in values) {
+    const value = values[key];
+    if (value) {
+      const param = prefix ? prefix + "[" + key + "]" : key;
+      query += value !== null && typeof value === 'object'
+        ? buildQuery(value, param)
+        : "&" + param + "=" + encodeURIComponent(value);
+    }
+  }
+  return query;
+}
+
+/**
+ * Parses query string portion from uri
+ * @param queryOrUri string with max 1 level of nesting
+ * @returns Plain Object
+ */
+export function parseQuery(queryOrUri) {
+  const pathAndQuery = queryOrUri.split("?");
+  const params = new URLSearchParams(
+    pathAndQuery.length === 1 ? pathAndQuery[0] : pathAndQuery[1]
+  );
+  const values = {};
+  for (let [key, value] of params) {
+    if (!key) continue;
+
+    const pieces = key.split("[");
+    if (pieces.length > 2) {
+      throw new Error("More then 1 level of nesting");
+    }
+    if (pieces.length === 1) {
+      values[key] = value;
+    } else {
+      if (values[pieces[0]] === undefined) {
+        values[pieces[0]] = {};
+      }
+      values[pieces[0]][pieces[1].slice(0, -1)] = value;
+    }
+  }
+  return values;
+}
