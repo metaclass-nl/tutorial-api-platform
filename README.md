@@ -1,11 +1,11 @@
 <h1>Tutorial and for API Platform</h1>
 
-[API Platform](https://api-platform.com) is an extremely powerfull web framework, but i's aproach to application 
+[API Platform](https://api-platform.com) is a very powerfull web framework, but i's aproach to application 
 development is still revolutionary: 
 Instead of developing your own controllers, services and a user interface on top of 
 an existing framework, you only supply the domain classes (Entities) and the framework
 generates the first version of the application. Then you then you adapt 
-(override, specialize, extend) it to suit your needs. 
+(extend, override) it to suit your needs. 
 
 With proper training this approach gives high productivity and great flexibility,
 but is tends to have a steep leaning curve. Api platform is quite well documented, 
@@ -23,14 +23,14 @@ what you have learnt into use for scaffolding your own application.
 
 Chapters and branches
 ---------------------
-1. Employee base [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter1-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter1-react) 
-2. Hours registration [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter2-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter2-react)
-3. Localization and Internationalization [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter3-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter3-react)
-4. Labels and Entity Select [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter4-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter4-react)
-5. Search [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter5-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter5-react)
-6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter6-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter6-react)
-7. Authentication (JWT) [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter7-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter7-react)
-8. Authorization (Under development) [api](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter8-api) [react](https://github.com/metaclass-nl/api-platform-tutorial/tree/chapter8-react)
+1. Employee base [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) 
+2. Hours registration [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react)
+3. Localization and Internationalization [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react)
+4. Labels and Entity Select [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react)
+5. Search [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react)
+6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react)
+7. Authentication (JWT) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
+8. Authorization (Under development) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
 
 Each branche builds on top of the previous one of the same type. 'react' Branches
 also contain the code from the corresponding 'api' branch.  
@@ -110,7 +110,7 @@ Install
 -------
 Clone the tutorials repository using git:
 ```shell
-git clone https://github.com/metaclass-nl/api-platform-tutorial.git
+git clone https://github.com/metaclass-nl/tutorial-api-platform.git
 ```
 
 Testing your install
@@ -118,7 +118,7 @@ Testing your install
 You may test the installation following the [instructions on the api platform website](https://api-platform.com/docs/distribution/#installing-the-framework).
 Just skip the part about downloading and extracting the .tar.gz file and go straight to:
 ```shell
-cd api-platform-tutorial
+cd tutorial-api-platform
 docker-compose pull # Download the latest versions of the pre-built images
 docker-compose up -d # Running in detached mode
 ```
