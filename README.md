@@ -408,3 +408,17 @@ Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
 To test the new Entity class point your browser at https://localhost:8443/. 
 When you try out Get /employees the response body should contain the data of the 
 four employees.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter2-api ./api/src/Entity/Employee.php
+```
+will compare your own version of ./api/src/Entity/Employee.php with
+the one of chapter2-api.
+
+After committing your changes check out branch chapter1-react. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) 
+and follow the instructions.
