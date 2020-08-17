@@ -95,3 +95,19 @@ columns address, zipcode, city, and label be removed.
 This will result in the following output on https://localhost/employees/ 
 
 [Employees list](resources/Employees.png)
+
+Next
+----
+
+Let git compare your current code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter2-api ./api/src/Entity/Employee.php
+```
+will compare your own version of ./api/src/Entity/Employee.php with
+the one of chapter2-api.
+
+After committing your changes check out branch chapter2-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) 
+and follow the instructions.
+
