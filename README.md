@@ -18,8 +18,8 @@ Each chapter has one 'api' branche in git and one 'react' branche.
 The 'api' branches only contain api code, the 'react' branches
 contain both api code and react code. 
 
-The tutorial comes with an [extended react client generator](https://github.com/metaclass-nl/client-generator) that puts
-what you have learnt into use for scaffolding your own application.
+In addition to this tutorial an [extended react client generator](https://github.com/metaclass-nl/client-generator) 
+is available that puts what you have learnt into use for scaffolding your own application.
 
 Chapters and branches
 ---------------------
@@ -32,27 +32,32 @@ Chapters and branches
 7. Authentication (JWT) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
 8. Authorization (Under development) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
 
-Each branche builds on top of the previous one of the same type. 'react' Branches
-also contain the code from the corresponding 'api' branch.  
-
+Each branch builds on top of the previous one of the same type. Each 'react' branch
+also contains the code from the corresponding 'api' branch. 
 To see the code resulting from a branch you can check out 
-the next branche of the same type. Or better: let git compare your current 
-code with the branche of the next branch so that you can see the differences right away.  
+the next branche of the same type, or browse it on github. 
+Or better: let git compare your current code with the branche 
+of the next chapter so that you can see the differences right away.  
 
-You can start with any branch by checking it out and following its instructions.
+After installation and testing (see below), normally you would start with 
+checking out branch chapter1-api and point your browser to 
+[the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
+to get a nicely rendered version of its readme. When you are finished
+with the instructions you commit your changes and check out chapter1-react,
+select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
+
+But you can start with any branch by checking it out and following its instructions.
 However, if you skip a chapter you need to restart docker-compose 
-to apply the migrations. When swiching back you may have to migrate back to 
-the last migration in the branch (replace <version number> with the actual number): 
-```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate <version number>
-```
-Then apply the DataFixtures by:
+to apply the migrations. Then apply the DataFixtures by:
 ```shell
 docker-compose exec php bin/console doctrine:fixtures:load
 ```                     
-For a react branche you may need to update yarn:
+For a react branche you may also need to update yarn:
 ```shell
 docker-compose exec client yarn install
+```                     
+Wait for yarn to complete, then:
+```shell
 docker-compose exec client yarn update
 ```                     
 With chapter 4 react and higher if you still get an error on missing react-intl: 
@@ -72,39 +77,16 @@ Required knowledge
 - maybe docker and docker-compose
 You don't need to be an expert in these domains, basic working experience should be enough. 
 
-About the admin interface
--------------------------
-The tutorial contains instructions with respect to the scaffolded React 'client' 
-user interface. The scaffolded React 'client' user interface is simple and insightfull 
-as all the code for the basic CRUD operations is generated as-expected,
-understanding and adapting it just requires common knowledge of ES6, react and redux
-and will add to your general experience with them. 
-
-The 'admin' user interface is based on the abstact user interface [React Admin](https://marmelab.com/react-admin/).
-Experience with [phpPeanuts](http://www.phppeanuts.org/) learns that an abstract
-user interface add considerably to the steepness of the learning curve. 
-Furthermore you will learn mostly about the specifics of React Admin,
-and less about building common applications with ES6, react and redux. 
-
-This doesn't mean the admin user interface is not interesting, it is! But for a smaller 
-audience of more experienced developers who want to get the most out of api platform.
-Therefore branches for the 'admin' user interface are left out for now, maybe they will be added later.
-
 Requirements
 ------------
 The master branche that was checked out when cloning the repository contains
 an allmost unmodified (1) Api Platform Distribution. You need [Docker](https://docs.docker.com/install/) 
 (recent version with docker-compose) to run it. On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/)
- is supported. Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. Docker Machine is not supported out of the box.
+ is supported. Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. 
+ Docker Machine is not supported out of the box.
+ 
+(1) README.md was changed obviously and tutorial branches where added. 
 
-Limitations
------------
-This is a work in progess. Currently everything needs to be re-tested 
-because of the merging of changes from the upstream api platform repository
-
-This tutorial currently only supports the (scaffolded) React client user interface.  
-
-The tutorial does not support installation with Symfony Flex and Composer so you can skip that section 
 
 Install
 -------
@@ -133,18 +115,51 @@ XHR requests will be blocked. You may have to do this every time after you
 have closed the browser. 
 
 To test the admin interface point your browser at https://localhost:444/. You may need to
-make an other security exception.
+make an other security exception for the certificate of the admin interface.
+
+Getting Started
+---------------
+Normally you would start with checking out branch chapter1-api and point your browser to 
+[the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
+to get a nicely rendered version of its readme. When you are finished
+with the instructions you commit your changes and check out chapter1-react,
+select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
+
+About the admin interface
+-------------------------
+The tutorial contains instructions with respect to the scaffolded React 'client' 
+user interface. The scaffolded React 'client' user interface is simple and insightfull 
+as all the code for the basic CRUD operations is generated as-expected,
+understanding and adapting it just requires common knowledge of ES6, react and redux
+and will add to your general experience with them. 
+
+The 'admin' user interface is based on the abstact user interface [React Admin](https://marmelab.com/react-admin/).
+Experience with [phpPeanuts](http://www.phppeanuts.org/) learns that an abstract
+user interface add considerably to the steepness of the learning curve. 
+Furthermore you will learn mostly about the specifics of React Admin,
+and less about building common applications with ES6, react and redux. 
+
+This doesn't mean the admin user interface is not interesting, it is! But for a smaller 
+audience of more experienced developers who want to get the most out of api platform.
+Therefore branches for the 'admin' user interface are left out for now, maybe they will be added later.
+
+Limitations
+-----------
+This is a work in progess and needs more testing.
+
+This tutorial currently only supports the (scaffolded) React client user interface.  
+
+The tutorial does not support installation with Symfony Flex and Composer so you can skip that section 
+
 
 Credits
 -------
 
-The tutorial and examples are copyright (c) [MetaClass](https://www.metaclass.nl/), Groningen, 2019, 2020
+The tutorial and examples are copyright (c) [MetaClass](https://www.metaclass.nl/), Groningen, 2019, 2020.
 
 It is is based on the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
 created by [Kévin Dunglas](https://dunglas.fr). 
 
- 
-(1) README.md was changed obviously. 
 
 Contribution
 ------------
