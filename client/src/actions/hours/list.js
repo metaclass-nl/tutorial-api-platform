@@ -18,6 +18,10 @@ export function success(retrieved) {
   return { type: 'HOURS_LIST_SUCCESS', retrieved };
 }
 
+export function query(query) {
+  return { type: 'HOURS_LIST_QUERY', query };
+}
+
 export function list(page = 'hours') {
   return dispatch => {
     dispatch(loading(true));

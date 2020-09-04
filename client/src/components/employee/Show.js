@@ -18,7 +18,9 @@ class Show extends Component {
     deleteError: PropTypes.string,
     deleteLoading: PropTypes.bool.isRequired,
     deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
+    del: PropTypes.func.isRequired,
+    listQuery: PropTypes.string,
+    isUserAdmin: PropTypes.bool
   };
 
   componentDidMount() {
@@ -71,6 +73,14 @@ class Show extends Component {
               </tr>
             </thead>
             <tbody>
+              {this.props.isUserAdmin && (
+                <tr>
+                  <th scope="row"><FormattedMessage id="employee.user" defaultMessage="user"/></th>
+                  <td>
+                    {item['user'].label}
+                  </td>
+                </tr>
+              )}
               <tr>
                 <th scope="row"><FormattedMessage id="employee.firstName" defaultMessage="firstName"/></th>
                 <td>
@@ -128,7 +138,7 @@ class Show extends Component {
             </tbody>
           </table>
         )}
-        <Link to=".." className="btn btn-primary">
+        <Link to={"../" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list" />
         </Link>
         {item && (
@@ -136,9 +146,11 @@ class Show extends Component {
             <button className="btn btn-warning"><FormattedMessage id="edit" defaultMessage="Edit"/></button>
           </Link>
         )}
-        <button onClick={this.del} className="btn btn-danger">
-          <FormattedMessage id="delete" defaultMessage="Delete"/>
-        </button>
+        {this.props.isUserAdmin && (
+          <button onClick={this.del} className="btn btn-danger">
+            <FormattedMessage id="delete" defaultMessage="Delete"/>
+          </button>
+        )}
       </div>
     );
   }
@@ -152,7 +164,9 @@ const mapStateToProps = state => ({
   eventSource: state.employee.show.eventSource,
   deleteError: state.employee.del.error,
   deleteLoading: state.employee.del.loading,
-  deleted: state.employee.del.deleted
+  deleted: state.employee.del.deleted,
+  listQuery: state.employee.list.query,
+  isUserAdmin: state.login.isUserAdmin
 });
 
 const mapDispatchToProps = dispatch => ({

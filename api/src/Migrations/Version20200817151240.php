@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190927101203 extends AbstractMigration
+final class Version20200817151240 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,8 +22,9 @@ final class Version20190927101203 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SEQUENCE employee_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE employee (id INT NOT NULL, first_name VARCHAR(255) NULL, last_name VARCHAR(255) NOT NULL, function VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, zipcode VARCHAR(255) NULL, city VARCHAR(255) NOT NULL, birth_date DATE NOT NULL, arrival Time NULL, PRIMARY KEY(id))');
+        $this->addSql('ALTER TABLE employee ADD user_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE employee ADD CONSTRAINT FK_5D9F75A1A76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE INDEX IDX_5D9F75A1A76ED395 ON employee (user_id)');
     }
 
     public function down(Schema $schema) : void
@@ -31,7 +32,9 @@ final class Version20190927101203 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('DROP SEQUENCE employee_id_seq CASCADE');
-        $this->addSql('DROP TABLE employee');
+        $this->addSql('CREATE SCHEMA public');
+        $this->addSql('ALTER TABLE employee DROP CONSTRAINT FK_5D9F75A1A76ED395');
+        $this->addSql('DROP INDEX IDX_5D9F75A1A76ED395');
+        $this->addSql('ALTER TABLE employee DROP user_id');
     }
 }

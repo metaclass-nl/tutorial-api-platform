@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/hours/create';
 import {FormattedMessage} from "react-intl";
+import {parseQuery} from "../../utils/dataAccess";
 
 class Create extends Component {
   static propTypes = {
@@ -12,7 +13,9 @@ class Create extends Component {
     loading: PropTypes.bool.isRequired,
     created: PropTypes.object,
     create: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    listQuery: PropTypes.string,
+    userEmployee: PropTypes.object
   };
 
   componentWillUnmount() {
@@ -27,10 +30,18 @@ class Create extends Component {
         />
       );
 
+    const initialValues = {start: new Date().toISOString()};
+    const listValues = parseQuery(this.props.listQuery);
+    if (listValues.employee) {
+      initialValues.employee = listValues.employee.id;
+    }
+    if (this.props.userEmployee) {
+      initialValues.employee = this.props.userEmployee["@id"];
+    }
+
     return (
       <div>
         <h1><FormattedMessage id="hours.new" defaultMessage="New Hours"/></h1>
-
         {this.props.loading && (
           <div className="alert alert-info" role="status">
             <FormattedMessage id="loading" defaultMessage="Loading..."/>
@@ -43,8 +54,8 @@ class Create extends Component {
           </div>
         )}
 
-        <Form onSubmit={this.props.create} values={this.props.item} />
-        <Link to="." className="btn btn-primary">
+        <Form onSubmit={this.props.create} initialValues={initialValues} />
+        <Link to={"./" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
       </div>
@@ -54,7 +65,9 @@ class Create extends Component {
 
 const mapStateToProps = state => {
   const { created, error, loading } = state.hours.create;
-  return { created, error, loading };
+  const listQuery = state.hours.list.query;
+  const { userEmployee } = state.login;
+  return { created, error, loading, listQuery, userEmployee };
 };
 
 const mapDispatchToProps = dispatch => ({

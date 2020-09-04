@@ -12,6 +12,7 @@ export default {
     "employee.hours": "Uren",
     "employee.label": "Naam",
     "employee.label.placeholder": "Toon de entiteit aan de gebruiker in een enkele string",
+    "employee.user": "Gebruiker",
 
     "employee.item": "Medewerker",
     "employee.list": "Lijst van medewerkers",

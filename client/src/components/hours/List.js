@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { list, reset } from '../../actions/hours/list';
+import { list, reset, query } from '../../actions/hours/list';
 import {FormattedMessage} from "react-intl";
 import * as defined from '../common/intlDefined';
 import EntityLinks from '../common/EntityLinks';
@@ -19,7 +19,8 @@ class List extends Component {
     eventSource: PropTypes.instanceOf(EventSource),
     deletedItem: PropTypes.object,
     list: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    isUserAdmin: PropTypes.bool
   };
 
   values = {};
@@ -30,6 +31,7 @@ class List extends Component {
 
   list(values, apiQuery) {
     this.values = values;
+    this.props.query(this.props.location.search);
     this.props.list("/hours?" + apiQuery);
   }
 
@@ -77,6 +79,7 @@ class List extends Component {
             query={this.props.location.search}
             list={this.list.bind(this)}
             history={this.props.history}
+            isUserAdmin={this.props.isUserAdmin}
           />
           <div className="toolbar-buttons form-group">
             <Link to="create" className="btn btn-primary">
@@ -157,12 +160,14 @@ const mapStateToProps = state => {
     eventSource,
     deletedItem
   } = state.hours.list;
-  return { retrieved, loading, error, eventSource, deletedItem };
+  const { isUserAdmin } = state.login;
+  return { retrieved, loading, error, eventSource, deletedItem, isUserAdmin };
 };
 
 const mapDispatchToProps = dispatch => ({
   list: page => dispatch(list(page)),
-  reset: eventSource => dispatch(reset(eventSource))
+  reset: eventSource => dispatch(reset(eventSource)),
+  query: queryString => dispatch(query(queryString))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

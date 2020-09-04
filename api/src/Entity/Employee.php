@@ -20,17 +20,20 @@ use App\Filter\SimpleSearchFilter;
  *     attributes={"order"={"lastName", "firstName"}},
  *     itemOperations={
  *          "get"={
- *              "normalization_context"={"groups"={"employee_get"}}
+ *              "normalization_context"={"groups"={"employee_get"}},
+ *               "security"="is_granted('ROLE_ADMIN') or object.getUser() == user"
  *          },
- *          "put",
- *          "patch",
- *          "delete"
+ *          "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or
+               (object.getUser() == user and previous_object.getUser() == user)"},
+ *          "patch"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or
+               (object.getUser() == user and previous_object.getUser() == user)"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN')" }
  *     },
  *     collectionOperations={
  *         "get"={
  *              "normalization_context"={"groups"={"employee_list"}}
  *          },
- *          "post"
+ *          "post"={"security"="is_granted('ROLE_ADMIN')" }
  *     }
  * )
  * @ApiFilter(OrderFilter::class)
@@ -131,6 +134,13 @@ class Employee
      * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
      */
     private $hours;
+
+    /**
+     * @var User associated with this employee
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @Groups({"employee_get"})
+     */
+    private $user;
 
     public function getId(): int
     {
@@ -307,6 +317,24 @@ class Employee
      */
     function getLabel() {
         return $this->getLastName(). ', '. $this->getFirstName();
+    }
+
+    /**
+     * @return null|User
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param null|User $user
+     * @return Employee
+     */
+    public function setUser(User $user=null): Employee
+    {
+        $this->user = $user;
+        return $this;
     }
 
 }

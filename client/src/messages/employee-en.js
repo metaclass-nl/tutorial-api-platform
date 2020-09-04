@@ -12,6 +12,7 @@ export default {
   "employee.hours": "Hours",
   "employee.label": "Name",
   "employee.label.placeholder": "Represent the entity to the user in a single string",
+  "employee.user": "User",
 
   "employee.item": "Employee",
   "employee.list": "Employee List",

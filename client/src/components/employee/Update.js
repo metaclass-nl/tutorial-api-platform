@@ -22,7 +22,9 @@ class Update extends Component {
     retrieve: PropTypes.func.isRequired,
     update: PropTypes.func.isRequired,
     del: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    listQuery: PropTypes.string,
+    isUserAdmin: PropTypes.bool
   };
 
   componentDidMount() {
@@ -88,14 +90,17 @@ class Update extends Component {
           <Form
             onSubmit={values => this.props.update(item, values)}
             initialValues={item}
+            isUserAdmin={this.props.isUserAdmin}
           />
         )}
-        <Link to=".." className="btn btn-primary">
+        <Link to={"../" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
-        <button onClick={this.del} className="btn btn-danger">
-          <FormattedMessage id="delete" defaultMessage="Delete"/>
-        </button>
+        {this.props.isUserAdmin && (
+          <button onClick={this.del} className="btn btn-danger">
+            <FormattedMessage id="delete" defaultMessage="Delete"/>
+          </button>
+        )}
       </div>
     );
   }
@@ -112,7 +117,9 @@ const mapStateToProps = state => ({
   eventSource: state.employee.update.eventSource,
   created: state.employee.create.created,
   deleted: state.employee.del.deleted,
-  updated: state.employee.update.updated
+  updated: state.employee.update.updated,
+  listQuery: state.employee.list.query,
+  isUserAdmin: state.login.isUserAdmin
 });
 
 const mapDispatchToProps = dispatch => ({

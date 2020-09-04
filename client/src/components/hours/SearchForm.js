@@ -10,7 +10,8 @@ import SelectEntity from '../common/SelectEntity.js';
 class SearchForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string
+    error: PropTypes.string,
+    isUserAdmin: PropTypes.bool
   };
 
   renderField = data => {
@@ -21,27 +22,29 @@ class SearchForm extends Component {
     const intl = getIntl();
     return (
       <form className="search" onSubmit={this.props.handleSubmit}>
-        <Field
-          component={this.renderField}
-          name="employee.id"
-          label=<FormattedMessage id="hours.employee" defaultMessage="employee" />
-          placeholder=""
-          widget={SelectEntity}
-          labelProp="label"
-          fetchUrl="employees?pagination=false"
-          />
+        {this.props.isUserAdmin && (
+          <Field
+            component={this.renderField}
+            name="employee.id"
+            label={<FormattedMessage id="hours.employee" defaultMessage="employee" />}
+            placeholder=""
+            widget={SelectEntity}
+            labelProp="label"
+            fetchUrl="employees?pagination=false"
+            />
+          )}
         <Field
           component={this.renderField}
           name="description"
           type="text"
-          label=<FormattedMessage id="hours.description" defaultMessage="description" />
+          label={<FormattedMessage id="hours.description" defaultMessage="description" />}
           placeholder=""
           />
         <Field
           component={this.renderField}
           name="start"
           type="date"
-          label=<FormattedMessage id="hours.start" defaultMessage="start" />
+          label={<FormattedMessage id="hours.start" defaultMessage="start" />}
           placeholder=""
           format={inputLoc.formatDate}
           normalize={inputLoc.normalizeDate}
@@ -50,7 +53,7 @@ class SearchForm extends Component {
           component={this.renderField}
           name="nHours"
           type="number"
-          label=<FormattedMessage id="hours.nHours" defaultMessage="nHours" />
+          label={<FormattedMessage id="hours.nHours" defaultMessage="nHours" />}
           step="0.1"
           placeholder={ intl.formatMessage({id:"hours.nHours.placeholder", defaultMessage:"Mumber"}) }
           format={inputLoc.formatNumber}
@@ -60,7 +63,7 @@ class SearchForm extends Component {
           component={this.renderField}
           name="employee.function"
           type="text"
-          label=<FormattedMessage id="employee.function" defaultMessage="function" />
+          label={<FormattedMessage id="employee.function" defaultMessage="function" />}
           placeholder=""
           />
         <button type="submit" className="btn btn-success">

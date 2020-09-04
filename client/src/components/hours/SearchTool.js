@@ -13,7 +13,8 @@ class SearchTool extends ListTool {
   static propTypes = {
     query: PropTypes.string,
     list: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    isUserAdmin: PropTypes.bool
   };
 
   apiRequest() {
@@ -101,6 +102,7 @@ class SearchTool extends ListTool {
         onSubmit={values => this.formSubmit(values)}
         onChange={values => this.formChange(values)}
         initialValues={ this.values }
+        isUserAdmin={this.props.isUserAdmin}
       />
     );
   }

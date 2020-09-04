@@ -18,6 +18,10 @@ export function success(retrieved) {
   return { type: 'EMPLOYEE_LIST_SUCCESS', retrieved };
 }
 
+export function query(query) {
+  return { type: 'EMPLOYEE_LIST_QUERY', query };
+}
+
 export function list(page = 'employees') {
   return dispatch => {
     dispatch(loading(true));
