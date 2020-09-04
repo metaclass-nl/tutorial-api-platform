@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { list, reset } from '../../actions/hours/list';
+import { list, reset, query } from '../../actions/hours/list';
 import {FormattedMessage} from "react-intl";
 import * as defined from '../common/intlDefined';
 import EntityLinks from '../common/EntityLinks';
@@ -30,6 +30,7 @@ class List extends Component {
 
   list(values, apiQuery) {
     this.values = values;
+    this.props.query(this.props.location.search);
     this.props.list("/hours?" + apiQuery);
   }
 
@@ -162,7 +163,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   list: page => dispatch(list(page)),
-  reset: eventSource => dispatch(reset(eventSource))
+  reset: eventSource => dispatch(reset(eventSource)),
+  query: queryString => dispatch(query(queryString))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

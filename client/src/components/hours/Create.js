@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/hours/create';
 import {FormattedMessage} from "react-intl";
+import {parseQuery} from "../../utils/dataAccess";
 
 class Create extends Component {
   static propTypes = {
@@ -12,7 +13,8 @@ class Create extends Component {
     loading: PropTypes.bool.isRequired,
     created: PropTypes.object,
     create: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    listQuery: PropTypes.string
   };
 
   componentWillUnmount() {
@@ -26,6 +28,12 @@ class Create extends Component {
           to={`edit/${encodeURIComponent(this.props.created['@id'])}`}
         />
       );
+
+    const initialValues = {start: new Date().toISOString()};
+    const listValues = parseQuery(this.props.listQuery);
+    if (listValues.employee) {
+      initialValues.employee = listValues.employee.id;
+    }
 
     return (
       <div>
@@ -43,8 +51,8 @@ class Create extends Component {
           </div>
         )}
 
-        <Form onSubmit={this.props.create} values={this.props.item} />
-        <Link to="." className="btn btn-primary">
+        <Form onSubmit={this.props.create} initialValues={initialValues} />
+        <Link to={"./" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
       </div>
@@ -54,7 +62,8 @@ class Create extends Component {
 
 const mapStateToProps = state => {
   const { created, error, loading } = state.hours.create;
-  return { created, error, loading };
+  const listQuery = state.hours.list.query;
+  return { created, error, loading, listQuery };
 };
 
 const mapDispatchToProps = dispatch => ({

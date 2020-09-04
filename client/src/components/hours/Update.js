@@ -23,7 +23,8 @@ class Update extends Component {
     retrieve: PropTypes.func.isRequired,
     update: PropTypes.func.isRequired,
     del: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    listQuery: PropTypes.string
   };
 
   componentDidMount() {
@@ -41,7 +42,8 @@ class Update extends Component {
   };
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
+    const listUri = "../" + (this.props.listQuery ? this.props.listQuery : "");
+    if (this.props.deleted) return <Redirect to={listUri} />;
 
     const item = this.props.updated ? this.props.updated : this.props.retrieved;
 
@@ -95,7 +97,7 @@ class Update extends Component {
             initialValues={item}
           />
         )}
-        <Link to=".." className="btn btn-primary">
+        <Link to={listUri} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
         <button onClick={this.del} className="btn btn-danger">
@@ -117,7 +119,8 @@ const mapStateToProps = state => ({
   eventSource: state.hours.update.eventSource,
   created: state.hours.create.created,
   deleted: state.hours.del.deleted,
-  updated: state.hours.update.updated
+  updated: state.hours.update.updated,
+  listQuery: state.hours.list.query
 });
 
 const mapDispatchToProps = dispatch => ({

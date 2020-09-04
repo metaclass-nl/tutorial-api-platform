@@ -73,4 +73,16 @@ export function eventSource(state = null, action) {
   }
 }
 
-export default combineReducers({ error, loading, retrieved, eventSource });
+export function query(state = null, action) {
+  switch (action.type) {
+    case 'EMPLOYEE_LIST_QUERY':
+      return action.query;
+
+    // Do not clear in case of 'EMPLOYEE_LIST_RESET'
+
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ error, loading, retrieved, eventSource, query });

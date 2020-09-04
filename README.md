@@ -316,9 +316,10 @@ import { withRouter } from 'react-router-dom';
 /** Forwards the user to the login page if unauthenticated */
 class AuthController extends React.Component {
   static propTypes = {
-    state: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    loginPath: PropTypes.string
+    loginPath: PropTypes.string,
+    token: PropTypes.string,
+    location: PropTypes.object
   };
 
   componentDidMount() {
@@ -333,7 +334,7 @@ class AuthController extends React.Component {
   handleFetchError(status, json) {
     // alert('Fetch error' + status + ': ' + JSON.stringify(json))
 
-    // forget the token if it is rejected by the api
+    // forget the token if it is rejected
     if (status === 401 && json.message !== "Invalid credentials.")
       this.props.forgetToken();
   }

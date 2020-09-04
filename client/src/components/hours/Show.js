@@ -19,7 +19,8 @@ class Show extends Component {
     deleteError: PropTypes.string,
     deleteLoading: PropTypes.bool.isRequired,
     deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
+    del: PropTypes.func.isRequired,
+    listQuery: PropTypes.string
   };
 
   componentDidMount() {
@@ -37,14 +38,15 @@ class Show extends Component {
   };
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
+    const listUri = "../" + (this.props.listQuery ? this.props.listQuery : "");
+    if (this.props.deleted) return <Redirect to={listUri} />;
 
     const item = this.props.retrieved;
 
     return (
       <div>
         <h1><FormattedMessage
-          id="hours.showX"
+          id="hours.show"
           defaultMessage="Show {start} {description}"
           values={ {start: <defined.FormattedDateTime value={item && item['start']} />, description: item && item['description']} }
         /></h1>
@@ -119,7 +121,7 @@ class Show extends Component {
             </tbody>
           </table>
         )}
-        <Link to=".." className="btn btn-primary">
+        <Link to={listUri} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list" />
         </Link>
         {item && (
@@ -143,7 +145,8 @@ const mapStateToProps = state => ({
   eventSource: state.hours.show.eventSource,
   deleteError: state.hours.del.error,
   deleteLoading: state.hours.del.loading,
-  deleted: state.hours.del.deleted
+  deleted: state.hours.del.deleted,
+  listQuery: state.hours.list.query
 });
 
 const mapDispatchToProps = dispatch => ({

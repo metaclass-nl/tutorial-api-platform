@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { list, reset } from '../../actions/employee/list';
+import { list, reset, query } from '../../actions/employee/list';
 import {FormattedMessage} from "react-intl";
 import * as defined from '../common/intlDefined';
 import Pagination from "../common/Pagination";
@@ -18,7 +18,8 @@ class List extends Component {
     eventSource: PropTypes.instanceOf(EventSource),
     deletedItem: PropTypes.object,
     list: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    query: PropTypes.func.isRequired
   };
 
   values = {};
@@ -29,6 +30,7 @@ class List extends Component {
 
   list(values, apiQuery) {
     this.values = values;
+    this.props.query(this.props.location.search);
     this.props.list("/employees?" + apiQuery);
   }
 
@@ -99,7 +101,7 @@ class List extends Component {
               <ThSort orderBy={ {"arrival": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
                 <FormattedMessage id="employee.arrival" default="arrival"/>
               </ThSort>
-              <th colSpan={2} />
+              <th colSpan={3} />
             </tr>
           </thead>
           <tbody>
@@ -132,6 +134,12 @@ class List extends Component {
                       <span className="sr-only"><FormattedMessage id="edit" defaultMessage="Edit"/></span>
                     </Link>
                   </td>
+                  <td>
+                    <Link to={`../hours/?employee[id]=${encodeURIComponent(item['@id'])}`}>
+                      <span className="fa fa-clock" aria-hidden="true" />
+                      <span className="sr-only"><FormattedMessage id="employee.hours" defaultMessage="Hours"/></span>
+                    </Link>
+                  </td>
                 </tr>
               ))}
           </tbody>
@@ -157,7 +165,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   list: page => dispatch(list(page)),
-  reset: eventSource => dispatch(reset(eventSource))
+  reset: eventSource => dispatch(reset(eventSource)),
+  query: queryString => dispatch(query(queryString))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);
