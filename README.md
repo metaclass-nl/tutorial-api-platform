@@ -252,6 +252,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
+    public const HORLINGS_REFERENCE = 'User_Horlings';
+    public const PETERS_REFERENCE = 'User_Peters';
+    public const EDEN_REFERENCE = 'User_Eden';
+    public const JACOBS_REFERENCE = 'User_Jacobs';
+
     private $passwordEncoder;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
@@ -271,14 +276,16 @@ class UserFixtures extends Fixture
                 $entity,
                 'j.horlings_password'));
         $manager->persist($entity);
+        $this->addReference(self::HORLINGS_REFERENCE, $entity);
 
         $entity = new User();
         $entity->setEmail('d.peters@leiden.nl')
-            ->setRoles(['ROLE_ADMINISTRATOR'])
+            ->setRoles(['ROLE_ADMIN'])
             ->setPassword($this->passwordEncoder->encodePassword(
                 $entity,
                 'd.peters_password'));
         $manager->persist($entity);
+        $this->addReference(self::PETERS_REFERENCE, $entity);
 
         $entity = new User();
         $entity->setEmail('n.eden@groningen.nl')
@@ -286,6 +293,7 @@ class UserFixtures extends Fixture
                 $entity,
                 'n.eden_password'));
         $manager->persist($entity);
+        $this->addReference(self::EDEN_REFERENCE, $entity);
 
         $entity = new User();
         $entity->setEmail('s.jacobs@groningen.nl')
@@ -293,6 +301,7 @@ class UserFixtures extends Fixture
                 $entity,
                 's.jacobs_password'));
         $manager->persist($entity);
+        $this->addReference(self::JACOBS_REFERENCE, $entity);
 
         $manager->flush();
     }
