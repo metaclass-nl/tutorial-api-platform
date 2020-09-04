@@ -18,7 +18,8 @@ class Show extends Component {
     deleteError: PropTypes.string,
     deleteLoading: PropTypes.bool.isRequired,
     deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
+    del: PropTypes.func.isRequired,
+    listQuery: PropTypes.string
   };
 
   componentDidMount() {
@@ -128,7 +129,7 @@ class Show extends Component {
             </tbody>
           </table>
         )}
-        <Link to=".." className="btn btn-primary">
+        <Link to={"../" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list" />
         </Link>
         {item && (
@@ -152,7 +153,8 @@ const mapStateToProps = state => ({
   eventSource: state.employee.show.eventSource,
   deleteError: state.employee.del.error,
   deleteLoading: state.employee.del.loading,
-  deleted: state.employee.del.deleted
+  deleted: state.employee.del.deleted,
+  listQuery: state.employee.list.query
 });
 
 const mapDispatchToProps = dispatch => ({

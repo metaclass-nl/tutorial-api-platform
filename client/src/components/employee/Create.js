@@ -12,7 +12,8 @@ class Create extends Component {
     loading: PropTypes.bool.isRequired,
     created: PropTypes.object,
     create: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
+    listQuery: PropTypes.string,
   };
 
   componentWillUnmount() {
@@ -43,8 +44,8 @@ class Create extends Component {
           </div>
         )}
 
-        <Form onSubmit={this.props.create} values={this.props.item} />
-        <Link to="." className="btn btn-primary">
+        <Form onSubmit={this.props.create} values={this.props.item} isUserAdmin={true}/>
+        <Link to={"./" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
           <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
       </div>
@@ -54,7 +55,8 @@ class Create extends Component {
 
 const mapStateToProps = state => {
   const { created, error, loading } = state.employee.create;
-  return { created, error, loading };
+  const listQuery = state.employee.list.query;
+  return { created, error, loading, listQuery };
 };
 
 const mapDispatchToProps = dispatch => ({

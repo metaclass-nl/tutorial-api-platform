@@ -8,9 +8,10 @@ import { withRouter } from 'react-router-dom';
 /** Forwards the user to the login page if unauthenticated */
 class AuthController extends React.Component {
   static propTypes = {
-    state: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    loginPath: PropTypes.string
+    loginPath: PropTypes.string,
+    token: PropTypes.string,
+    location: PropTypes.object
   };
 
   componentDidMount() {

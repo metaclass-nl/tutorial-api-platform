@@ -17,7 +17,7 @@ class SelectEntity extends Component {
   };
 
   state = {};
-  mounted = false
+  mounted = false;
 
   componentDidMount() {
     this.mounted = true;
@@ -43,7 +43,7 @@ class SelectEntity extends Component {
       return null;
     }
 
-    var items = this.state.entities.map(item => (
+    const items = this.state.entities.map(item => (
       <option key={item["@id"]} value={item["@id"]}>{item[this.props.labelProp]}</option>
     ));
     if (!this.props.required || this.props.input.value === "") {
