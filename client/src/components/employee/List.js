@@ -67,7 +67,7 @@ class List extends Component {
               <th><FormattedMessage id="employee.function" default="function"/></th>
               <th><FormattedMessage id="employee.birthDate" default="birthDate"/></th>
               <th><FormattedMessage id="employee.arrival" default="arrival"/></th>
-              <th colSpan={2} />
+              <th colSpan={3} />
             </tr>
           </thead>
           <tbody>
@@ -98,6 +98,12 @@ class List extends Component {
                     <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-pencil fa-pencil-alt" aria-hidden="true" />
                       <span className="sr-only"><FormattedMessage id="edit" defaultMessage="Edit"/></span>
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`../hours/?employee[id]=${encodeURIComponent(item['@id'])}`}>
+                      <span className="fa fa-clock" aria-hidden="true" />
+                      <span className="sr-only"><FormattedMessage id="employee.hours" defaultMessage="Hours"/></span>
                     </Link>
                   </td>
                 </tr>

@@ -1,5 +1,5 @@
-Chapter 6: Sorting and Simple Search- React client
-==================================================
+Chapter 6: Sorting and Simple Search - React client
+===================================================
 
 The environment is te same as in the chapter5-react branche, except:
 - instructions from README.md of chapter5-react where applied
@@ -80,7 +80,7 @@ Then make the class extend ListTool, remove the values property and
 the methods componentDidMount and componentDidUpdate. Afterwards the Hours
 List should work as it did before.
 
-In the Employee list component Add the imports:
+In the Employee list component add the imports:
 ```javascript jsx
 import {buildQuery} from "../../utils/dataAccess";
 import ListTool from "../common/ListTool";
@@ -127,7 +127,7 @@ Finally add the onClick to the Pagination component in the render method:
         <Pagination retrieved={this.props.retrieved} onClick={page=>this.page(page)} />
 ```
 
-Test the Employee list and its pagination buttons.
+Test the Employee list.
 
 
 Sort Headers
@@ -416,6 +416,86 @@ it should find Eden, Nicky by its zipcode. If you think this
 is counter intuitive you could add some columns to the page and/or
 remove some properties from the @ApiFilter annotation on the
 Employee entity class.
+
+Improving the Back to List buttons
+----------------------------------
+In chapter 5 the Back to List buttons of the Hours components where improved
+so that they take search criteria and pagination into account. The same can be done
+with the Employee component. 
+
+In the employee List component add query to the import of actions/employee/list, resulting in:
+```javascript jsx
+import { list, reset, query } from '../../actions/employee/list';
+```
+
+Add a comma and the following line to the static propTypes object:
+```javascript jsx
+    query: PropTypes.func.isRequired
+```
+
+Add the following line to the list method:
+```javascript jsx
+    this.props.query(this.props.location.search);
+```
+
+To client/src/actions/employee/list.js add the function to create the
+message to dispatch to Redux for the query:
+```javascript jsx
+export function query(query) {
+  return { type: 'EMPLOYEE_LIST_QUERY', query };
+}
+```
+
+And to the corresponding reducers add:
+```javascript jsx
+export function query(state = null, action) {
+  switch (action.type) {
+    case 'EMPLOYEE_LIST_QUERY':
+      return action.query;
+
+    // Do not clear in case of 'EMPLOYEE_LIST_RESET'
+
+    default:
+      return state;
+  }
+}
+```
+and add the function to combineReducers, resulting in:
+```javascript jsx
+export default combineReducers({ error, loading, retrieved, eventSource, query });
+```
+
+To make the Return to List button point to the right page 
+add a comma and the following line to the static propTypes object
+of the employee Create component: 
+```javascript jsx
+  listQuery: PropTypes.string,
+```
+Change the backToList Link to:
+```javascript jsx
+       <Link to={"./" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
+```
+and change the mapStateToProps function to:
+```javascript jsx
+const mapStateToProps = state => {
+  const { created, error, loading } = state.employee.create;
+  const listQuery = state.employee.list.query;
+  return { created, error, loading, listQuery };
+};
+```
+
+You can now test the employee Create component to
+refer back to the List with the last search criteria, sorting and pagination.
+
+Do the same with the employee Show and Update components. The
+mapStateToProps function is a little different, you only need to
+add a comma and:
+```javascript jsx
+  listQuery: state.employee.list.query
+```
+
+You can now test the employee Show and Update components.
+
 
 Scaffolding your own application
 --------------------------------
