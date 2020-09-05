@@ -178,7 +178,7 @@ class SelectEntity extends Component {
   };
 
   state = {};
-  mounted = false
+  mounted = false;
 
   componentDidMount() {
     this.mounted = true;
@@ -204,7 +204,7 @@ class SelectEntity extends Component {
       return null;
     }
 
-    var items = this.state.entities.map(item => (
+    const items = this.state.entities.map(item => (
       <option key={item["@id"]} value={item["@id"]}>{item[this.props.labelProp]}</option>
     ));
     if (!this.props.required || this.props.input.value === "") {
@@ -281,9 +281,9 @@ Now the Redux form Field for employee can be adapted like this:
           placeholder=""
           required={true}
           widget={SelectEntity}
-	  labelProp="label"
+	      labelProp="label"
           fetchUrl="employees?pagination=false"
-          label=<FormattedMessage id="hours.employee" defaultMessage="employee" />
+          label={<FormattedMessage id="hours.employee" defaultMessage="employee" />}
         />
 ```
 Three properties where added to this Field:
