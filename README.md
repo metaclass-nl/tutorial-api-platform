@@ -146,13 +146,13 @@ Then in the render method the button has a title defined like this:
 ```
 Replace it by:
 ```javascript jsx
-                        title=<FormattedMessage id="navigation.toggle" defaultMessage="Toggle navigation"/>
+                        title={<FormattedMessage id="navigation.toggle" defaultMessage="Toggle navigation"/>}
 ```
 You can do the same with the NavLinks, they become:
 ```javascript jsx
-                        <NavLink href="/" content=<FormattedMessage id="navigation.home" defaultMessage="Home"/> />
-                        <NavLink href="/employees/" content=<FormattedMessage id="navigation.employees" defaultMessage="Employees"/> />
-                        <NavLink href="/hours/" content=<FormattedMessage id="navigation.hours" defaultMessage="Hours"/> />
+                        <NavLink href="/" content={<FormattedMessage id="navigation.home" defaultMessage="Home"/>} />
+                        <NavLink href="/employees/" content={<FormattedMessage id="navigation.employees" defaultMessage="Employees"/>} />
+                        <NavLink href="/hours/" content={<FormattedMessage id="navigation.hours" defaultMessage="Hours"/>} />
 ```
 
 This adds the components for the translation to your Navigation component but
@@ -213,7 +213,7 @@ In because of the option of message extraction create a constant intl in the met
 
 Finally replace the FormattedMessage object:
 ```javascript jsx
-                        title=<FormattedMessage id="navigation.toggle" defaultMessage="Toggle navigation"/>
+                        title={<FormattedMessage id="navigation.toggle" defaultMessage="Toggle navigation"/>}
 ```
 by the following function call:
 ```javascript jsx

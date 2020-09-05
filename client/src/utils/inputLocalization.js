@@ -67,7 +67,7 @@ export function  formatDateTime(v) {
  * @returns string normalized as a proper value for api platform
  */
 export function normalizeDateTime(v) {
-    if (!v) return null;
+    if (!v || v.length < 16) return null;
     return new Date(
         parseInt(v.substring(0, 4), 10), parseInt(v.substring(5, 7), 10) - 1,
         parseInt(v.substring(8, 10), 10), parseInt(v.substring(11, 13), 10),
