@@ -25,7 +25,7 @@ class Form extends Component {
           component={this.renderField}
           name="nHours"
           type="number"
-          label=<FormattedMessage id="hours.nHours" defaultMessage="nHours" />
+          label={<FormattedMessage id="hours.nHours" defaultMessage="nHours" />}
           step="0.1"
           placeholder={ intl.formatMessage({id:"hours.nHours.placeholder", defaultMessage:"Mumber"}) }
           required={true}
@@ -36,7 +36,7 @@ class Form extends Component {
           component={this.renderField}
           name="start"
           type="datetime-local"
-          label=<FormattedMessage id="hours.start" defaultMessage="start" />
+          label={<FormattedMessage id="hours.start" defaultMessage="start" />}
           placeholder=""
           required={true}
           format={inputLoc.formatDateTime}
@@ -46,19 +46,19 @@ class Form extends Component {
           component={this.renderField}
           name="onInvoice"
           type="checkbox"
-          label=<FormattedMessage id="hours.onInvoice" defaultMessage="onInvoice" />
+          label={<FormattedMessage id="hours.onInvoice" defaultMessage="onInvoice" />}
           placeholder=""/>
         <Field
           component={this.renderField}
           name="description"
           type="text"
-          label=<FormattedMessage id="hours.description" defaultMessage="description" />
+          label={<FormattedMessage id="hours.description" defaultMessage="description" />}
           placeholder=""
           required={true}/>
         <Field
           component={this.renderField}
           name="employee"
-          label=<FormattedMessage id="hours.employee" defaultMessage="employee" />
+          label={<FormattedMessage id="hours.employee" defaultMessage="employee" />}
           placeholder=""
           required={true}
           widget={SelectEntity}

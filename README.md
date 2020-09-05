@@ -611,6 +611,144 @@ to client/src/main.css:
 ```
 The form should now look like [this](/resources/HoursSearch.png). 
 
+Improving the Back to List buttons and initial values
+-----------------------------------------------------
+The hours List component can now search, but the "Back to list" buttons
+in the hours Create, Show and Update components still refers to
+the top of the full list. To the user this does not really feel like
+going "back" from where he/she came from. This can be solved by
+including the last query string from the list into the buttons uris.
+
+But how to get the query string from the List into the Create, Show and Update components?
+This is a typical job for Redux. It requires an action to dispatch a message 
+and a reducer to store it in Redux. The existing list action takes care of retrieving the list,
+to separate concerns it is better to add a specific action for storing the query string.
+
+To client/src/actions/hours/list.js add the function to create the
+message to dispatch to Redux for the query:
+```javascript jsx
+export function query(query) {
+  return { type: 'EMPLOYEE_HOURS_QUERY', query };
+}
+```
+
+And to the corresponding reducers add:
+```javascript jsx
+export function query(state = null, action) {
+  switch (action.type) {
+    case 'EMPLOYEE_HOURS_QUERY':
+      return action.query;
+
+    // Do not clear in case of 'EMPLOYEE_HOURS_RESET'
+
+    default:
+      return state;
+  }
+}
+```
+and add the function to combineReducers, resulting in:
+```javascript jsx
+export default combineReducers({ error, loading, retrieved, eventSource, query });
+```
+Because of the naming of function "query" this will store the queryString under the name "hours.query" 
+
+In the hours List component add query to the import of actions/hours/list, resulting in:
+```javascript jsx
+import { list, reset, query } from '../../actions/hours/list';
+```
+
+Add a comma and the following line to the static propTypes object:
+```javascript jsx
+    query: PropTypes.func.isRequired
+```
+
+Add the following line to the list method to actually call the action:
+```javascript jsx
+    this.props.query(this.props.location.search);
+```
+
+To make the Return to List button actually point to the right page 
+add a comma and the following line to the static propTypes object
+of the hours Create component: 
+```javascript jsx
+  listQuery: PropTypes.string,
+```
+
+Change the backToList Link to:
+```javascript jsx
+       <Link to={"./" + (this.props.listQuery ? this.props.listQuery : "")} className="btn btn-primary">
+```
+and change the mapStateToProps function to:
+```javascript jsx
+const mapStateToProps = state => {
+  const { created, error, loading } = state.employee.create;
+  const listQuery = state.employee.list.query;
+  return { created, error, loading, listQuery };
+};
+```
+
+You can now test the employee Create component to
+refer back to the List with the last search criteria, sorting and pagination.
+
+Do the same with the hours Show and Update components, but at the top 
+of the render method add:
+```javascript jsx
+const listUri = "../" + (this.props.listQuery ? this.props.listQuery : "");
+```
+Change on the next line the Redirect property to value to {listUri} and
+do the same with the backToList Link tag.
+
+The mapStateToProps function is also a little different, you only need to
+add a comma and:
+```javascript jsx
+  listQuery: state.hours.list.query
+```
+
+You can now test the hours Show and Update components.
+
+The Create component now knows the last query string of 
+the list. It could use that info to initially select an Employee.
+It would also be handy to have the start input set to the current date and time.
+
+To get the employee id from the query string the Create component
+needs to parse the query string. Add the following import:
+```javascript jsx
+import {parseQuery} from "../../utils/dataAccess";
+```
+
+In the render method above the return statement add: 
+```javascript jsx
+    const initialValues = {start: new Date().toISOString()};
+    const listValues = parseQuery(this.props.listQuery);
+    if (listValues.employee) {
+      initialValues.employee = values.employee.id;
+    }
+```
+
+Finally change the Form tag to:
+```javascript jsx
+        <Form onSubmit={this.props.create} initialValues={initialValues} />
+```
+
+You can now test the hours Create component to
+pre-select the employee that was searched for in the list and
+to show the current date and time in the input "start".
+
+Another pre-select can be made from the employee List component. In 
+its render method at the thead tag make the colspan of the last th tag 3.
+Then close to the end of tbody, below the td tag containing the edit link, add:
+```javascript jsx
+                  <td>
+                    <Link to={`../hours/?employee[id]=${encodeURIComponent(item['@id'])}`}>
+                      <span className="fa fa-clock" aria-hidden="true" />
+                      <span className="sr-only"><FormattedMessage id="employee.hours" defaultMessage="Hours"/></span>
+                    </Link>
+                  </td>
+```
+When you test the Employee list there should be a new clock-shaped link for each Employee 
+that leads to the Hours list with the Employee selected so that it shows the Hours of
+that same Employee.
+
 Scaffolding your own application
 --------------------------------
 Templates that where adapted for the use a search tool as well as sorting like is

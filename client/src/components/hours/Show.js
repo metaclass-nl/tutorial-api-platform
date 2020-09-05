@@ -44,7 +44,7 @@ class Show extends Component {
     return (
       <div>
         <h1><FormattedMessage
-          id="hours.showX"
+          id="hours.show"
           defaultMessage="Show {start} {description}"
           values={ {start: <defined.FormattedDateTime value={item && item['start']} />, description: item && item['description']} }
         /></h1>

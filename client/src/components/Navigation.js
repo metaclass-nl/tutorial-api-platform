@@ -50,9 +50,9 @@ class Navigation extends React.Component {
                 </button>
                 <div className={className}>
                     <ul className="navbar-nav mr-auto">
-                        <NavLink href="/" content=<FormattedMessage id="navigation.home" defaultMessage="Home"/> />
-                        <NavLink href="/employees/" content=<FormattedMessage id="navigation.employees" defaultMessage="Employees"/> />
-                        <NavLink href="/hours/" content=<FormattedMessage id="navigation.hours" defaultMessage="Hours"/> />
+                        <NavLink href="/" content={<FormattedMessage id="navigation.home" defaultMessage="Home"/>} />
+                        <NavLink href="/employees/" content={<FormattedMessage id="navigation.employees" defaultMessage="Employees"/>} />
+                        <NavLink href="/hours/" content={<FormattedMessage id="navigation.hours" defaultMessage="Hours"/>} />
                     </ul>
                 </div>
             </nav>
