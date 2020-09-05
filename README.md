@@ -338,6 +338,11 @@ To start the generation from the command prompt:
 ```shell
 docker-compose exec client templates/scaffold.js
 ```
+If you get "Error: Cannot find module" you need to install the required modules:
+```shell
+docker-compose exec client yarn add handlebars handlebars-helpers @api-platform/client-generator
+```
+Then start the generation again.
 
 The templates are also available together with the common components and utils/intlProvider.js and english messages templates in
 [branch tutorial-chapter3 of
