@@ -1,4 +1,4 @@
-<h1>Tutorial and for API Platform</h1>
+<h1>Tutorial API Platform</h1>
 
 [API Platform](https://api-platform.com) is a very powerfull web framework, but i's aproach to application 
 development is still revolutionary: 
