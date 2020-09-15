@@ -31,7 +31,7 @@ Chapters and branches
 6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react)
 7. Authentication (JWT) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
 8. Authorization [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
-9. Report (Under developemnt) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
+9. Report (Under development) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
 
 Each branch builds on top of the previous one of the same type. Each 'react' branch
 also contains the code from the corresponding 'api' branch. 
