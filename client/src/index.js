@@ -21,15 +21,16 @@ import messages from "./messages/all";
 import './main.css';
 import AuthController from './components/common/AuthController';
 import Login from './components/common/Login';
+import Home from './components/daytotalsperemployee/List.js';
 
 
 // Import your reducers and routes here
-import Welcome from './Welcome';
 import employee from './reducers/employee/';
 import employeeRoutes from './routes/employee';
 import hours from './reducers/hours/';
 import hoursRoutes from './routes/hours';
 import login from './reducers/login';
+import daytotalsperemployee from './reducers/daytotalsperemployee';
 
 const history = createBrowserHistory();
 const store = createStore(
@@ -40,6 +41,7 @@ const store = createStore(
         login,
         employee,
         hours,
+        daytotalsperemployee
     }),
     applyMiddleware(routerMiddleware(history), thunk)
 );
@@ -55,7 +57,7 @@ ReactDOM.render(
                     <Navigation/>
                     <div className="mainContainer">
                         <Switch>
-                            <Route path="/" component={Welcome} strict={true} exact={true}/>
+                            <Route path="/" component={Home} strict={true} exact={true}/>
                                 {/* Add your routes here */}
                                 <Route path="/login/" component={Login} strict={true} exact={true}/>
                                 {employeeRoutes}

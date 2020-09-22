@@ -1,8 +1,8 @@
-Chapter 9: Report - React
-=========================
+Chapter 10: The End - React
+===========================
 
-The environment is te same as in the chapter8-react branche, except:
-- instructions from README.md of chapter8-react where applied
-- instructions from README.md of chapter9-api where applied
+The environment is te same as in the chapter9-react branche, except:
+- instructions from README.md of chapter9-react where applied
 
-UNDER CONSTRUCTION
+This chapter does not exists. This branche is only here
+to make available the results of applying the instructions from README.md of chapter9-react

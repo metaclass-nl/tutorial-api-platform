@@ -313,7 +313,7 @@ class Employee
      * Represent the entity to the user in a single string
      * @return string
      * @ApiProperty(iri="http://schema.org/name")
-     * @Groups({"employee_get", "employee_list", "hours_get", "hours_list"})
+     * @Groups({"employee_get", "employee_list", "hours_get", "hours_list", "day_totals_per_employee"})
      */
     function getLabel() {
         return $this->getLastName(). ', '. $this->getFirstName();

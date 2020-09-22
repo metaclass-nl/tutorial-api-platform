@@ -13,9 +13,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Validator\Constraints\CommonUserHoursStartConstraint;
+use App\Model\DayTotalsPerEmployee;
 
 /**
- * Registration of time worked by an Employee on a day
+ * Registration of time worked by an Employee
  *
  * @ApiResource(attributes={
  *     "pagination_items_per_page"=10,
@@ -34,7 +35,15 @@ use App\Validator\Constraints\CommonUserHoursStartConstraint;
  *         "get"={
  *              "normalization_context"={"groups"={"hours_list"}}
  *          },
- *          "post"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"}
+ *         "post"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"},
+ *         "get_day_report"={
+ *             "method"="GET",
+ *             "path"="/hours/dayreport",
+ *             "output"=DayTotalsPerEmployee::class,
+ *             "normalization_context"={
+ *                  "groups"={"day_totals_per_employee"}},
+ *             "pagination_enabled"=false
+ *         }
  *     }
  * )
  * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
