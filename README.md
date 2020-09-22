@@ -90,6 +90,7 @@ class DayTotalsPerEmployee
     }
 
     /** @ApiProperty(identifier=true)
+     * @Groups({"day_totals_per_employee"})
      * @return string
      */
     public function getId()
@@ -279,9 +280,8 @@ class DayTotalsPerEmployeeCollectionDataProvider implements ContextAwareCollecti
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return Hours::class === $resourceClass
-            && $context['operation_type'] = OperationType::COLLECTION
-            && $context['collection_operation_name'] == 'get_day_report';
+        return Hours::class === $resourceClass 
+            && $operationName == 'get_day_report';
     }
 
     /**
@@ -328,7 +328,12 @@ This adds a default for filter start[after] that only cicks in if start[strictly
 Its value is the start of the day (UTC) one week ago. Then it delegates the building and execution of the query to the 
 decorated DataProvider.
 
-It calculates $afterTime from the filter values mentioned above, then loops through the resulting Hours and calculates 
+If this default would not have been required, it would have been better to make a ResultExtensions that implements 
+ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\ContextAwareQueryResultCollectionExtensionInterface. 
+But in this case the default must be added to the context before the built-in extensions are called. A ResultExtensions is the last one to be called by the DataProvider so the ResultExension could not have added the default before the built-in extensions are called. 
+
+The rest of ::getCollection calculates $afterTime from the filter values mentioned above, 
+then loops through the resulting Hours and calculates 
 $dayIndex as the number of whole days the Hours started since $afterTime. If a DayTotalsPerEmployee not yet exists for
 this $dayIndex and the $employee of the Hours, it creates it. 
 The Hours are added to the $hours of the DayTotalsPerEmployee.
@@ -352,6 +357,7 @@ This looks good, especially that it is specific to doctrine orm and has .default
         arguments:
             $dataProvider: '@api_platform.doctrine.orm.default.collection_data_provider'
 ```
+
 When you start the Docker container again you should get no more errors. You can try out the operation in the swagger ui at https://localhost:8443/docs, there is a new GET operation ​/hours​/dayreport. After logging in (see the readme.md of 
 [branch chapter7-api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-api)
 fill in 2019-09-18T00:00:00 for start[after] and hit Execute. You should then get a response like:
