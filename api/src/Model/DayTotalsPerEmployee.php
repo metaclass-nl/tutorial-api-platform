@@ -62,6 +62,7 @@ class DayTotalsPerEmployee
     }
 
     /** @ApiProperty(identifier=true)
+     * @Groups({"day_totals_per_employee"})
      * @return string
      */
     public function getId()

@@ -19,7 +19,7 @@ use App\Model\DayTotalsPerEmployee;
  * Registration of time worked by an Employee
  *
  * @ApiResource(attributes={
- *     "pagination_items_per_page"=2,
+ *     "pagination_items_per_page"=10,
  *     "order"={"start": "DESC", "description": "ASC"},
  *     },
  *     itemOperations={

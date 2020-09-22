@@ -29,8 +29,7 @@ class DayTotalsPerEmployeeCollectionDataProvider implements ContextAwareCollecti
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return Hours::class === $resourceClass
-            && $context['operation_type'] = OperationType::COLLECTION
-            && $context['collection_operation_name'] == 'get_day_report';
+            && $operationName == 'get_day_report';
     }
 
     /**
