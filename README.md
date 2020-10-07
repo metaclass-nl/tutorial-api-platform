@@ -1,7 +1,7 @@
 <h1>Tutorial API Platform</h1>
 
-[API Platform](https://api-platform.com) is a very powerfull web framework, but i's aproach to application 
-development is still revolutionary: 
+[API Platform](https://api-platform.com) is a very powerfull api framework, but i's aproach to application 
+development (if you use doctrine or ElasticSearch) is still revolutionary: 
 Instead of developing your own controllers, services and a user interface on top of 
 an existing framework, you only supply the domain classes (Entities) and the framework
 generates the first version of the application. Then you then you adapt 
@@ -18,6 +18,10 @@ Each chapter has one 'api' branche in git and one 'react' branche.
 The 'api' branches only contain api code, the 'react' branches
 contain both api code and react code. 
 
+If you are only interested in the api side you can skip the react branches. 
+The api branches only use the Swagger UI and curl for testing and do not depend
+on react.  
+
 In addition to this tutorial an [extended react client generator](https://github.com/metaclass-nl/client-generator) 
 is available that puts what you have learnt into use for scaffolding your own application.
 
@@ -31,10 +35,11 @@ Chapters and branches
 6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react)
 7. Authentication (JWT) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
 8. Authorization [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
-9. Report (Under development) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
+9. Report [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
+10. End [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-react)
 
-Each branch builds on top of the previous one of the same type. Each 'react' branch
-also contains the code from the corresponding 'api' branch. 
+Each branch builds on top of the previous one of the same type. 
+Each 'react' branch also contains the code from the corresponding 'api' branch. 
 To see the code resulting from a branch you can check out 
 the next branche of the same type, or browse it on github. 
 Or better: let git compare your current code with the branche 
@@ -45,7 +50,8 @@ checking out branch chapter1-api and point your browser to
 [the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
 to get a nicely rendered version of its readme. When you are finished
 with the instructions you commit your changes and check out chapter1-react,
-select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
+select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.
+Of course if you only want to do the api branches you can skip the react ones.  
 
 But you can start with any branch by checking it out and following its instructions.
 However, if you skip a chapter you need to restart docker-compose 
@@ -68,14 +74,16 @@ docker-compose exec client yarn add react-intl
 
 Required knowledge
 ------------------
+- maybe docker and docker-compose
+APi branches:
 - PHP 7
 - Symfony 4 or 5
 - Doctrine ORM
+React branches:
 - ES6
 - React.js
 - Redux
 - React Router
-- maybe docker and docker-compose
 You don't need to be an expert in these domains, basic working experience should be enough. 
 
 Requirements
@@ -125,6 +133,7 @@ Normally you would start with checking out branch chapter1-api and point your br
 to get a nicely rendered version of its readme. When you are finished
 with the instructions you commit your changes and check out chapter1-react,
 select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
+Of course if you only want to do the api branches you can skip the react ones.  
 
 About the admin interface
 -------------------------
@@ -142,7 +151,7 @@ and less about building common applications with ES6, react and redux.
 
 This doesn't mean the admin user interface is not interesting, it is! But for a smaller 
 audience of more experienced developers who want to get the most out of api platform.
-Therefore branches for the 'admin' user interface are left out for now, maybe they will be added later.
+Therefore branches for the 'admin' user interface are left out for now.
 
 Limitations
 -----------
