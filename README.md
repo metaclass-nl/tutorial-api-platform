@@ -95,6 +95,8 @@ an allmost unmodified (1) Api Platform Distribution. You need [Docker](https://d
  Docker Machine is not supported out of the box.
  
 (1) README.md was changed obviously and tutorial branches where added. 
+To sustain the original order of the doctrine migrations Version20200828181711 was 
+replaced by  Version20190819120152 from a previous version of API Platform.
 
 
 Install
