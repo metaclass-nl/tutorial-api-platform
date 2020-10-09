@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get"={
  *              "normalization_context"={"groups"={"hours_get"}}
  *          },
- *          "patch",
+ *          "put",
  *          "delete"
  *     },
  *     collectionOperations={
