@@ -12,6 +12,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use App\Validator\Constraints\CommonUserHoursStartConstraint;
 
 /**
  * Registration of time worked by an Employee on a day
@@ -22,16 +23,18 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *     },
  *     itemOperations={
  *          "get"={
- *              "normalization_context"={"groups"={"hours_get"}}
+ *              "normalization_context"={"groups"={"hours_get"}},
+ *              "security"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"
  *          },
- *          "put",
- *          "delete"
+ *          "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or
+               (object.getEmployee().getUser() == user and previous_object.getEmployee().getUser() == user)"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user" }
  *     },
  *     collectionOperations={
  *         "get"={
  *              "normalization_context"={"groups"={"hours_list"}}
  *          },
- *          "post"
+ *          "post"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"}
  *     }
  * )
  * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
@@ -66,6 +69,7 @@ class Hours
      * @ORM\Column(type="datetime")
      * @Assert\NotNull
      * @Groups({"hours_get", "hours_list"})
+     * @CommonUserHoursStartConstraint
      */
     private $start;
 
