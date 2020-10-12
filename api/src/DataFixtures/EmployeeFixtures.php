@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Employee;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class EmployeeFixtures extends Fixture implements DependentFixtureInterface
