@@ -17,7 +17,7 @@ new relationship of Employee with User.
 
 * Users can not be added/modified through the api.
 
-Add current User info to Redux
+Add current User info to Redux<a name="Redux"></a>
 ------------------------------
 In order to adapt to the authorization the client needs to know
 whether the user is an administrator. This information can be
@@ -125,7 +125,7 @@ And include the functions in the combineReducers call:
 export default combineReducers({ token, error, isUserAdmin, userEmployee });
 ```
 
-Adaptations for Employee 
+Adaptations for Employee<a name="Employee"></a>
 ------------------------
 An ordinary user can no longer create a new Employee, so the Create button in the employee List component
 can be disabled or removed for ordinary users. Because these users can never use this button, disabling
@@ -241,7 +241,7 @@ You can now test that the user Select row only shows up in the employee Form com
 if you are logged in as an administrator.
 
 
-Adaptations for Hours 
+Adaptations for Hours<a name="Hours"></a>
 ---------------------
 Ordinary users can only see their own Employee. If the user has access to only 
 one employee, it can be pre-selected in the hours Create component. To start at
@@ -296,3 +296,17 @@ for the employee Create component.
 
 You can now test that the Employee select in the Hours Search Form
 only shows up if you are logged in as an administrator.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter9-react 
+```
+will compare your own version with code one of chapter9-react. You mau also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes check out branch chapter9-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) 
+and follow the instructions.
