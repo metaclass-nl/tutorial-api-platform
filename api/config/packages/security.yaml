@@ -17,6 +17,7 @@ security:
         main:
             stateless: true
             anonymous: true
+            lazy: true
             provider: app_user_provider
             json_login:
                 check_path: /authentication_token
