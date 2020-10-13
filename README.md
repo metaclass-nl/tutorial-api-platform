@@ -9,7 +9,7 @@ The environment is te same as in the chapter8-react branch, except:
 This chapter adds a report of totals of hours per Employee per day
 as the homepage (replacing the Welcome page of Api Platform).
 
-Client code generation
+Client code generation<a name="CodeGeneration"></a>
 ----------------------
 Custom operations like get_day_report that was added to Hours in the api branche of this chapter
 are not supported by the react client generator. Normally one has to build the client manually
@@ -40,7 +40,7 @@ where <token> was replaced by the actual jwt token retrieved as described in the
 The resulting files where committed to this branche so that you do not have to
 install nmp and the Extended React Client Generator.
 
-Making the generated code work
+Making the generated code work<a name="MakeItWork"></a>
 ------------------------------
 The client generator has produced files for all CRUD operations even though only the get operations where defined
 in the @ApiResource tag. Your first task is to remove files that are not needed for the List component:
@@ -157,7 +157,7 @@ You can now test the client. After logging in as d.peters@leiden.nl you should s
 DayTotalsPerEmployee list. If you search for start = 2019/17/09 some
 day totals should show up.
 
-Specific adaptations
+Specific adaptations<a name="Specific"></a>
 --------------------
 Now the generated code works it is easy to see that the list contains some superfluous columns:
 item (Day Totals Per Employee) and label. You can remove them from client/src/daytotalsperemployee/List.js
@@ -277,8 +277,20 @@ and add the following method:
   }
 ```
 
-You can not test the client. After logging in as d.peters@leiden.nl you should see the the
+You can now test the client. After logging in as d.peters@leiden.nl you should see the the
 DayTotalsPerEmployee list. If you search for start.after = 2019/17/09 some
 day totals should show up. Check if selecting and unselecting an Employee works.
 Test if selecting a date below 'To' works as expected. Click on an hourglass link
 of an item with Count 2 to see the Hours registrations that where added up.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter10-react 
+```
+will compare your own version with code one of chapter10-react. You may also add the path
+to a folder of file to make the diff more specific.
+
+You have finished the tutorial. Congratulations!
