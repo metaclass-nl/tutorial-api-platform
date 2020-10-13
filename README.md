@@ -8,7 +8,7 @@ This chapter adds filters for sorting and a custom Filter service
 for searching with a single text input in several fields.
 
 
-OrderFilter
+OrderFilter<a name="OrderFilter"></a>
 -----------
 
 For a start add the following import to Employee.php and Hours.php in api/src/Entity:
@@ -35,7 +35,7 @@ of Hours:
  * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
 ```
 
-SimpleSearch Filter
+SimpleSearch Filter<a name="SimpleSearchFilter"></a>
 -------------------
 So far all filters the application uses standard filter services that where included with api platform. 
 One limitation of those filter services is that they all combine their query expressions through AND.
@@ -61,7 +61,7 @@ namespace App\Filter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
@@ -187,3 +187,15 @@ If you include properties that contain other types of values, it will result in 
 
 Another limitation is that it allways searches case insensitive. Finally it has no default for the properties. If you do not specify any properties it will throw an InvalidArgumentException "Properties must be specified". 
 
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter7-api 
+```
+will compare your own version with code one of chapter7-api. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes you may check out branch chapter6-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react) 
+and follow the instructions. Or if you only follow the api branches chapter7-api.
