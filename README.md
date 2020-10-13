@@ -7,7 +7,7 @@ The environment is te same as in the chapter6-react branche, except:
 
 This chapter adds JWT authentication
 
-Login Form
+Login Form<a name="Login"></a>
 ----------
 
 In chapter8-api a route was declared for /authentication_token. 
@@ -16,6 +16,7 @@ It expects a POST with a body like
 {"email":"d.peters@leiden.nl","password":"d.peters_password"}
 ```
 and will return a response like:
+```json
 {"token":"the actual token"}
 ```
 
@@ -219,7 +220,8 @@ Add the following to client/src/messages/common-nl.js:
     "login.email": "Email",
     "login.password": "Wachtwoord",
     "login.submit": "Inloggen",
-    "login.error.unauthorized": "Inloggen mislukt"```
+    "login.error.unauthorized": "Inloggen mislukt"
+```
 And once again the comma.
 
 You can now test the login form by pointing your browser to https://localhost/login/
@@ -228,7 +230,7 @@ If you log in sucessfully you may find yourself back on the page you where befor
 you typed https://localhost/login/, or if you openend a new window or tab, still
 on the log in page.
 
-Extending the dataAccess utility
+Extending the dataAccess utility<a name="dataAccess"></a>
 --------------------------------
 
 Once a token is available it must be included in each request the app sends to the api.
@@ -295,7 +297,7 @@ to multiple applications the token may be sent to the wrong application.
 DO NOT make the entrypoint variable!
 
 
-Authentication Controller
+Authentication Controller<a name="Controller"></a>
 -------------------------
 
 OK, there is a login form that sets a token into Redux, the dataAccess utility
@@ -402,3 +404,16 @@ Of couse everything should work normally once logged in.
 If you start with https://localhost/login/ you should see the 
 Welcome page after logging in.
 
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter8-react 
+```
+will compare your own version with code one of chapter8-react. You mau also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes check out branch chapter8-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api) 
+and follow the instructions.
