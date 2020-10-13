@@ -7,8 +7,16 @@ The environment is te same as in the chapter4-api branche, except:
 This chapter adds search filters for simply searching for Hours
 with fields that contain or are equal to the values in the form.
 
-ApiFilter
+ApiFilter<a name="ApiFilter"></a>
 ---------
+First add some imports to api/src/Entity/Hours.php:
+```php
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+```
+
 The search form should contain all persistent properties of 
 Hours except id and onInvoice. It should also contain the
 function of the related employee.
@@ -50,3 +58,15 @@ be used to search for an exact value. For example for searching for
 "start[before]=2020-07-08T12:02:00+00:00&start[after]2020-07-08T12:02:00+00:00".
 Because both explessions are inclusive so only the exact value will match both.
 
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter6-api 
+```
+will compare your own version with code one of chapter6-api. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes you may check out branch chapter5-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react) 
+and follow the instructions. Or if you only follow the api branches chapter6-api.
