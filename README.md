@@ -7,8 +7,8 @@ The environment is te same as in the chapter3-react branche, except:
 
 This chapter replaces ids by labels and a select widget.
 
-Obsolete Columns and Fields
----------------------------
+Superfluous Columns and Fields<a name="Superfluous"></a>
+------------------------------
 
 The table that where scaffolded for the list of employees holds a column
 for each property of Employee. This was probably done because the scaffolding script
@@ -37,7 +37,7 @@ The fields that where scaffolded for editing an Employee show the property
 hours that is no longer present in the output of the api. It can be removed
 from client/src/components/employee/Form.js.
 
-Labels
+Labels<a name="Labels"></a>
 ------
 
 In chapter4-api you added an extra tag at the label property of Employee:
@@ -151,7 +151,7 @@ Formatting the message is similar:
 ```
 Of course you need to adapt the translations in the messages folder accordingly.
 
-Select
+Select<a name="Select"></a>
 ------
 
 All employee ids are now out of sight except for the text input 
@@ -297,7 +297,7 @@ Finally the render method renders the constant Widget, once again passing the pr
 To prevent React from getting confused by an in the context of Widget useless label property 
 holding another component, it is set undefined before the properties are passed to Widget.
 
-A little styling
+A little styling<a name="Style"></a>
 ----------------
 
 To make the layout look a little better on desktops, add a file main.css to the client/src folder 
@@ -337,7 +337,7 @@ Then import it in client/src/index.js:
 import './main.css';
 ```
 
-Scaffolding your own application
+Scaffolding your own application<a name="Scaffolding"></a>
 --------------------------------
 
 Templates that where adapted for the use of labels instead of @ids and a select widget
@@ -356,3 +356,17 @@ you need to correct the scaffolded code.
 Finally, if your application needs the user to edit references to multiple
 entities, the scaffolded entryfield will only be usable if you show the @ids
 of the entities somewhere in the application, for example in the List component.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter5-react 
+```
+will compare your own version with code one of chapter5-react. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes check out branch chapter5-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-api) 
+and follow the instructions.
