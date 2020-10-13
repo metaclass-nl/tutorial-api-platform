@@ -9,7 +9,7 @@ This chapter adds a search form for simply searching for Hours
 with fields that contain or are equal to the values in the form.
 
 
-Search Form
+Search Form<a name="SearchForm"></a>
 -----------
 The application already contains a Form for editing Hours that
 does serveral things that would be nice for the search form too:
@@ -74,7 +74,7 @@ by renaming the employee select to employee.id:
 This way both employee.id and employee.function will be put together in the nested
 object in employee.
 
-Browsing history and query string utitiies
+Browsing history and query string utitiies<a name="History"></a>
 ------------------------------------------
 
 The current Hours List component renders Pagination buttons. When the user presses
@@ -182,7 +182,7 @@ export function parseQuery(queryOrUri) {
 }
 ```
 
-Pagination
+Pagination<a name="Pagination"></a>
 ----------
 Forgetting about the pagination makes processing the values from the the uris simpeler, 
 but it is good practice to first refactor and then extend. This means to first adapt the 
@@ -276,7 +276,7 @@ You can now test the application. The pagination buttons should work and you sho
 be able to go back using the browsers back button.
 
 
-Toolbar
+Toolbar<a name="ToolBar"></a>
 -------
 Below the title "Hours List"the List currently renders a paragraph with the Create button:
 ```javascript jsx
@@ -320,7 +320,7 @@ The above method replaces the lifecycle methods componentDidMount
 and componentDidUpdate. Please remove them from the List component.
 
 
-SearchTool
+SearchTool<a name="SearchTool"></a>
 ----------
 Create a file SearchTool.js in the client/src/components/hours folder with
 the following code:
@@ -577,7 +577,7 @@ above the return statement:
 ```
 The buttons should now disappear as expected.
 
-Style 
+Style<a name="Style"></a>
 -----
 
 To make the form fields smaller and display in line, and to make the
@@ -611,7 +611,7 @@ to client/src/main.css:
 ```
 The form should now look like [this](/resources/HoursSearch.png). 
 
-Improving the Back to List buttons and initial values
+Improving the Back to List buttons and initial values<a name="Buttons"></a>
 -----------------------------------------------------
 The hours List component can now search, but the "Back to list" buttons
 in the hours Create, Show and Update components still refers to
@@ -749,7 +749,8 @@ When you test the Employee list there should be a new clock-shaped link for each
 that leads to the Hours list with the Employee selected so that it shows the Hours of
 that same Employee.
 
-Scaffolding your own application
+
+Scaffolding your own application<a name="Scaffolding"></a>
 --------------------------------
 Templates that where adapted for the use a search tool as well as sorting like is
 described in chapter 6 are available in [branch tutorial-chapter6 of
@@ -767,3 +768,16 @@ Because of this the application developer probably needs to adapt the search too
 form to make it work properly. Therefore the search tool is not used by default 
 in the scaffolded List components. 
 
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter6-react 
+```
+will compare your own version with code one of chapter6-react. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes check out branch chapter6-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-api) 
+and follow the instructions.
