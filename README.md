@@ -7,7 +7,7 @@ The environment is te same as in the chapter3-api branche, except:
 This chapter removes some columns from api lists end adds labels to referred employees.
 The client section replaces ids by labels and a select widget
 
-Schema.org/name
+Schema.org/name<a name="name"></a>
 ---------------
 If the user interface an Entity it in fact shows the data from the properties of the entity. 
 However, if a property of one entity conaints one or more references to other entities, 
@@ -46,7 +46,7 @@ but experience has learnt that that a property 'name' is often already used
 as just another property, while 'label' is usually available)
 
 
-Serialization groups
+Serialization groups<a name="SerializationGroups"></a>
 --------------------
 By default api platform includes all own properties of entities when they are serialized
 and only @ids of referred entities. Ids of entities referred to by 1 t m relations are
@@ -235,3 +235,16 @@ there should be response body like:
   "label": "Eden, Nicky"
 }
 ```
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter5-api 
+```
+will compare your own version with code one of chapter5-api. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes you may check out branch chapter4-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react) 
+and follow the instructions. Or if you only follow the api branches chapter5-api.
