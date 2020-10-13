@@ -12,7 +12,7 @@ This chapter adds Authorization:
 
 * Users can not be added/modified through the api.
 
-Employee User relationship
+Employee User relationship<a name="Relationship"></a>
 --------------------------
 
 In order to know what a user is allowed to see etc a new relationship
@@ -81,7 +81,7 @@ docker-compose exec php ./bin/console doctrine:fixtures:load
 and choose yes to delete all data before the fixtures are loaded.
 
 
-User resource
+User resource<a name="User"></a>
 -------------
 Administrators will have more access then ordinary users. 
 In order to adapt the client needs to be able to find out wheater the
@@ -153,7 +153,7 @@ that users can be retrieved, that their passwords are
 not in the results and that the user @id and label are 
 in the result of getting an individual Employee.
 
-Securing Operations
+Securing Operations<a name="Operations"></a>
 -------------------
 Please read [the Security page](https://api-platform.com/docs/core/security/) 
 of the API Platform documentation (you may skip the chapters about Voters and Error Message).
@@ -236,7 +236,7 @@ ordinary users to post or delete Hours.
 You can now test through https://localhost:8443/docs that the above
 operations return 403 Forbidden errors if the security requirements are not met.
  
-Filtering
+Filtering<a name="Filtering"></a>
 ---------
 
 Limiting the access to collection get operations is done by
@@ -349,7 +349,7 @@ not to use the ::applyToItem function so that you learn
 more about the security configurations made in the @ApiResource annotations.
 
 
-Validation
+Validation<a name="Validation"></a>
 ----------
 Usually Hours registrations are processed in some way by the administration
 and then they can no longer be added or modified by ordinary users. 
@@ -447,3 +447,16 @@ You can now test through https://localhost:8443/docs that
 adding or changing Hours that start outside last week results
 in a validation error if you are logged in as an ordinary user
 but not if you are logged in as an administrator.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter9-api 
+```
+will compare your own version with code one of chapter9-api. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes you may check out branch chapter8-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react) 
+and follow the instructions. Or if you only follow the api branches chapter9-api.
