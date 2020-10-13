@@ -8,14 +8,14 @@ The environment is te same as in the chapter6-api branche, except:
 
 This chapter adds JWT authentication
 
-Error after installing this branch
+Error after installing this branch<a name="Error"></a>
 ----------------------------------
 After installing this branch the api will allways return an Internal Server Error
 with a description like 'There is no extension able to load the configuration for "lexik_jwt_authentication"'.
 This will be solved by installing the LexikJWTAuthenticationBundle, more specifically, 
 by the composer install command.
 
-LexikJWTAuthenticationBundle environment
+LexikJWTAuthenticationBundle environment<a name="LexikJWTAuthenticationBundle"></a>
 ----------------------------------------
 
 Before installing the LexikJWTAuthenticationBundle you should be aware that
@@ -55,7 +55,7 @@ it will not be owned by root so that you can check it out from some other branch
 git running into authorization problems. 
 
 
-User classes
+User classes<a name="User"></a>
 ------------
 
 You can follow the instructions in [the symfon docs](https://symfony.com/doc/current/security.html#a-create-your-user-class)
@@ -235,7 +235,7 @@ docker-compose exec php bin/console doctrine:migrations:migrate
 ```
 
 
-User Fixtures
+User Fixtures<a name="Fixtures"></a>
 -------------
 
 And to add the users, create a new file api/src/DataFixtures/UserFixtures.php
@@ -316,7 +316,7 @@ Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
 (You will loose all data in the database of your api-platform install).
 
 
-Configuring the Symfony SecurityBundle
+Configuring the Symfony SecurityBundle<a name="Configuration"></a>
 --------------------------------------
 Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#configuring-the-symfony-securitybundle) under "update the security configuration" except for the dev: firewall and
  "declare the route used for /authentication_token".
@@ -334,10 +334,10 @@ and executing an operation. Each operation should result in 401 Unauthorized wit
 }
 ```
 
-Getting a token and testing it
+Getting a token and testing it<a name="GetToken"></a>
 ------------------------------
 
-You can continue with the instructions on [Adding endpoint to SwaggerUI to retrieve a JWT token](Adding endpoint to SwaggerUI to retrieve a JWT token) or you can simply run the following shell command:
+You can continue with the instructions on [Adding endpoint to SwaggerUI to retrieve a JWT token](https://api-platform.com/docs/core/jwt/#adding-endpoint-to-swaggerui-to-retrieve-a-jwt-token) or you can simply run the following shell command:
 ```shell
 curl -X POST -H "Content-Type: application/json" https://localhost:8443/authentication_token -d '{"email":"d.peters@leiden.nl","password":"d.peters_password"}' -k
 ```
@@ -353,4 +353,15 @@ to the api so it is not yet get validated. But as soon as you try to execute any
 Swagger UI it will send what you entered as Authorization header to the api so that you should 
 get the normal response instead of 401 Unauthorized.
 
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter8-api 
+```
+will compare your own version with code one of chapter8-api. You may also add the path
+to a folder of file to make the diff more specific.
 
+After committing your changes you may check out branch chapter7-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react) 
+and follow the instructions. Or if you only follow the api branches chapter8-api.
