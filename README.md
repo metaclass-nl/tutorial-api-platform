@@ -499,3 +499,16 @@ To configure the service add the following to api/config/services.yaml:
 
 If you retrieve https://localhost:8443/docs.json again the summary and descriptions about /hours​/dayreport
 should be more appropriate. In the Swagger Ui the corresponding info should have changed too.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter10-api 
+```
+will compare your own version with code one of chapter10-api. You mau also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes you may check out branch chapter9-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react) 
+and follow the instructions. Or if you only follow the api branches: you have finished the tutorial. Congratulations!
