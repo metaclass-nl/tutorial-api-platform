@@ -1,5 +1,5 @@
-Chapter 6: Sorting and Simple Search - React client
-===================================================
+Chapter 6: Sorting and Simple Search- React client
+==================================================
 
 The environment is te same as in the chapter5-react branche, except:
 - instructions from README.md of chapter5-react where applied
@@ -9,7 +9,7 @@ This chapter adds support for sorting both the Employee and the
 Hours list by clicking on a column header and a custom Filter service
 for searching with a single text input in several fields.
 
-ListTool
+ListTool<a name="ListTool"></a>
 --------
 In chapter 5 searching was added to the Hours list, it was first refactored
 to make pagination work with a conventional query string. Sorting needs to use
@@ -130,7 +130,7 @@ Finally add the onClick to the Pagination component in the render method:
 Test the Employee list.
 
 
-Sort Headers
+Sort Headers<a name="SortHeaders"></a>
 ------------
 Sorting the table by a single click on a table column header seems simple, 
 but it gets more complicated when the second click on the header should reverse 
@@ -209,7 +209,7 @@ th .fa-sort-down, th .fa {
 }
 ```
 
-Sorting the Employee list
+Sorting the Employee list<a name="EmployeeList"></a>
 -------------------------
 Import the component in the Employee list:
 ```javascript jsx
@@ -260,7 +260,7 @@ The last two columns are pritty much like the first one:
 
 Test the Employee list column headers and its pagination buttons.
 
-Sorting the Hours list
+Sorting the Hours list<a name="HoursList"></a>
 ----------------------
 
 Import the component in the Hours list:
@@ -313,7 +313,7 @@ instead a flat object with paths as keys is used:
 Test the Hours list column headers, pagination buttons and search form. The sort order should be retained when
 the search is changed, but the pagination should be reset.
 
-SimpleSearch
+SimpleSearch<a name="SimpleSearch"></a>
 ------------
 
 SimpleSearch allows the user to type all terms in a single input. 
@@ -417,7 +417,7 @@ is counter intuitive you could add some columns to the page and/or
 remove some properties from the @ApiFilter annotation on the
 Employee entity class.
 
-Improving the Back to List buttons
+Improving the Back to List buttons<a name="Buttons"></a>
 ----------------------------------
 In chapter 5 the Back to List buttons of the Hours components where improved
 so that they take search criteria and pagination into account. The same can be done
@@ -497,7 +497,7 @@ add a comma and:
 You can now test the employee Show and Update components.
 
 
-Scaffolding your own application
+Scaffolding your own application<a name="Scaffolding"></a>
 --------------------------------
 Templates that where adapted for the use a list- or search tool as well as sorting are available 
 in [branch tutorial-chapter6 of metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter6).
@@ -515,3 +515,17 @@ immediate properties. Because read-only properties are often not persistent, the
 Because of this the application developer probably needs to adapt the search tool and
 search form to make it work properly. Therefore the search tool is not used by default 
 in the scaffolded List components. 
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter7-react 
+```
+will compare your own version with code one of chapter7-react. You mau also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes check out branch chapter7-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-api) 
+and follow the instructions.
