@@ -79,9 +79,8 @@ class Employee
     private $birthDate;
 
     /**
-     * @var \DateTime Tite the employee usually arrives at work
+     * @var \DateTime Time the employee usually arrives at work
      * @ORM\Column(type="time", nullable=true)
-     * @Assert\Time()
      */
     private $arrival;
 

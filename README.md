@@ -6,8 +6,8 @@ The environment is te same as in the chapter1-api branche, except:
 
 This chapter adds an entity class Hours that has an n to 1 relation with Employee and adds a menu (client only).  
 
-Api
----
+Entity<a name="Entity"></a>
+------
 Before you add the Entity class 'Hours', make sure the database schema is in sync. 
 When you do docker-compose up migrations are executed automatically, but 
 you can explicitly execute those that are not yet executed: 
@@ -276,6 +276,8 @@ be an example value model like
     },
 ```
 
+Fixtures<a name="Fixtures"></a>
+--------
 To add data create a new file api/src/DataFixtures/HoursFixtures.php.
 (also create the necessary folders). Then copy the following to the file:
 
@@ -286,7 +288,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Hours;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class HoursFixtures extends Fixture implements DependentFixtureInterface
@@ -492,3 +494,16 @@ Say yes to "Careful, database "api" will be purged. Do you want to continue?"
 
 To test the new Entity class point your browser at https://localhost:8443/. 
 When you try out Get /hours the response body should contain the data of the hours.
+
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter3-api 
+```
+will compare your own version with code one of chapter3-api. You may also add the path
+to a folder of file to make the diff more specific.
+
+After committing your changes you may check out branch chapter2-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react) 
+and follow the instructions. Or if you only follow the api branches chapter3-api.
