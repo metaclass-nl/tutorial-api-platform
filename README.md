@@ -19,7 +19,7 @@ docker-compose exec php bin/console doctrine:fixtures:load
 
 This chapter adds the user interface for an entity class Employee.
 
-React client
+React client<a name="Client"></a>
 ------------
 To scaffold (generate code) files for the client for the new Employee class, you can 
 type at the command prompt: 
@@ -80,7 +80,7 @@ and make a security exception for the self-signed certificate, otherwise the cli
 XHR requests will be blocked. You may have to do this every time after you
 have closed the browser. 
 
-To test the client point your browser at https://localhost/employees/
+To test the client point your browser at http://localhost/employees/
 (including the last slash!)
 
 The table that is scaffolded for the list of employees holds a column
@@ -92,22 +92,20 @@ In client/src/components/employee/List.js below
 ```
 columns address, zipcode, city, and label be removed.
 
-This will result in the following output on https://localhost/employees/ 
+This will result in the following output on http://localhost/employees/ 
 
 [Employees list](resources/Employees.png)
 
 Next
 ----
-
-Let git compare your current code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter2-api ./api/src/Entity/Employee.php
+git diff chapter2-react ./client
 ```
-will compare your own version of ./api/src/Entity/Employee.php with
-the one of chapter2-api.
+will compare your own version with code one of chapter2-react. You may also extend the path
+to a folder of file to make the diff more specific.
 
 After committing your changes check out branch chapter2-api. 
 Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) 
 and follow the instructions.
-
