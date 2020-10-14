@@ -5,12 +5,12 @@ The environment is te same as in the master branche, except:
 - Entity Greetings was removed
 - A migration was added to adjust the database
 - Switched off mercure to avoid it's viral agpl license
-- Changed client/public/index.html title to "Tutorial for API Platform"
+- Changed client/public/index.html title to "API Platform Tutorial"
 
 This chapter adds an entity class Employee.
 
-Api
----
+Entity<a name="Entity"></a>
+------
 Your first task is to add the Entity class 'Employee', but before you do so,
 make sure the database schema is in sync. 
 When you do docker-compose up migrations are executed automatically, but 
@@ -313,6 +313,8 @@ be an example value model like
 ...
 ```
 
+Fixtures<a name="Fixtures"></a>
+--------
 To add data we will use the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
 You can install it from the command line:
 ```shell
@@ -329,7 +331,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Employee;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class EmployeeFixtures extends Fixture
 {
@@ -421,4 +423,4 @@ the one of chapter2-api.
 
 After committing your changes check out branch chapter1-react. 
 Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) 
-and follow the instructions.
+and follow the instructions. Or if you only follow the api branches chapter3-api.
