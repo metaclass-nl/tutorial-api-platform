@@ -10,7 +10,7 @@ The environment is te same as in the chapter1-react branche, except:
 This chapter adds the user interface an entity class Hours that has an n to 1 relation with Employee
 and adds a menu.
 
-Hours
+Hours<a name="Hours"></a>
 -----
 To scaffold (generate code) files for the client for the new Employee class, you can 
 type at the command prompt: 
@@ -81,7 +81,7 @@ Columns onInvoice and label can be removed.
 This will result in the following:
 [Hours list](resources/Hours.png)
 
-Menu
+Menu<a name="Menu"></a>
 ----
 
 Views have been generated for hours and for employees, but no way to navigate beween them. 
@@ -194,5 +194,16 @@ the  ConnectedRouter component can only hace one element.
 Notice that another div was added to wrap around the Switch component.
 It allows to specify styles for it in a a css stylesheet. 
 
+Next
+----
+Let git compare your own code with the branche of the next chapter 
+so that you can see the differences right away. For example:
+```shell
+git diff chapter3-react 
+```
+will compare your own version with code one of chapter3-react. You may also add the path
+to a folder of file to make the diff more specific.
 
-
+After committing your changes check out branch chapter3-api. 
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-api) 
+and follow the instructions.
