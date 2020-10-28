@@ -1,4 +1,4 @@
-<h1>Tutorial API Platform</h1>
+<h1>MetaClass' Tutorial API Platform</h1>
 
 [API Platform](https://api-platform.com) is a very powerfull api framework, but i's aproach to application 
 development (if you use doctrine or ElasticSearch) is still revolutionary: 
@@ -167,7 +167,7 @@ The tutorial does not support installation with Symfony Flex and Composer so you
 Credits
 -------
 
-The tutorial and examples are copyright (c) [MetaClass](https://www.metaclass.nl/), Groningen, 2019, 2020.
+The tutorial and examples are copyright (c) [ MetaClass ](https://www.metaclass.nl/), Groningen, 2019, 2020.
 
 It is is based on the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
 created by [Kévin Dunglas](https://dunglas.fr). 
