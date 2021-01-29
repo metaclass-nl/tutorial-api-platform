@@ -3,9 +3,9 @@
 [API Platform](https://api-platform.com) is a very powerfull api framework, but i's aproach to application 
 development (if you use doctrine or ElasticSearch) is still revolutionary: 
 Instead of developing your own controllers, services and a user interface on top of 
-an existing framework, you only supply the domain classes (Entities) and the framework
-generates the first version of the application. Then you then you adapt 
-(extend, override) it to suit your needs. 
+an existing framework, you only supply the domain classes (Entities) and some configuration
+and the framework supplies default behavior for the api. Then you then you adapt 
+(decorate, extend, override) it to suit your needs. 
 
 With proper training this approach gives high productivity and great flexibility,
 but is tends to have a steep leaning curve. Api platform is quite well documented, 
@@ -16,14 +16,15 @@ This tutorial takes you step by step through the process of building
 a simple application with api platform and the react client generator. 
 Each chapter has one 'api' branche in git and one 'react' branche. 
 The 'api' branches only contain api code, the 'react' branches
-contain both api code and react code. 
-
-If you are only interested in the api side you can skip the react branches. 
-The api branches only use the Swagger UI and curl for testing and do not depend
-on react.  
+contain both api code and react code. If you are only interested in the api side 
+you can skip the react branches. The api branches only use the Swagger UI
+and curl for testing and do not depend on react.  
 
 In addition to this tutorial an [extended react client generator](https://github.com/metaclass-nl/client-generator) 
 is available that puts what you have learnt into use for scaffolding your own application.
+
+As of api-platform version 2.6 the standard distribution contains a nextJS client
+instead of the react client. This tutorial does not (yet?) have nextJS branches. 
 
 Chapters and branches
 ---------------------
@@ -120,22 +121,16 @@ As we did not install using Symfony Flex and Composer you can skip that section
 and go straight to [It's Ready!](https://api-platform.com/docs/distribution/#its-ready).
 Follow the instructions to test the api.
 
-Before you can test the admin or client interface you need to visit https://localhost:8443/
-and make a security exception for the self-signed certificate, otherwise its 
-XHR requests will be blocked. You may have to do this every time after you
-have closed the browser. 
-
-To test the admin interface point your browser at https://localhost:444/. You may need to
-make an other security exception for the certificate of the admin interface.
+To test the admin interface point your browser at https://localhost/admin. 
 
 Getting Started
 ---------------
-Normally you would start with checking out branch chapter1-api and point your browser to 
+To start at the beginning check out branch chapter1-api and point your browser to 
 [the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
 to get a nicely rendered version of its readme. When you are finished
 with the instructions you commit your changes and check out chapter1-react,
 select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
-Of course if you only want to do the api branches you can skip the react ones.  
+If you only want to do the api branches you can skip the react ones.  
 
 About the admin interface
 -------------------------
