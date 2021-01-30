@@ -34,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "order"={"start": "DESC", "description": "ASC"}
  * })
  * @ORM\Entity
+ * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
 class Hours
 {
@@ -206,10 +207,14 @@ buttons in the client an ApiResource attribute "pagination_items_per_page" was a
 ```php
  * @ApiResource(attributes={
  *     "pagination_items_per_page"=10,
- *     "order"={"date": "DESC", "description": "ASC"}
+ *     "order"={"start": "DESC", "description": "ASC"}
  * })
 ```
-Once again the attribute "order" specifies the defailt order
+Once again the attribute "order" specifies the default order. This time an index 
+was added to improve the performance of sorting and of searching by $start:
+```php
+ * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
+```
 
 A Doctrine annotation defines the relationship with Employee: 
 ```php
@@ -255,7 +260,7 @@ And execute it by:
 docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
-To test the new Hours class point your browser at https://localhost:8443/. 
+To test the new Hours class point your browser at https://localhost/docs. 
 You should see a new model Hours. When you try out Get /hours there should
 be an example value model like
 ```json
@@ -492,7 +497,7 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Say yes to "Careful, database "api" will be purged. Do you want to continue?"
 (You will loose all data in the database of your api-platform install).
 
-To test the new Entity class point your browser at https://localhost:8443/. 
+To test the new Entity class point your browser at https://localhost/docs. 
 When you try out Get /hours the response body should contain the data of the hours.
 
 Next
