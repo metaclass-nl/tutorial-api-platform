@@ -12,7 +12,7 @@ Hints<a name="Hints"></a>
 Most of the work has to be done on the client, but the api can provide some hints
 for the client (generator) in the jsonld metadata.
 
-To see the metadata without the hints point your browser at [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
+To see the metadata without the hints point your browser at [https://localhost/docs.jsonld](https://localhost/docs.jsonld).
 Under property "hydra:supportedClass" at index 0 (@id: "#Employee") 
 under its property "hydra:supportedProperty: at index 6 (hydra:title: "birthDate") 
 under its property "hydra:property": you find
@@ -34,7 +34,7 @@ You also need to add a use statement for ApiProperty above the class statement:
 use ApiPlatform\Core\Annotation\ApiProperty;
 ```
 
-Now refresh [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
+Now refresh [https://localhost/docs.jsonld](https://localhost/docs.jsonld).
 At the same position you should now find
 "range": "http://www.w3.org/2001/XMLSchema#date".
 
@@ -45,7 +45,7 @@ To change the corresponding range of property $arrival add the following to its 
      * )
 ```
 
-Now refresh [https://localhost:8443/docs.jsonld](https://localhost:8443/docs.jsonld).
+Now refresh [https://localhost/docs.jsonld](https://localhost/docs.jsonld).
 Under "hydra:supportedProperty: at index 7 (hydra:title: "arrival") you should now find
 "range": "http://www.w3.org/2001/XMLSchema#time".
 
@@ -153,7 +153,7 @@ class LocaleSubscriber implements EventSubscriberInterface
 
 It should be picked up automatically by Symfony. You can test it like this:
 ```shell
-curl -X POST "https://localhost:8443/employees" -H  "accept-language: nl-NL" -H  "accept: application/ld+json" -H  "Content-Type: application/ld+json" -d "{\"firstName\":\"abcdefghijklmnopqrstuvwxyz\"}" -k
+curl -X POST "https://localhost/employees" -H  "accept-language: nl-NL" -H  "accept: application/ld+json" -H  "Content-Type: application/ld+json" -d "{\"firstName\":\"abcdefghijklmnopqrstuvwxyz\"}" -k
 ```
 
 If you still get validation errors in English, make a to change a config file of Symfony
