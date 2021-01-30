@@ -30,6 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  * @ORM\Entity
+ * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
 class Hours
 {
