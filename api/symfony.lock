@@ -167,9 +167,6 @@
     "league/html-to-markdown": {
         "version": "4.10.0"
     },
-    "monolog/monolog": {
-        "version": "2.2.0"
-    },
     "lexik/jwt-authentication-bundle": {
         "version": "2.5",
         "recipe": {
@@ -181,6 +178,9 @@
         "files": [
             "config/packages/lexik_jwt_authentication.yaml"
         ]
+    },
+    "monolog/monolog": {
+        "version": "2.2.0"
     },
     "namshi/jose": {
         "version": "7.2.3"
@@ -429,6 +429,9 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.22.0"
+    },
+    "symfony/polyfill-php56": {
+        "version": "v1.20.0"
     },
     "symfony/polyfill-php70": {
         "version": "v1.20.0"
