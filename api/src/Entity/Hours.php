@@ -37,6 +37,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * @ApiFilter(DateFilter::class, properties={"start"})
  * @ApiFilter(RangeFilter::class, properties={"nHours"})
  * @ORM\Entity
+ * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
 class Hours
 {

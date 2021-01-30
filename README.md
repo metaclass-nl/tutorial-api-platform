@@ -25,7 +25,7 @@ for ordering by, so the following annotation should do:
 ```
 This allows ordering by a combination any properties of the entity. Ordering ascending by
 the labels for example can be specified by query string "order[lastName]=asc&order[firstName]=asc".
-You can test this at https://localhost:8443/ 
+You can test this at https://localhost/docs 
 
 The Hours list has a column Employee that holds the labels of the referred Employees. Ordering
 by these labels can be specified by query string "order[employee.lastName]=asc&order[employee.firstName]=asc".
@@ -179,7 +179,7 @@ and in the class comment:
 This makes the SimpleSearchFilter search in the properties "lastName", "firstName", "function", "address", "zipcode" and "city".
 It will look for query parameter "search" instead of the default 'simplesearch'.
 
-You can now test the filter at https://localhost:8443/ 
+You can now test the filter at https://localhost/docs 
 
 One limitation of the SimpleSearchFilter is that it can only search in properties that contain strings.
 If you include properties that contain other types of values, it will result in an error like "An exception occurred while executing 'SELECT ...' ' with params ... SQLSTATE[42883]: Undefined function: 7 ERROR:  function lower(time without time zone) does not exist"
