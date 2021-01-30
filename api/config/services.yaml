@@ -38,6 +38,6 @@ services:
         arguments:
             $dataProvider: '@api_platform.doctrine.orm.default.collection_data_provider'
     'App\Swagger\SwaggerDecorator':
-        decorates: 'api_platform.swagger.normalizer.api_gateway'
+        decorates: 'api_platform.openapi.normalizer.api_gateway'
         arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
