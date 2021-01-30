@@ -148,7 +148,7 @@ not only for security reasons, but also to decouple the clients from
 the inner workings of the server.
 
 
-You can now test through https://localhost:8443/docs 
+You can now test through https://localhost/docs 
 that users can be retrieved, that their passwords are
 not in the results and that the user @id and label are 
 in the result of getting an individual Employee.
@@ -233,7 +233,7 @@ To secure access to Hours replace its @ApiResource annotation by the following:
 This is similar to the configurations of Employee, except that "delete" and "post now allow
 ordinary users to post or delete Hours.
 
-You can now test through https://localhost:8443/docs that the above
+You can now test through https://localhost/docs that the above
 operations return 403 Forbidden errors if the security requirements are not met.
  
 Filtering<a name="Filtering"></a>
@@ -323,7 +323,7 @@ User and Employee only a criterion is added to the WHERE clause. But for
 Hours a JOIN is added too for the employee relationship. This results
 in an alias that then is used for the criterion added to the WHERE clause.
 
-You can now test through https://localhost:8443/docs that collecion GET
+You can now test through https://localhost/docs that collecion GET
 operations behave accordingly.
 
 Maybe you wonder why the function ::applyToItem is in a comment. This is
@@ -443,7 +443,7 @@ And to the property comment of $start:
 * @CommonUserHoursStartConstraint
 ```
 
-You can now test through https://localhost:8443/docs that
+You can now test through https://localhost/docs that
 adding or changing Hours that start outside last week results
 in a validation error if you are logged in as an ordinary user
 but not if you are logged in as an administrator.
