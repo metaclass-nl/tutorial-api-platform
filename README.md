@@ -321,11 +321,11 @@ Configuring the Symfony SecurityBundle<a name="Configuration"></a>
 Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#configuring-the-symfony-securitybundle) under "update the security configuration" except for the dev: firewall and
  "declare the route used for /authentication_token".
 
-To enable testing the api through https://localhost:8443/docs 
+To enable testing the api through https://localhost/docs 
 you also need to add the configuration from 
 [Documenting the Authentication Mechanism with Swagger/Open API](https://api-platform.com/docs/core/jwt/#configuring-api-platform).
 
-You can now test the authentication by going to https://localhost:8443/docs
+You can now test the authentication by going to https://localhost/docs
 and executing an operation. Each operation should result in 401 Unauthorized with:
 ```json
 {
@@ -339,14 +339,14 @@ Getting a token and testing it<a name="GetToken"></a>
 
 You can continue with the instructions on [Adding endpoint to SwaggerUI to retrieve a JWT token](https://api-platform.com/docs/core/jwt/#adding-endpoint-to-swaggerui-to-retrieve-a-jwt-token) or you can simply run the following shell command:
 ```shell
-curl -X POST -H "Content-Type: application/json" https://localhost:8443/authentication_token -d '{"email":"d.peters@leiden.nl","password":"d.peters_password"}' -k
+curl -X POST -H "Content-Type: application/json" https://localhost/authentication_token -d '{"email":"d.peters@leiden.nl","password":"d.peters_password"}' -k
 ```
 this should output something like:
 ```json
 {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE1OTU5NTA0MjUsImV4cCI6MTU5NTk1NDAyNSwicm9sZXMiOlsiUk9MRV9BRE1JTklTVFJBVE9SIiwiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZC5wZXRlcnNAbGVpZGVuLm5sIn0.vT2QoRL5jc9MEtCFeqK6TRoG2oA5miV8NUFr3rp3k7TLwWEa32wak9V9ufN5h-tmsXLGG3FyLjGQ9Nw5mBU0O66O7t20VEUarTR2mCqx-Opmli55-0ka6BlsfP6Oy4t-ZUEMXB_d_HB0joOYXc6zt27ZUbUuVoJ-AFg3SX8BET7Q1QjoMChwFA2Asuh7b7V6w0E3FmDUdpQn2AEawz7jdwClbdl6MftlBqYsc1Xmq4pFw6tB7-ogVP4xfP-mAJuBgQcFRjktAj3ksqPtNwQX4fHKZc5IUltqlrZf5mOnW-Eo67MhzA4wS5vh_vTrjmlJC4Cfg2tm8yFqTEsYnAQORjBlvFeNjko2nnOeEs0Aq9xO5CGKTPrg9L9TqCK-SbevjHjLgfUDRfh1L54Xwww2g4aEN0jqMo-mFjl6DtNVw9j4lze3g9I1QhNvscZ_i7SfeFnt7fy0IWxzH75b811LGryEK0vSvcqLc6nI71ZsNToUcRNczsJOql_TGBV_aLCxNNIq0ODd6IMSfuAns6l3GbDhs-3u6Y7N-8H8SSJMo4k3zW-V28Rldq-TQogXrEk0pIxk9QmSCYBGZHzKfxZbAy8jndzcea1CGRnlazLaYAEqvfgtqwjgJjNbG6f5UCuf8dGGGUa14uwBsUlPgGs3B8aiTzeUAMzqIyZYAHhlJFA"}
 ```
 
-If you go to https://localhost:8443/docs there should be a button "Authorize". 
+If you go to https://localhost/docs there should be a button "Authorize". 
 Press it an type "Bearer " (without the quotes but with the space) and then paste the token 
 from your curl output (without the quotes) and press "Authorize". This does not send the token 
 to the api so it is not yet get validated. But as soon as you try to execute anything in the 
