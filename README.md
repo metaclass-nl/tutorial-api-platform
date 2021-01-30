@@ -287,7 +287,7 @@ And execute it by:
 docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
-To test the new Entity class point your browser at https://localhost:8443/. 
+To test the new Entity class point your browser at https://localhost/docs. 
 You may need to make a security exception for the self-signed certificate that your
 browser may report as not safe.
 
@@ -407,7 +407,7 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
 (You will loose all data in the database of your api-platform install).
 
-To test the new Entity class point your browser at https://localhost:8443/. 
+To test the new Entity class point your browser at https://localhost/docs. 
 When you try out Get /employees the response body should contain the data of the 
 four employees.
 
@@ -423,4 +423,4 @@ the one of chapter2-api.
 
 After committing your changes check out branch chapter1-react. 
 Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) 
-and follow the instructions. Or if you only follow the api branches chapter3-api.
+and follow the instructions. Or if you only follow the api branches chapter2-api.
