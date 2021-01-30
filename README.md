@@ -79,7 +79,7 @@ In order to make api platform use the serialization groups the
  *          "get"={
  *              "normalization_context"={"groups"={"hours_get"}}
  *          },
- *          "patch",
+ *          "put",
  *          "delete"
  *     },
  *     collectionOperations={
@@ -109,7 +109,7 @@ And add the following to the comment of property $onInvoice:
      * @Groups({"hours_get"})
 ```
 
-You can test your configuration at https://localhost:8443/ .
+You can test your configuration at https://localhost/docs .
 When you try out Get /hours there should be response body like:
 ```json
 {
@@ -199,7 +199,7 @@ Finally add the following to the comment of method ::getLabel
 ```
 This makes the label not only show up in employee operations but also in hours get operations.
 
-You can test your configuration at https://localhost:8443/.
+You can test your configuration at https://localhost/docs.
 When you try out Get //employees there should be response body like:
 ```json
 {

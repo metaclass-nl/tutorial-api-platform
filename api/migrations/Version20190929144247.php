@@ -26,6 +26,7 @@ final class Version20190929144247 extends AbstractMigration
         $this->addSql('CREATE TABLE hours (id INT NOT NULL, employee_id INT DEFAULT NULL, n_hours DOUBLE PRECISION NOT NULL, start  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, on_invoice BOOLEAN DEFAULT NULL, description VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_8A1ABD8D8C03F15C ON hours (employee_id)');
         $this->addSql('ALTER TABLE hours ADD CONSTRAINT FK_8A1ABD8D8C03F15C FOREIGN KEY (employee_id) REFERENCES employee (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE INDEX IDX_8A1ABD8D9F79558F6DE44026 ON hours (start, description)');
     }
 
     public function down(Schema $schema) : void
