@@ -150,9 +150,9 @@ Replace it by:
 ```
 You can do the same with the NavLinks, they become:
 ```javascript jsx
-                        <NavLink href="/" content={<FormattedMessage id="navigation.home" defaultMessage="Home"/>} />
-                        <NavLink href="/employees/" content={<FormattedMessage id="navigation.employees" defaultMessage="Employees"/>} />
-                        <NavLink href="/hours/" content={<FormattedMessage id="navigation.hours" defaultMessage="Hours"/>} />
+                        <NavLink href="/" content={<FormattedMessage id="navigation.home" defaultMessage="Home"/>} basePath={basePath} />
+                        <NavLink href="/employees/" content={<FormattedMessage id="navigation.employees" defaultMessage="Employees"/>} basePath={basePath} />
+                        <NavLink href="/hours/" content={<FormattedMessage id="navigation.hours" defaultMessage="Hours"/>} basePath={basePath} />
 ```
 
 This adds the components for the translation to your Navigation component but
@@ -173,7 +173,7 @@ For Dutch edit the file client/src/messages/common-nl.js and add:
 ```
 (Alternatively you could give these messages a file of their own and import them in all.js)
 
-To test it point your browser at http://localhost/
+To test it point your browser at https://localhost/
 
 If you implemented the IntlProvider and FormattedMessage calls correctly you should see the menu:
  Home Employees Hours
@@ -184,7 +184,7 @@ But if you set your browsers language to Dutch you should see:
 
 However, if you make your browser window small enough or zoom in far enough, it will
 be replaced by a single button. This is correct, but the title of the button (shown
-when yuo hover the mouse pointer over the button) now is:
+when you hover the mouse pointer over the button) now is:
 [object Object]
 
 Looks like the title of the button was not rendered as a react component, but simply
@@ -198,11 +198,11 @@ an object that offers imperative functions that return strings directly. This is
 the injectIntl function that is already in the import statement you added earlier.
 To make it work just replace 
 ```javascript jsx
-export default Navigation;
+export default withRouter(Navigation);
 ```
 at the bottom of the Navigation.js file by:
 ```javascript jsx
-export default injectIntl(Navigation);
+export default withRouter(injectIntl(Navigation));
 ```
 
 In because of the option of message extraction create a constant intl in the method 'render'from the properties:
@@ -235,72 +235,109 @@ src/components/common folder and paste the following content:
 
 ```javascript jsx
 import React from 'react';
-import {FormattedMessage, FormattedNumber as IntlFormattedNumber, FormattedDate as IntlFormattedDate, FormattedTime as IntlFormattedTime} from 'react-intl';
+import {
+  FormattedMessage,
+  FormattedNumber as IntlFormattedNumber,
+  FormattedDate as IntlFormattedDate,
+  FormattedTime as IntlFormattedTime
+} from 'react-intl';
 
 /**
  *  Some components that render null if value===undefined
  */
 
 /** If value defined, render localized representation */
-export function LocalizedBool(props)
-{
-    if (props.value===undefined) {
-        return null;
-    }
-    return props.value
-        ? <FormattedMessage id="true" defaultMessage={"Yes"}/>
-        : <FormattedMessage id="false" defaultMessage={"No"}/>
+export function LocalizedBool(props) {
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+  return props.value
+    ? <FormattedMessage id="true" defaultMessage={"Yes"}/>
+    : <FormattedMessage id="false" defaultMessage={"No"}/>
 }
 
 /** Do not render 'NaN' if value===undefined */
 export function FormattedNumber(props) {
-    if (props.value===undefined) {
-        return null;
-    }
-    return <IntlFormattedNumber {...props}/>;
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+  return <IntlFormattedNumber {...props}/>;
 }
 
 /** Do not format the current date if value===undefined */
 export function FormattedDate(props) {
-    if (props.value===undefined) {
-        return null;
-    }
-    return <IntlFormattedDate {...props}/>;
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+  return <IntlFormattedDate {...props}/>;
 }
 
-/** Do not format the current time if value===undefined */
-export function FormattedTime(props) {
-    if (props.value===undefined) {
-        return null;
-    }
-    return <IntlFormattedTime {...props}/>;
+/** Do not format the current date if value===undefined */
+export function FormattedLocalDate(props) {
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+  const copy = {...props};
+  if (props.trimTime) {
+    copy.value = props.value.substring(0, 10);
+  }
+  return <IntlFormattedDate {...copy}/>;
 }
+
+/** Do not format the current time if value===undefined.
+ * With PUT the server ignores time zone offset of the value, but with GET it does
+ * concatenate the offset of the time zone of the server, resulting in a
+ * different time then was supplied to PUT.
+ */
+export function FormattedTime(props) {
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+
+  return <IntlFormattedTime {...props}/>;
+}
+
+/** Do not format the current time if value===undefined.
+ * With PUT the server ignores time zone offset of the value, but with GET it does
+ * concatenate the offset of the time zone of the server, resulting in a
+ * different time then was supplied to PUT.
+ */
+export function FormattedLocalTime(props) {
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+  // Remove the time zone offset
+  const copy = {...props};
+  copy.value = props.value.substring(0, 19);
+
+  return <IntlFormattedTime {...copy}/>;
+}
+
 
 /**
  * Allways format both date and time, except:
  * Do not format the current date and time if value===undefined */
-export function FormattedDateTime(props)
-{
-    if (props.value===undefined) {
-        return null;
-    }
-    const extensible = {...props}
-    if (props.hour===undefined) {
-        extensible.hour = 'numeric';
-    }
-    if (props.minute===undefined) {
-        extensible.minute = 'numeric';
-    }
-    if (props.year===undefined) {
-        extensible.year = 'numeric';
-    }
-    if (props.month===undefined) {
-        extensible.month = 'numeric';
-    }
-    if (props.day===undefined) {
-        extensible.day = 'numeric';
-    }
-    return <IntlFormattedDate {...extensible}/>;
+export function FormattedDateTime(props) {
+  if (props.value === undefined || props.value === null) {
+    return null;
+  }
+  const extensible = {...props}
+  if (props.hour === undefined) {
+    extensible.hour = 'numeric';
+  }
+  if (props.minute === undefined) {
+    extensible.minute = 'numeric';
+  }
+  if (props.year === undefined) {
+    extensible.year = 'numeric';
+  }
+  if (props.month === undefined) {
+    extensible.month = 'numeric';
+  }
+  if (props.day === undefined) {
+    extensible.day = 'numeric';
+  }
+  return <IntlFormattedDate {...extensible}/>;
 }
 ```
 
@@ -336,7 +373,7 @@ as well as the sub folders "employee" and "hours" of the reducers folder.
 The templates do require an extra template engine plug-in therefore the script generate.js was included. 
 To start the generation from the command prompt:
 ```shell
-docker-compose exec client templates/scaffold.js
+docker-compose exec client templates/scaffold.js --generator react
 ```
 If you get "Error: Cannot find module" you need to install the required modules:
 ```shell
@@ -447,7 +484,7 @@ weekday from the property start. In components/List.js and Show.js replace:
 ```
 by:
 ```javascript jsx
-<defined.FormattedDate value={item['start']} weekday="short"/>
+<defined.FormattedLocalDate value={item['start']} weekday="short"/>
 ```
 
 Next
