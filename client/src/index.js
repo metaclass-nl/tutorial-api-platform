@@ -21,27 +21,27 @@ import employeeRoutes from './routes/employee';
 
 const history = createBrowserHistory();
 const store = createStore(
-    combineReducers({
-        router: connectRouter(history),
-        form,
-        /* Add your reducers here */
-        employee,
-    }),
-    applyMiddleware(routerMiddleware(history), thunk)
+  combineReducers({
+    router: connectRouter(history),
+    form,
+    /* Add your reducers here */
+    employee,
+  }),
+  applyMiddleware(routerMiddleware(history), thunk)
 );
 
 ReactDOM.render(
-<Provider store={store}>
+  <Provider store={store}>
     <ConnectedRouter history={history}>
-    <Switch>
-    <Route path="/" component={Welcome} strict={true} exact={true}/>
-{/* Add your routes here */}
-{employeeRoutes}
-<Route render={() => <h1>Not Found</h1>} />
-</Switch>
-</ConnectedRouter>
-</Provider>,
-document.getElementById('root')
+      <Switch>
+        <Route path="/" component={Welcome} strict={true} exact={true}/>
+        {/* Add your routes here */}
+        {employeeRoutes}
+        <Route render={() => <h1>Client Route Not Found</h1>} />
+      </Switch>
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
