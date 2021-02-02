@@ -1,8 +1,18 @@
 Chapter 1: Employee base
 ========================
 
+This chapter adds the user interface for an entity class Employee.
+
 The environment is the same as in the chapter1-api branche, except:
-- instructions from README.md of chapter1-api where applied
+- client container with create-react-app was added. It is much like the one that was
+  in the standard distribution 2.5;
+- api/docker/caddy/Caddyfile was augmented to route client requests to the http server 
+  of the client container. Probably only works in development mode;
+- instructions from README.md of chapter1-api where applied.
+
+In order to activate the new client container you need to restart docker-compose. 
+To test it point your browser to https://localhost/. You should see the 
+welcome screen with title "Tutorial API Platform".
 
 ! If you did not apply the instructions from README.md of chapter1-api
 yourself, you do need to go back to branch chapter1-api and apply
@@ -17,7 +27,6 @@ Finally apply the DataFixtures by:
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
 
-This chapter adds the user interface for an entity class Employee.
 
 React client<a name="Client"></a>
 ------------
@@ -25,7 +34,7 @@ To scaffold (generate code) files for the client for the new Employee class, you
 type at the command prompt: 
 
 ```shell
-docker-compose exec client generate-api-platform-client
+docker-compose exec client generate-api-platform-client --generator react
 ```
 
 Please take a look at at least one of the action files and one of the reducer files
@@ -75,13 +84,12 @@ add the following line:
         {employeeRoutes}
 ```
 
-Before you can test this you need to visit https://localhost:8443/
-and make a security exception for the self-signed certificate, otherwise the clients
-XHR requests will be blocked. You may have to do this every time after you
-have closed the browser. 
+
 
 To test the client point your browser at http://localhost/employees/
-(including the last slash!)
+(including the last slash!). Make a security exception for
+the self-signed certificate. You may have to do this every time after you
+have closed the browser.
 
 The table that is scaffolded for the list of employees holds a column
 for each property of Employee. This was probably done because the scaffolding script
