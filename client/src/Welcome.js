@@ -9,15 +9,8 @@ const Welcome = () => (
               rel="noopener noreferrer"
               href="https://api-platform.com"
           >
-            <Logo />
           </a>
-            <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://les-tilleuls.coop"
-            >
-                <Flag />
-            </a>
+          <br/> <br/> <br/> <br/> <br/>
         </header>
         <section className="welcome__main">
             <div className="main__aside">
@@ -26,18 +19,18 @@ const Welcome = () => (
             </div>
             <div className="main__content">
                 <h1>
-                    Welcome to <strong>API Platform</strong>!
+                    <strong>Tutorial API Platform</strong>
                 </h1>
+                <br/>
                 <div className="main__before-starting">
                     <p>
                         This container will host your{' '}
-                        <a href={`https://${document.domain}`}><b>Progressive Web App</b></a>.
-                        Learn how to create your first API and generate a PWA:
+                        <a href={`https://${document.domain}`}><b>React Web App</b></a>.
                     </p>
                     <a
                         target="_blank"
                         rel="noopener noreferrer"
-                        href="https://api-platform.com/docs/"
+                        href="https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react"
                         className="main__button"
                     >
                         Get started<Arrow />
@@ -45,20 +38,14 @@ const Welcome = () => (
                 </div>
                 <div className="main__other">
                     <h2>Available services:</h2>
-                    <div className="other__bloc">
-                        <div className="other__circle">
-                            <Api />
-                        </div>
+                    <div className="other__bloc" style={{"width": "200px", "padding-left": "80px"}}>
                         <div className="other__content">
-                          <h3><a href={`https://${document.domain}:8443`}>API</a></h3>
+                          <h3><a href={`https://${document.domain}/docs`}>API</a></h3>
                         </div>
                     </div>
-                    <div className="other__bloc">
-                        <div className="other__circle">
-                            <Admin />
-                        </div>
+                    <div className="other__bloc" style={{"width": "200px", "padding-left": "65px"}}>
                         <div className="other__content">
-                          <h3><a href={`https://${document.domain}:444`}>Admin</a></h3>
+                          <h3><a href={`https://${document.domain}/admin`}>Admin</a></h3>
                         </div>
                     </div>
                 </div>
@@ -1688,7 +1675,7 @@ const Arrow = () => (
             type="text/css"
             dangerouslySetInnerHTML={{
                 __html:
-                    '  \n\t.linkst0{clip-path:url(#SVGID_2_);fill:#38A9B4;}\n'
+                    '  \n\t.linkst0{clip-path:url(#SVGID_2_);fill:#FF6600;}\n'
             }}
         />
         <defs>
