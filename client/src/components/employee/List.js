@@ -83,10 +83,10 @@ class List extends Component {
                   {item['function']}
                   </td>
                   <td>
-                  <defined.FormattedDate value={item['birthDate']} />
+                  <defined.FormattedLocalDate value={item['birthDate']} />
                   </td>
                   <td>
-                  <defined.FormattedTime value={item['arrival']} />
+                  <defined.FormattedLocalTime value={item['arrival']} />
                   </td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
@@ -117,9 +117,9 @@ const mapStateToProps = state => {
     retrieved,
     loading,
     error,
-    eventSource,
-    deletedItem
+    eventSource
   } = state.employee.list;
+  const deletedItem = state.employee.del.deleted;
   return { retrieved, loading, error, eventSource, deletedItem };
 };
 

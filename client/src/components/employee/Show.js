@@ -110,13 +110,13 @@ class Show extends Component {
               <tr>
                 <th scope="row"><FormattedMessage id="employee.birthDate" defaultMessage="birthDate"/></th>
                 <td>
-                    <defined.FormattedDate value={item['birthDate']} />
+                    <defined.FormattedLocalDate value={item['birthDate']} />
                 </td>
               </tr>
               <tr>
                 <th scope="row"><FormattedMessage id="employee.arrival" defaultMessage="arrival"/></th>
                 <td>
-                    <defined.FormattedTime value={item['arrival']} />
+                    <defined.FormattedLocalTime value={item['arrival']} />
                 </td>
               </tr>
               <tr>

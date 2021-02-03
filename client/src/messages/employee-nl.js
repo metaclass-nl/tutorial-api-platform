@@ -22,5 +22,6 @@ export default {
     "employee.delete.confirm": "Weet u zeker dat u deze medewerker wilt verwijderen?",
     "employee.created": "{label} is aangemaakt.",
     "employee.updated": "{label} is gewijzigd.",
+    "employee.deleted": "{label} is verwijderd.",
     "employee.mercure_deleted": "{label} is verwijderd door een andere gebruiker."
 }
