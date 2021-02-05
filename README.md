@@ -62,6 +62,18 @@ class ListTool extends Component {
   render() {
     return null;
   }
+
+  // ------------ AbstractSeachTool methods inlined ----------
+    
+  /** @return string part of the iri after the last slash */
+  static idFromIri(iri) {
+    if (!iri) return undefined;
+
+    const i = iri.lastIndexOf("/");
+    if (i === -1) return undefined;
+
+    return iri.substring(i + 1);
+  }
 }
 
 export default ListTool;
@@ -77,7 +89,7 @@ import React from "react";
 import ListTool from "../common/ListTool";
 ```
 Then make the class extend ListTool, remove the values property and
-the methods componentDidMount and componentDidUpdate. Afterwards the Hours
+the methods idFromIri, componentDidMount and componentDidUpdate. Afterwards the Hours
 List should work as it did before.
 
 In the Employee list component add the imports:
@@ -92,7 +104,7 @@ Replace the methods componentDidMount and componentDidUpdate by:
 
   list(values, apiQuery) {
     this.values = values;
-    this.props.list("/employees?" + apiQuery);
+    this.props.list("employees?" + apiQuery);
   }
 
   /**
