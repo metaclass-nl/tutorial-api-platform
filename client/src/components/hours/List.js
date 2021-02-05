@@ -32,7 +32,7 @@ class List extends Component {
   list(values, apiQuery) {
     this.values = values;
     this.props.query(this.props.location.search);
-    this.props.list("/hours?" + apiQuery);
+    this.props.list("hours?" + apiQuery);
   }
 
   /**
@@ -67,7 +67,7 @@ class List extends Component {
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
-            <FormattedMessage id="hours.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['@id']} }/>
+            <FormattedMessage id="hours.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['label']} }/>
           </div>
         )}
         {this.props.error && (

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Form from './Form';
 import { retrieve, update, reset } from '../../actions/{{{lc}}}/update';
 import { del } from '../../actions/{{{lc}}}/delete';
+import {FormattedMessage, injectIntl} from "react-intl";
 
 class Update extends Component {
   static propTypes = {
@@ -24,43 +25,50 @@ class Update extends Component {
     reset: PropTypes.func.isRequired
   };
 
+  deleting = false;
+
   componentDidMount() {
     this.props.retrieve(decodeURIComponent(this.props.match.params.id));
   }
 
   componentWillUnmount() {
+    this.deleting = false;
     this.props.reset(this.props.eventSource);
   }
 
   del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
+    const {intl} = this.props;
+    if (window.confirm(intl.formatMessage({id:"{{{lc}}}.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"}))) {
+      this.deleting = true;
       this.props.del(this.props.retrieved);
+    }
   };
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
+    // It happened that this.props.deleted was still set when user was returning after redirect
+    if (this.deleting && this.props.deleted) return <Redirect to=".." />;
 
     const item = this.props.updated ? this.props.updated : this.props.retrieved;
 
     return (
       <div>
-        <h1>Edit {item && item['@id']}</h1>
+        <h1><FormattedMessage id="{{{lc}}}.update" defaultMessage="Edit {label}" values={ {label: item && item['@id']} }/></h1>
 
         {this.props.created && (
           <div className="alert alert-success" role="status">
-            {this.props.created['@id']} created.
+            <FormattedMessage id="{{{lc}}}.created" defaultMessage="{label} created." values={ {label: this.props.created['@id']} } />
           </div>
         )}
         {this.props.updated && (
           <div className="alert alert-success" role="status">
-            {this.props.updated['@id']} updated.
+            <FormattedMessage id="{{{lc}}}.updated" defaultMessage="{label} updated." values={ {label: this.props.updated['@id']} } />
           </div>
         )}
         {(this.props.retrieveLoading ||
           this.props.updateLoading ||
           this.props.deleteLoading) && (
           <div className="alert alert-info" role="status">
-            Loading...
+            <FormattedMessage id="loading" defaultMessage="Loading..."/>
           </div>
         )}
         {this.props.retrieveError && (
@@ -89,10 +97,10 @@ class Update extends Component {
           />
         )}
         <Link to=".." className="btn btn-primary">
-          Back to list
+          <FormattedMessage id="backToList" defaultMessage="Back to list"/>
         </Link>
         <button onClick={this.del} className="btn btn-danger">
-          Delete
+          <FormattedMessage id="delete" defaultMessage="Delete"/>
         </button>
       </div>
     );
@@ -120,4 +128,4 @@ const mapDispatchToProps = dispatch => ({
   reset: eventSource => dispatch(reset(eventSource))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Update);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Update));

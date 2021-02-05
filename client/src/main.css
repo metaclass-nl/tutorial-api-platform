@@ -3,6 +3,9 @@
 .bg-lightGrey {
     background: #f2f2f2;
 }
+form.edit {
+    display: inline;
+}
 @media (min-width: 768px) {
     .mainContainer {
         padding-left: 20px;

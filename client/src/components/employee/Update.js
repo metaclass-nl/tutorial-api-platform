@@ -27,22 +27,27 @@ class Update extends Component {
     isUserAdmin: PropTypes.bool
   };
 
+  deleting = false;
+
   componentDidMount() {
     this.props.retrieve(decodeURIComponent(this.props.match.params.id));
   }
 
   componentWillUnmount() {
+    this.deleting = false;
     this.props.reset(this.props.eventSource);
   }
 
   del = () => {
     const {intl} = this.props;
-    if (window.confirm(intl.formatMessage({id:"employee.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"})))
+    if (window.confirm(intl.formatMessage({id:"employee.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"}))) {
+      this.deleting = true;
       this.props.del(this.props.retrieved);
+    }
   };
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
+    if (this.deleting && this.props.deleted) return <Redirect to=".." />;
 
     const item = this.props.updated ? this.props.updated : this.props.retrieved;
 
@@ -52,12 +57,12 @@ class Update extends Component {
 
         {this.props.created && (
           <div className="alert alert-success" role="status">
-            <FormattedMessage id="employee.created" defaultMessage="{label} created." values={ {label: this.props.created['@id']} } />
+            <FormattedMessage id="employee.created" defaultMessage="{label} created." values={ {label: this.props.created['label']} } />
           </div>
         )}
         {this.props.updated && (
           <div className="alert alert-success" role="status">
-            <FormattedMessage id="employee.updated" defaultMessage="{label} updated." values={ {label: this.props.updated['@id']} } />
+            <FormattedMessage id="employee.updated" defaultMessage="{label} updated." values={ {label: this.props.updated['label']} } />
           </div>
         )}
         {(this.props.retrieveLoading ||

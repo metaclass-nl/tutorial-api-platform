@@ -21,7 +21,7 @@ class Form extends Component {
   render() {
     const intl = getIntl();
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form onSubmit={this.props.handleSubmit} className="edit">
         {this.props.isUserAdmin && (
           <Field
             component={this.renderField}
@@ -31,7 +31,8 @@ class Form extends Component {
             required={true}
             widget={SelectEntity}
             labelProp="label"
-            fetchUrl="users?pagination=false" />
+            fetchUrl="users?pagination=false"
+            normalize={ v => v ? v : null } />
         )}
         <Field
           component={this.renderField}

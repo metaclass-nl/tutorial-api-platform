@@ -68,7 +68,7 @@ class List extends Component {
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
-            <FormattedMessage id="daytotalsperemployee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['@id']} }/>
+            <FormattedMessage id="daytotalsperemployee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['label']} }/>
           </div>
         )}
         {this.props.error && (

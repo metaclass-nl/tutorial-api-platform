@@ -10,6 +10,8 @@ ARG NGINX_VERSION=1.17
 # "development" stage
 FROM node:${NODE_VERSION}-alpine AS api_platform_client_development
 
+EXPOSE 3000
+
 WORKDIR /usr/src/client
 
 RUN yarn global add @api-platform/client-generator
@@ -23,8 +25,6 @@ COPY . ./
 
 VOLUME /usr/src/client/node_modules
 
-ENV HTTPS true
-
 CMD ["yarn", "start"]
 
 
@@ -36,7 +36,6 @@ ARG REACT_APP_API_ENTRYPOINT
 
 RUN set -eux; \
 	yarn build
-
 
 # "nginx" stage
 # depends on the "build" stage above
