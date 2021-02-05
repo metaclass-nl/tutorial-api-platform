@@ -31,7 +31,8 @@ class Form extends Component {
             required={true}
             widget={SelectEntity}
             labelProp="label"
-            fetchUrl="users?pagination=false" />
+            fetchUrl="users?pagination=false"
+            normalize={ v => v ? v : null } />
         )}
         <Field
           component={this.renderField}
