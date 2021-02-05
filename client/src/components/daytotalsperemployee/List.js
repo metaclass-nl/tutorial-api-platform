@@ -36,7 +36,7 @@ class List extends Component {
   list(values, apiQuery) {
     this.values = values;
     this.props.query(this.props.location.search);
-    this.props.list("/hours/dayreport?" + apiQuery);
+    this.props.list("hours/dayreport?" + apiQuery);
   }
 
   /**
@@ -116,7 +116,7 @@ class List extends Component {
                 <tr key={item['id']}>
                   <td><EntityLinks type="employees" items={item['employee']} labelProp="label" /></td>
                   <td>
-                  <defined.FormattedDate value={item['from']} />
+                  <defined.FormattedLocalDate value={item['from']} />
                   </td>
                   <td>
                   <defined.FormattedNumber value={item['count']}/>
