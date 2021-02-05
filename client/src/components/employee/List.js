@@ -31,7 +31,7 @@ class List extends Component {
   list(values, apiQuery) {
     this.values = values;
     this.props.query(this.props.location.search);
-    this.props.list("/employees?" + apiQuery);
+    this.props.list("employees?" + apiQuery);
   }
 
   /**
@@ -89,11 +89,19 @@ class List extends Component {
         <table className="table table-responsive table-striped table-hover">
           <thead>
             <tr>
-              <th><FormattedMessage id="employee.item" default="Employee"/></th>
-              <th><FormattedMessage id="employee.function" default="function"/></th>
-              <th><FormattedMessage id="employee.birthDate" default="birthDate"/></th>
-              <th><FormattedMessage id="employee.arrival" default="arrival"/></th>
-              <th colSpan={2} />
+              <ThSort orderBy={ {"lastName": "asc", "firstName": "asc"} }  isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.item" default="Employee"/>
+              </ThSort>
+              <ThSort orderBy={ {"function": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.function" default="function"/>
+              </ThSort>
+              <ThSort orderBy={ {"birthDate": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.birthDate" default="birthDate"/>
+              </ThSort>
+              <ThSort orderBy={ {"arrival": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.arrival" default="arrival"/>
+              </ThSort>
+              <th colSpan={3} />
             </tr>
           </thead>
           <tbody>
