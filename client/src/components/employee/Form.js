@@ -21,7 +21,7 @@ class Form extends Component {
   render() {
     const intl = getIntl();
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form onSubmit={this.props.handleSubmit} className="edit">
         {this.props.isUserAdmin && (
           <Field
             component={this.renderField}

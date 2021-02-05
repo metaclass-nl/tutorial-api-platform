@@ -32,7 +32,7 @@ class List extends Component {
   list(values, apiQuery) {
     this.values = values;
     this.props.query(this.props.location.search);
-    this.props.list("/employees?" + apiQuery);
+    this.props.list("employees?" + apiQuery);
   }
 
   /**
@@ -67,7 +67,7 @@ class List extends Component {
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
-            <FormattedMessage id="employee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['@id']} }/>
+            <FormattedMessage id="employee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['label']} }/>
           </div>
         )}
         {this.props.error && (
@@ -120,10 +120,10 @@ class List extends Component {
                   {item['function']}
                   </td>
                   <td>
-                  <defined.FormattedDate value={item['birthDate']} />
+                  <defined.FormattedLocalDate value={item['birthDate']} />
                   </td>
                   <td>
-                  <defined.FormattedTime value={item['arrival']} />
+                  <defined.FormattedLocalTime value={item['arrival']} />
                   </td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
@@ -160,9 +160,9 @@ const mapStateToProps = state => {
     retrieved,
     loading,
     error,
-    eventSource,
-    deletedItem
+    eventSource
   } = state.employee.list;
+  const deletedItem = state.employee.del.deleted;
   const {isUserAdmin} = state.login;
   return { retrieved, loading, error, eventSource, deletedItem, isUserAdmin };
 };

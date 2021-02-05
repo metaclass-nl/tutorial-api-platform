@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import getIntl from '../../utils/intlProvider';
 
 export function error(state = null, action) {
   switch (action.type) {
@@ -6,7 +7,8 @@ export function error(state = null, action) {
       return action.error;
 
     case '{{{uc}}}_SHOW_MERCURE_DELETED':
-      return `${action.retrieved['@id']} has been deleted by another user.`;
+        const intl = getIntl();
+        return intl.formatMessage({id:"employee.mercure_deleted", defaultMessage:"{label} has been deleted by another user."}, {label: action.retrieved['@id']});
 
     case '{{{uc}}}_SHOW_RESET':
       return null;
