@@ -207,7 +207,8 @@ SelectEntity field. Insert it right below the line with form onSubmit:
             required={true}
             widget={SelectEntity}
             labelProp="label"
-            fetchUrl="users?pagination=false" />
+            fetchUrl="users?pagination=false" 
+            normalize={ v => v ? v : null } />
         )}
 ```
 Don't forget to import the SelectEntity component:
