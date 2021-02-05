@@ -21,22 +21,27 @@ class Show extends Component {
     del: PropTypes.func.isRequired
   };
 
+  deleting = false;
+
   componentDidMount() {
     this.props.retrieve(decodeURIComponent(this.props.match.params.id));
   }
 
   componentWillUnmount() {
+    this.deleting = false;
     this.props.reset(this.props.eventSource);
   }
 
   del = () => {
     const {intl} = this.props;
-    if (window.confirm(intl.formatMessage({id:"employee.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"})))
+    if (window.confirm(intl.formatMessage({id:"employee.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"}))) {
+      this.deleting = true;
       this.props.del(this.props.retrieved);
+    }
   };
 
   render() {
-    if (this.props.deleted) return <Redirect to=".." />;
+    if (this.deleting && this.props.deleted) return <Redirect to=".." />;
 
     const item = this.props.retrieved;
 
@@ -110,13 +115,13 @@ class Show extends Component {
               <tr>
                 <th scope="row"><FormattedMessage id="employee.birthDate" defaultMessage="birthDate"/></th>
                 <td>
-                    <defined.FormattedDate value={item['birthDate']} />
+                    <defined.FormattedLocalDate value={item['birthDate']} />
                 </td>
               </tr>
               <tr>
                 <th scope="row"><FormattedMessage id="employee.arrival" defaultMessage="arrival"/></th>
                 <td>
-                    <defined.FormattedTime value={item['arrival']} />
+                    <defined.FormattedLocalTime value={item['arrival']} />
                 </td>
               </tr>
               <tr>

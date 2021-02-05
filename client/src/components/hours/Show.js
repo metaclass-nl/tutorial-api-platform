@@ -23,23 +23,28 @@ class Show extends Component {
     listQuery: PropTypes.string
   };
 
+  deleting = false;
+
   componentDidMount() {
     this.props.retrieve(decodeURIComponent(this.props.match.params.id));
   }
 
   componentWillUnmount() {
+    this.deleting = false;
     this.props.reset(this.props.eventSource);
   }
 
   del = () => {
     const {intl} = this.props;
-    if (window.confirm(intl.formatMessage({id:"hours.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"})))
+    if (window.confirm(intl.formatMessage({id:"hours.delete.confirm", defaultMessage:"Are you sure you want to delete this item?"}))) {
+      this.deleting = true;
       this.props.del(this.props.retrieved);
+    }
   };
 
   render() {
     const listUri = "../" + (this.props.listQuery ? this.props.listQuery : "");
-    if (this.props.deleted) return <Redirect to={listUri} />;
+    if (this.deleting && this.props.deleted) return <Redirect to={listUri} />;
 
     const item = this.props.retrieved;
 

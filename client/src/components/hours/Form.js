@@ -20,7 +20,7 @@ class Form extends Component {
   render() {
     const intl = getIntl();
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form onSubmit={this.props.handleSubmit} className="edit">
         <Field
           component={this.renderField}
           name="nHours"
@@ -64,6 +64,7 @@ class Form extends Component {
           widget={SelectEntity}
           labelProp="label"
           fetchUrl="employees?pagination=false"
+          normalize={ v => v ? v : null }
           />
 
         <button type="submit" className="btn btn-success">

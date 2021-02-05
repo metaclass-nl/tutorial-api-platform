@@ -47,7 +47,7 @@ class List extends Component {
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
-            <FormattedMessage id="employee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['@id']} }/>
+            <FormattedMessage id="employee.deleted" defaultMessage="{label} deleted" values={ {label: this.props.deletedItem['label']} }/>
           </div>
         )}
         {this.props.error && (
@@ -83,10 +83,10 @@ class List extends Component {
                   {item['function']}
                   </td>
                   <td>
-                  <defined.FormattedDate value={item['birthDate']} />
+                  <defined.FormattedLocalDate value={item['birthDate']} />
                   </td>
                   <td>
-                  <defined.FormattedTime value={item['arrival']} />
+                  <defined.FormattedLocalTime value={item['arrival']} />
                   </td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
@@ -123,9 +123,9 @@ const mapStateToProps = state => {
     retrieved,
     loading,
     error,
-    eventSource,
-    deletedItem
+    eventSource
   } = state.employee.list;
+  const deletedItem = state.employee.del.deleted;
   return { retrieved, loading, error, eventSource, deletedItem };
 };
 
