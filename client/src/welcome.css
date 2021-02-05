@@ -14,12 +14,12 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     overflow: auto;
-    background-color: #ececec;
+    background-color: #FFF0DC;
 }
 
 .welcome a {
     text-decoration: none;
-    color: #38a9b4;
+    color: #FF6600;
     font-weight: bold;
 }
 
@@ -33,7 +33,7 @@ body {
 
 .welcome h1 strong {
     font-weight: 700;
-    color: #38a9b4;
+    color: #FF6600;
 }
 
 .welcome h2 {
@@ -46,7 +46,7 @@ body {
 .welcome h3 {
     text-transform: uppercase;
     font-weight: 500;
-    color: #38a9b4;
+    color: #FF6600;
     font-size: 16px;
     margin: 0 0 5px;
     display: block;
@@ -55,8 +55,10 @@ body {
 /***** TOP *****/
 
 .welcome__top {
-    background-color: #67cece;
+    background-color: #FFF0DC;
     padding-bottom: 40px;
+    background: url('https://www.metaclass.nl/images/specifiek/header.jpg') right top no-repeat;;
+    background-size: 100%;
 }
 
 .welcome__flag {
@@ -83,7 +85,7 @@ body {
 }
 
 .main__aside {
-    background-color: #afe5e5;
+    background-color: #FFF0DC;
     width: 30%;
     position: relative;
     overflow: hidden;
@@ -121,13 +123,13 @@ body {
 
 .main__content {
     padding: 30px;
-    text-align: left;
+    text-align: center;
     flex: auto;
 }
 .other__bloc {
     display: inline-flex;
     align-items: center;
-    border: 4px solid #afe5e5;
+    border: 4px solid #FF6600;
     padding: 10px 20px;
     margin: 10px 0;
     height: 170px;
@@ -148,7 +150,7 @@ body {
 .other__circle {
     width: 110px;
     height: 110px;
-    background-color: #afe5e5;
+    background-color: #FFF0DC;
     border-radius: 50%;
     margin-right:20px;
 }
@@ -205,16 +207,16 @@ a.other__button {
 }
 
 .other__button:hover {
-    background-color: #afe5e5;
-    color: #339ba5;
+    background-color: #FFF0DC;
+    color: #FF6600;
 }
 
 .main__button {
     display: inline-block;
     padding: 10px 50px 10px 10px;
-    border: 3px solid #339ba5;
+    border: 3px solid #FF6600;
     font-size: 22px;
-    color: #339ba5;
+    color: #FF6600;
     text-transform: uppercase;
     margin: 15px 0;
     overflow: hidden;
@@ -232,7 +234,7 @@ a.other__button {
 }
 
 .main__button:hover {
-    background-color: #afe5e5;
+    background-color: #FFF0DC;
 }
 
 .main__button:hover svg {
@@ -278,8 +280,8 @@ a.other__button {
 }
 
 .help__circle:hover {
-    border-color: #67cece;
-    background-color: #afe5e5;
+    border-color: #FF6600;
+    background-color: #FFF0DC;
 }
 
 /***** MEDIAS *****/
@@ -291,7 +293,6 @@ a.other__button {
     }
     .main__content {
         width: 100%;
-        text-align: center;
         padding: 20px;
     }
 }

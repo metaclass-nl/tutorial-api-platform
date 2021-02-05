@@ -42,6 +42,7 @@ use App\Validator\Constraints\CommonUserHoursStartConstraint;
  * @ApiFilter(RangeFilter::class, properties={"nHours"})
  * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
  * @ORM\Entity
+ * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
 class Hours
 {
