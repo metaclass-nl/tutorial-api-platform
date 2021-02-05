@@ -13,7 +13,7 @@ import {Link} from "react-router-dom";
  */
 export default function EntityLinks(props) {
     const { type, items, labelProp = "@id", up } = props;
-    if (items === undefined) {
+    if (items === undefined || items === null) {
         return null;
     }
     if (Array.isArray(items)) {
