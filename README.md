@@ -16,7 +16,7 @@ To scaffold (generate code) files for the client for the new Employee class, you
 type at the command prompt: 
 
 ```shell
-docker-compose exec client generate-api-platform-client
+docker-compose exec client generate-api-platform-client --generator react
 ```
 
 Please take a look at at least one of the action files and one of the reducer files
@@ -66,7 +66,7 @@ add the following line:
         {hoursRoutes}
 ```
 
-Tot test it point your browser at http://localhost/hours/
+Tot test it point your browser at https://localhost/hours/
 (including the last slash!)
 
 The table that is scaffolded for the list of hours holds a column
@@ -89,13 +89,11 @@ So let's add a navigation bar. Create a file Navigation.js in the components fol
 paste the following:
 ```javascript jsx
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 
 const NavLink = props => {
     let className = props.className === undefined ? "nav-item" : props.className;
-    const slash2Pos = window.location.pathname.indexOf('/', 1);
-    const basePath = slash2Pos === -1 ? window.location.pathname : window.location.pathname.substr(0, slash2Pos + 1);
-    if (props.href === basePath) {
+    if (props.href === props.basePath) {
         className += " active";
     }
     return (
@@ -128,6 +126,8 @@ class Navigation extends React.Component {
         if (!this.state.collapsed) {
             className += " show";
         }
+        const slash2Pos = this.props.location.pathname.indexOf('/', 5);
+        const basePath = slash2Pos === -1 ? this.props.location.pathname : this.props.location.pathname.substr(0, slash2Pos + 1);
         return (
             <nav className="navbar navbar-expand-md navbar-light bg-lightGrey">
                 <div></div>
@@ -138,9 +138,9 @@ class Navigation extends React.Component {
                 </button>
                 <div className={className}>
                     <ul className="navbar-nav mr-auto">
-                        <NavLink href="/" content="Home"/>
-                        <NavLink href="/employees/" content="Employees" />
-                        <NavLink href="/hours/" content="Hours"/>
+                        <NavLink href="/" content="Home" basePath={basePath} />
+                        <NavLink href="/employees/" content="Employees" basePath={basePath} />
+                        <NavLink href="/hours/" content="Hours" basePath={basePath} />
                     </ul>
                 </div>
             </nav>
@@ -148,11 +148,13 @@ class Navigation extends React.Component {
     }
 }
 
-export default Navigation;
+export default withRouter(Navigation);
 ```
 
-This component contains a hardcoded menu and a sub component NavLink that dispalys a link, 
-adding a style "active" if its link starts with the content of window.location.pathname.
+This component contains a hardcoded menu and a sub component NavLink that displays a link, 
+adding a style "active" if its link starts with the content of its basePath property. 
+The value of this property is provided by the main component whose render method calculates
+it from its location property which is injectend by the withRouter call at the export statement.
 
 The navigation bar does not support pulldown menu's. If you like to use a 
 pull down menu or other dynamic features of bootstrap consider using
@@ -187,9 +189,9 @@ ReactDOM.render(
     document.getElementById('root')
 );
 ```
-Notice that the navigation is inside the ConnectedRouter component so that its Link 
-components will work with the router. An extra div had to be added around it because 
-the  ConnectedRouter component can only hace one element. 
+Notice that the navigation is inside the ConnectedRouter component so that it will work 
+with the router. An extra div had to be added around it because 
+the  ConnectedRouter component can only house one element. 
 
 Notice that another div was added to wrap around the Switch component.
 It allows to specify styles for it in a a css stylesheet. 
