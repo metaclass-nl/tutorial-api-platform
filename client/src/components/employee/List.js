@@ -106,10 +106,10 @@ class List extends Component {
                   {item['city']}
                   </td>
                   <td>
-                  <defined.FormattedDate value={item['birthDate']} />
+                  <defined.FormattedLocalDate value={item['birthDate']} />
                   </td>
                   <td>
-                  <defined.FormattedTime value={item['arrival']} />
+                  <defined.FormattedLocalTime value={item['arrival']} />
                   </td>
                   <td><EntityLinks type="hours" items={item['hours']} /></td>
                   <td>
@@ -144,9 +144,9 @@ const mapStateToProps = state => {
     retrieved,
     loading,
     error,
-    eventSource,
-    deletedItem
+    eventSource
   } = state.employee.list;
+  const deletedItem = state.employee.del.deleted;
   return { retrieved, loading, error, eventSource, deletedItem };
 };
 

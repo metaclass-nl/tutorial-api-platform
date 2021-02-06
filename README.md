@@ -2,8 +2,9 @@ Chapter 4: Labels - React client
 ================================
 
 The environment is te same as in the chapter3-react branche, except:
-- instructions from README.md of chapter3-react where applied
-- instructions from README.md of chapter4-api where applied
+- instructions from README.md of chapter3-react where applied,
+- instructions from README.md of chapter4-api where applied,
+- the templates where removed.
 
 This chapter replaces ids by labels and a select widget.
 
@@ -45,7 +46,13 @@ In chapter4-api you added an extra tag at the label property of Employee:
      * @ApiProperty(iri="http://schema.org/name")
 ```
 
-Let's start with client/src/components/employee/List.js. below
+Let's start with client/src/components/employee/List.js. In the render method near the end of
+```javascript jsx
+            <FormattedMessage id="employee.deleted"
+```
+replace '@id' by 'label'.
+
+Below
 ```javascript jsx
     <table className="table table-responsive table-striped table-hover">
 ```
@@ -58,9 +65,9 @@ and the content of the Link in tbody to
    {item['label']} 
 ```
 
-Component hours/List.js also contains a column id, but 
-here using the label would sort off mess up the table with too much
-data in a single column. This can be solved by making the
+Component hours/List.js also has a deleted message where '@id' can be replaced by 'label'. 
+And it contains a column id, but here using the label would sort off mess up 
+the table with too much data in a single column. This can be solved by making the
 first column show 'start' instead of @id and reordering the other colums like in:
 ```javascript jsx
         <table className="table table-responsive table-striped table-hover">
@@ -122,7 +129,8 @@ You can replace @id by label, resulting in:
 ```javascript jsx
         <h1><FormattedMessage id="employee.show" defaultMessage="Show {label}" values={ {label: item && item['label']} }/></h1>
 ```
-You can do the same with the component employee/Update.js 
+You can do the same with the component employee/Update.js, including '@id' in the
+employee.created and the employee.updated message.
 
 The same can be done with hours/Show.js. and hours/Update.js but here we have
 a problem: the label contains a dateTime in UTC and its format is not localized!
@@ -283,6 +291,7 @@ Now the Redux form Field for employee can be adapted like this:
           widget={SelectEntity}
 	      labelProp="label"
           fetchUrl="employees?pagination=false"
+          normalize={ v => v ? v : null }
           label={<FormattedMessage id="hours.employee" defaultMessage="employee" />}
         />
 ```
@@ -307,6 +316,9 @@ with the following content:
 
 .bg-lightGrey {
     background: #f2f2f2;
+}
+form.edit {
+    display: inline;
 }
 @media (min-width: 768px) {
     .mainContainer {
