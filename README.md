@@ -1,29 +1,9 @@
 <h1>MetaClass' Tutorial API Platform</h1>
 
-[API Platform](https://api-platform.com) is a very powerfull api framework, but i's aproach to application 
-development (if you use doctrine or ElasticSearch) is still revolutionary: 
-Instead of developing your own controllers, services and a user interface on top of 
-an existing framework, you only supply the domain classes (Entities) and the framework
-generates the first version of the application. Then you then you adapt 
-(extend, override) it to suit your needs. 
-
-With proper training this approach gives high productivity and great flexibility,
-but is tends to have a steep leaning curve. Api platform is quite well documented, 
-but the documentation is stuctured according to the components and features
-of api-platform, not to the tasks of building an actual application. 
- 
-This tutorial takes you step by step through the process of building 
-a simple application with api platform and the react client generator. 
-Each chapter has one 'api' branche in git and one 'react' branche. 
-The 'api' branches only contain api code, the 'react' branches
-contain both api code and react code. 
-
-If you are only interested in the api side you can skip the react branches. 
-The api branches only use the Swagger UI and curl for testing and do not depend
-on react.  
-
-In addition to this tutorial an [extended react client generator](https://github.com/metaclass-nl/client-generator) 
-is available that puts what you have learnt into use for scaffolding your own application.
+[API Platform](https://api-platform.com) is quite well documented, but the documentation
+is stuctured according to the components and features of api-platform, not to the tasks 
+of building an actual application. This tutorial takes you step by step through the process 
+of building a simple application with api platform and the react client generator.
 
 Chapters and branches
 ---------------------
@@ -38,45 +18,30 @@ Chapters and branches
 9. Report [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
 10. End [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-react)
 
-Each branch builds on top of the previous one of the same type. 
-Each 'react' branch also contains the code from the corresponding 'api' branch. 
-To see the code resulting from a branch you can check out 
-the next branche of the same type, or browse it on github. 
-Or better: let git compare your current code with the branche 
-of the next chapter so that you can see the differences right away.  
+Each chapter has one 'api' branche in git and one 'react' branche.
+The 'api' branches only contain api code, the 'react' branches
+contain both api code and react code. If you are only interested in the api side
+you can skip the react branches. The api branches only use the Swagger UI
+and curl for testing and do not depend on react.
 
-After installation and testing (see below), normally you would start with 
-checking out branch chapter1-api and point your browser to 
-[the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
-to get a nicely rendered version of its readme. When you are finished
-with the instructions you commit your changes and check out chapter1-react,
-select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.
-Of course if you only want to do the api branches you can skip the react ones.  
+Each branch builds on top of the previous one of the same type.
+Each 'react' branch also contains the code from the corresponding 'api' branch.
+To see the code resulting from a branch you can check out
+the next branche of the same type, or browse it on github.
+Or better: let git compare your current code with the branche
+of the next chapter so that you can see the differences right away.
 
-But you can start with any branch by checking it out and following its instructions.
-However, if you skip a chapter you need to restart docker-compose 
-to apply the migrations. Then apply the DataFixtures by:
-```shell
-docker-compose exec php bin/console doctrine:fixtures:load
-```                     
-For a react branche you may also need to update yarn:
-```shell
-docker-compose exec client yarn install
-```                     
-Wait for yarn to complete, then:
-```shell
-docker-compose exec client yarn update
-```                     
-With chapter 4 react and higher if you still get an error on missing react-intl: 
-```shell
-docker-compose exec client yarn add react-intl
-```
+In addition to this tutorial an [extended react client generator](https://github.com/metaclass-nl/client-generator)
+is available that puts what you have learnt into use for scaffolding your own application.
+
+As of api-platform version 2.6 the standard distribution contains a nextJS client
+instead of the react client. This tutorial does not (yet?) have nextJS branches.
 
 Required knowledge
 ------------------
 - maybe docker and docker-compose
 APi branches:
-- PHP 7
+- PHP 7 or 8
 - Symfony 4 or 5
 - Doctrine ORM
 React branches:
@@ -120,25 +85,51 @@ As we did not install using Symfony Flex and Composer you can skip that section
 and go straight to [It's Ready!](https://api-platform.com/docs/distribution/#its-ready).
 Follow the instructions to test the api.
 
-Before you can test the admin or client interface you need to visit https://localhost:8443/
-and make a security exception for the self-signed certificate, otherwise its 
-XHR requests will be blocked. You may have to do this every time after you
-have closed the browser. 
-
-To test the admin interface point your browser at https://localhost:444/. You may need to
-make an other security exception for the certificate of the admin interface.
+To test the admin interface point your browser at https://localhost/admin. 
 
 Getting Started
 ---------------
-Normally you would start with checking out branch chapter1-api and point your browser to 
+To start at the beginning check out branch chapter1-api and point your browser to 
 [the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
 to get a nicely rendered version of its readme. When you are finished
 with the instructions you commit your changes and check out chapter1-react,
 select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
-Of course if you only want to do the api branches you can skip the react ones.  
+If you only want to do the api branches you can skip the react ones.  
+
+But you can start with any branch by checking it out and following its instructions.
+However, if you skip a chapter you need to restart docker-compose
+to apply the migrations. Then apply the DataFixtures by:
+```shell
+docker-compose exec php bin/console doctrine:fixtures:load
+```                     
+For a react branche you may also need to update yarn:
+```shell
+docker-compose exec client yarn install
+```                     
+Wait for yarn to complete, then:
+```shell
+docker-compose exec client yarn update
+```                     
+With chapter 4 react and higher if you still get an error on missing react-intl:
+```shell
+docker-compose exec client yarn add react-intl
+```
+
 
 About the admin interface
 -------------------------
+Api platform is a very powerfull framework, but i's aproach to application
+development (if you use doctrine or ElasticSearch) is still revolutionary:
+Instead of developing your own controllers, services and a user interface on top of
+an existing framework, you only supply the domain classes (Entities) and some configuration
+and the framework supplies default behavior for the api. Then you then you adapt
+(decorate, extend, override) it to suit your needs.
+
+With proper training this approach gives high productivity and great flexibility,
+but is tends to have a steep leaning curve. Api platform is quite well documented,
+but the documentation is stuctured according to the components and features
+of api-platform, not to the tasks of building an actual application.
+
 The tutorial contains instructions with respect to the scaffolded React 'client' 
 user interface. The scaffolded React 'client' user interface is simple and insightfull 
 as all the code for the basic CRUD operations is generated as-expected,
@@ -159,17 +150,26 @@ Limitations
 -----------
 This is a work in progess and needs more testing.
 
-This tutorial currently only supports the (scaffolded) React client user interface.  
+This tutorial currently only supports the api core and the (scaffolded) React client 
+user interface.  
 
-The tutorial does not support installation with Symfony Flex and Composer so you can skip that section 
+This distribuition is only for educational purposes and will not be updated frequently. 
+If you want to run a client container for react within the standard distribution of 
+api platform you are advised to create your own fork and add a similar container there
+yourself. You will need to keep your fork up to date yourself. For most of it you can pull 
+updates from Api Platform, but they will not supply updates for your client container, 
+you will need to maintain it yourself, especially its package.json. You also need to
+maintain yourself any generated code as well as any components from the tutorial that you use. 
+Old software versions are prone to have known security vurnerabilities but new versions need to 
+be tested with you application before use in production.
 
 
 Credits
 -------
 
-The tutorial and examples are copyright (c) [ MetaClass ](https://www.metaclass.nl/), Groningen, 2019, 2020.
+The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021.
 
-It is is based on the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
+It is based on version 2.6.1 of the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
 created by [Kévin Dunglas](https://dunglas.fr). 
 
 
@@ -181,11 +181,12 @@ Please fork the repository and add tutorial branches there
 for some other client (generation) platform or the admin component, 
 then send a merge request. 
 
-However, api platform and the client platforms are changing constantly so 
+However, api platform and the client platforms are changing constantly. Even though
+the tutorial is for educational purposes only, 
 at some point you may need to update your branches to keep them up to date and
 working. Please do not request the merging of code that you are not 
 willing to maintain. Abandoned branches that are no longer functional 
 or have security issues may be removed. 
 
-When you open a Pull Request to this repository, 
-you agree to license your code under the MIT license.
+When you open a Pull Request to this repository, you agree to license the (changes to the)
+code that is subject to the pull request under the MIT license.
