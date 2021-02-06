@@ -72,11 +72,11 @@ import SearchTool from "./SearchTool";
 
 In method list change:
 ```javascript jsx
-        this.props.list("/day_totals_per_employees?" + apiQuery);
+        this.props.list("day_totals_per_employees?" + apiQuery);
 ```
 into
 ```javascript jsx
-        this.props.list("/hours/dayreport?" + apiQuery);
+        this.props.list("hours/dayreport?" + apiQuery);
 ```
 Replace the ListTool tag by:
 ```javascript jsx
@@ -171,9 +171,9 @@ is enough. Change FormattedMessage daytotalsperemployee.from to:
 Add a message with this id to the client/src/messages/daytotalsperemployee-en.js
 and one to daytotalsperemployee-nl.js with translation "Datum".
 
-Back in client/src/daytotalsperemployee/List.js in the tbody Change the defined.FormattedDateTime item['from'] to defined.FormattedDate and remove the next ThSort. 
+Back in client/src/daytotalsperemployee/List.js in the tbody Change the defined.FormattedDateTime item['from'] to defined.FormattedLocalDate and remove the next ThSort. 
 Remove the import or ThSort and rename all ThSort tags to th.
-Remove the td with FormattedDate item['to'].
+Remove the td with FormattedDateTime item['to'].
 
 The hourglass link still refers to the show route that does not exist. A more usefull target would
 be the Hours list searching for the employee and day of the item. Change it to:
@@ -184,7 +184,7 @@ be the Hours list searching for the employee and day of the item. Change it to:
 To make that work add the following method to the List class:
 ```javascript jsx
   hoursLink(item) {
-    const employeeId = item.employee['@id'].substring(10);
+    const employeeId = item.employee['@id'];
     const day = item.from;
     return `/hours/?employee[id]=${encodeURIComponent(employeeId)}&start=${encodeURIComponent(day)}`;
   }
