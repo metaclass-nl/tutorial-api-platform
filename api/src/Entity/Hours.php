@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "order"={"start": "DESC", "description": "ASC"}
  * })
  * @ORM\Entity
+ * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
 class Hours
 {
