@@ -23,6 +23,7 @@ But the search form should not be entirely the same as the edit form:
   unlikely that the user knows both by head. To make it more usefull the start
   field should only require a date to search for all Hours that start on that date
 - a field for employee.function should be added
+- Redux Form should know the form under a different name so that it keeps a separate state 
 
 As requirements change in the future the search form may be expected to change and divert
 more and more from the edit form. It therefore is OK to simply copy the code from
@@ -74,8 +75,14 @@ by renaming the employee select to employee.id:
 This way both employee.id and employee.function will be put together in the nested
 object in employee.
 
-Browsing history and query string utitiies<a name="History"></a>
-------------------------------------------
+At te bottom of the form in the reduxForm call change the value of form:
+```javascript jsx
+export default reduxForm({
+  form: 'hours_search',
+```
+
+Browsing history and query string utilities<a name="History"></a>
+-------------------------------------------
 
 The current Hours List component renders Pagination buttons. When the user presses
 one of these buttons a new uri is added to the browsing history so that the user
@@ -202,7 +209,7 @@ Then replace the componentDidMount method by:
 
   componentDidMount() {
     this.values = parseQuery(this.props.location.search);
-    this.props.list("/hours?" + buildQuery({page: values.page}));
+    this.props.list("hours?" + buildQuery({page: values.page}));
   }
 ```
 
@@ -230,7 +237,7 @@ To process this adapt the componentDidUpdate method like this:
   componentDidUpdate(prevProps) {
     if (this.props.location.search !== prevProps.location.search) {
       this.values = parseQuery(this.props.location.search);
-      this.props.list("/hours?" + buildQuery({page: values.page}));
+      this.props.list("hours?" + buildQuery({page: values.page}));
     }
   }
 ```
@@ -265,7 +272,7 @@ function handleClick(event, props, uri) {
 }
 ```
 
-Because a query string is now used insead of passing the api uri as page parameter
+Because a query string is now used instead of passing the api uri as page parameter
 the following route in client/src/routes/hours.js will no longer be used and
 can be removed:
 ```javascript jsx
@@ -312,7 +319,7 @@ the query for the api:
 ```javascript jsx
 list(values, apiQuery) {
     this.values = values;
-    this.props.list("/hours?" + apiQuery);
+    this.props.list("hours?" + apiQuery);
   }
 ```
 
@@ -341,6 +348,16 @@ class SearchTool extends Component {
 
   values;
 
+  /** @return string part of the iri after the last slash */
+  static idFromIri(iri) {
+    if (!iri) return undefined;
+
+    const i = iri.lastIndexOf("/");
+    if (i === -1) return undefined;
+
+    return iri.substring(i + 1);
+  }
+
   componentDidMount() {
     this.valuesFromQuery();
     this.props.list(this.values, this.apiQuery());
@@ -366,7 +383,7 @@ class SearchTool extends Component {
     if (employee) {
       if (employee.id) {
         // need to strip /employees/
-        req["employee.id"] = employee.id.substring(11);
+        req.employee = this.constructor.idFromIri(employee.id.);
       }
       if (employee.function) {
         req["employee.function"] = employee.function;
@@ -439,7 +456,7 @@ class SearchTool extends Component {
       <SearchForm
         onSubmit={values => this.formSubmit(values)}
         onChange={values => this.formChange(values)}
-        initialValues={ this.values }
+        initialValues={ {...this.values, order: undefined, page: undefined} }
       />
     );
   }
@@ -496,7 +513,7 @@ together with a query string for the api. This is how the query string is create
     if (employee) {
       if (employee.id) {
         // need to strip /employees/
-        req.employee = employee.id.substring(11);
+        req.employee = this.constructor.idFromIri(employee.id.);
       }
       if (employee.function) {
         req["employee.function"] = employee.function;

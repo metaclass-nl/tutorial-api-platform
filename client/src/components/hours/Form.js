@@ -64,6 +64,7 @@ class Form extends Component {
           widget={SelectEntity}
           labelProp="label"
           fetchUrl="employees?pagination=false"
+          normalize={ v => v ? v : null }
           />
 
         <button type="submit" className="btn btn-success">
