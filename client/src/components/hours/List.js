@@ -31,7 +31,7 @@ class List extends Component {
   list(values, apiQuery) {
     this.values = values;
     this.props.query(this.props.location.search);
-    this.props.list("/hours?" + apiQuery);
+    this.props.list("hours?" + apiQuery);
   }
 
   /**
