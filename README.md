@@ -1,5 +1,5 @@
-Chapter 8: Authorization - Api
-=============================
+Chapter 9: Report - Api
+=======================
 
 The environment is te same as in the chapter8-api branch, except:
 - instructions from README.md of chapter8-api where applied,
@@ -12,10 +12,10 @@ Report model<a name="ReportModel"></a>
 
 The report needs to retrieve Hours, probably filtering them by $start and $employee.
 Then in should group them by $employee and the day in which they fall and for each group
-instantiate DayTotalsPerEmployee and set $employee, $hours and the DateTime $from. 
+instantiate DayTotalsPerEmployee and set $employee, $hours and the DateTime $from.
 The DayTotalsPerEmployee will calculate:
 - DateTime $to (24 hours after $from),
-- $total Total of hours, 
+- $total Total of hours,
 - $onInvoice Total of hours on invoice
 - $fractionBilled $onInvoice / $total
 - $count Number of Hours registrations in the group.\
@@ -207,9 +207,9 @@ they must filter Hours, not DayTotalsPerEmployee. It is possible to wrap them*, 
 to add an extra collection operation to the Hours resource.
 
 But wait a minute, didn't the API Platform Documentation page on [Creating Custom Operations and Controllers](https://api-platform.com/docs/core/controllers/) discourage using custom controllers with API Platform? True, but a custom
-controller is not required, only an extra operation and a custom DataProvider! And it also says "For most use cases, better extension points, working both with REST and GraphQL, are available" referring to the [General Design Considerations](https://api-platform.com/docs/core/design/) page wich in turn refers to [Extending API Platform](https://api-platform.com/docs/core/extending/) where the first extension point is "Data Providers". 
+controller is not required, only an extra operation and a custom DataProvider! And it also says "For most use cases, better extension points, working both with REST and GraphQL, are available" referring to the [General Design Considerations](https://api-platform.com/docs/core/design/) page wich in turn refers to [Extending API Platform](https://api-platform.com/docs/core/extending/) where the first extension point is "Data Providers".
 
-To create an extra operation without a custom controller, in api/src/Entities/Hours.php in the @ApiResource tag below 
+To create an extra operation without a custom controller, in api/src/Entities/Hours.php in the @ApiResource tag below
 ```php method doc
  *     collectionOperations={
  *         "get"={
@@ -227,11 +227,11 @@ add a comma and the following lines:
  *             "pagination_enabled"=false
  *         }
 ```
-The method is GET so this operation will behave just like the built-in collectionOperation "get", except for the specifications below 
+The method is GET so this operation will behave just like the built-in collectionOperation "get", except for the specifications below
 "get_day_report": the path being "/hours/dayreport", the normalization will use the day_totals_per_employee group and there will be no pagination.
 
-You can try it out in the swagger ui at https://localhost:8443/docs, there is a new GET operation ​/hours​/dayreport.
-After logging in (see the readme.md of 
+You can try it out in the swagger ui at https://localhost/docs, there is a new GET operation /hours/dayreport.
+After logging in (see the readme.md of
 [branch chapter7-api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-api)
 you can try it out. It results in an array of Hours, just like /hours, but without any properties. But that's to be expected
 with the serializtion group being "day_totals_per_employee".
@@ -244,7 +244,7 @@ Data Provider<a name="DataProvider"></a>
 =============
 A custom data provider should fetch the hours according to filters speficied in the query string.
 Then in should group them by $employee and the day in which they fall and for each group
-instantiate DayTotalsPerEmployee and set $employee, $hours and the DateTime $from. 
+instantiate DayTotalsPerEmployee and set $employee, $hours and the DateTime $from.
 
 The  API Platform Documentation contains an example of a [Custom Collection Data Provider](https://api-platform.com/docs/core/data-providers/#custom-collection-data-provider) but it does not use Doctrine, and a custom [Item Data Provider](https://api-platform.com/docs/core/data-providers/#injecting-extensions-pagination-filter-eagerloading-etc) that does. It would be possible to combine them into a Custom Collection Data Provider that does its own Doctrine query but it's easyer to use a decorated version of the the built-in Collection Data Provider.
 
@@ -325,22 +325,22 @@ class DayTotalsPerEmployeeCollectionDataProvider implements ContextAwareCollecti
 }
 ```
 This adds a default for filter start[after] that only cicks in if start[strictly_after] is also not specified.
-Its value is the start of the day (UTC) one week ago. Then it delegates the building and execution of the query to the 
+Its value is the start of the day (UTC) one week ago. Then it delegates the building and execution of the query to the
 decorated DataProvider.
 
-If this default would not have been required, it would have been better to make a ResultExtensions that implements 
-ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\ContextAwareQueryResultCollectionExtensionInterface. 
-But in this case the default must be added to the context before the built-in extensions are called. A ResultExtensions is the last one to be called by the DataProvider so the ResultExension could not have added the default before the built-in extensions are called. 
+If this default would not have been required, it would have been better to make a ResultExtensions that implements
+ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\ContextAwareQueryResultCollectionExtensionInterface.
+But in this case the default must be added to the context before the built-in extensions are called. A ResultExtensions is the last one to be called by the DataProvider so the ResultExension could not have added the default before the built-in extensions are called.
 
-The rest of ::getCollection calculates $afterTime from the filter values mentioned above, 
-then loops through the resulting Hours and calculates 
+The rest of ::getCollection calculates $afterTime from the filter values mentioned above,
+then loops through the resulting Hours and calculates
 $dayIndex as the number of whole days the Hours started since $afterTime. If a DayTotalsPerEmployee not yet exists for
-this $dayIndex and the $employee of the Hours, it creates it. 
+this $dayIndex and the $employee of the Hours, it creates it.
 The Hours are added to the $hours of the DayTotalsPerEmployee.
 Finally the resulting array of DayTotalsPerEmployee is sorted by its keys, resulting in
 an ascending order by $dayIndex and within that an ascending order by Employee label.
 
-The new service does not work out of the box, if you try docker-compose up Symfony runs 
+The new service does not work out of the box, if you try docker-compose up Symfony runs
 out of memory on startup. Probably the ChainCollectionDataProvider is injected which itself gets
 the more concrete CollectionDataProviders injected, amongst which the DayTotalsPerEmployeeCollectionDataProvider,
 leading to an endless dependency injection circle.
@@ -348,8 +348,8 @@ leading to an endless dependency injection circle.
 Of course the concrete built-in CollectionDataProvider service must exist, but to get it injected one must supply its service name. Before Symfony had auto wirering this was a common problem, usually solved by searching the configuration files. Those of api platform happen to be in api/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/config so it helps to search all files in there for 'CollectionDataProvider'. In doctrine_orm.xml the following configuration is found:
 ```xml
         <service id="api_platform.doctrine.orm.default.collection_data_provider" parent="api_platform.doctrine.orm.collection_data_provider" class="ApiPlatform\Core\Bridge\Doctrine\Orm\CollectionDataProvider">
-            <tag name="api_platform.collection_data_provider" />
-        </service>
+    <tag name="api_platform.collection_data_provider" />
+</service>
 ```
 This looks good, especially that it is specific to doctrine orm and has .default. in its name. To try it please add the following to api/config/services.yaml:
 ```yaml
@@ -358,78 +358,78 @@ This looks good, especially that it is specific to doctrine orm and has .default
             $dataProvider: '@api_platform.doctrine.orm.default.collection_data_provider'
 ```
 
-When you start the Docker container again you should get no more errors. You can try out the operation in the swagger ui at https://localhost:8443/docs, there is a new GET operation ​/hours​/dayreport. After logging in (see the readme.md of 
+When you start the Docker container again you should get no more errors. You can try out the operation in the swagger ui at https://localhost/docs, there is a new GET operation /hours/dayreport. After logging in (see the readme.md of
 [branch chapter7-api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-api)
 fill in 2019-09-18T00:00:00 for start[after] and hit Execute. You should then get a response like:
 ```json
 {
-  "@context": "/contexts/Hours",
-  "@id": "/hours",
-  "@type": "hydra:Collection",
-  "hydra:member": [
-    {
-      "employee": {
-        "@id": "/employees/11",
-        "@type": "Employee",
-        "label": "Eden, Nicky"
-      },
-      "from": "2019-09-18T00:00:00+00:00",
-      "label": "Eden, Nicky 2019-09-18",
-      "to": "2019-09-19T00:00:00+00:00",
-      "count": 2,
-      "total": 8,
-      "onInvoice": 8,
-      "fractionBilled": 1
+    "@context": "/contexts/Hours",
+    "@id": "/hours",
+    "@type": "hydra:Collection",
+    "hydra:member": [
+        {
+            "employee": {
+                "@id": "/employees/11",
+                "@type": "Employee",
+                "label": "Eden, Nicky"
+            },
+            "from": "2019-09-18T00:00:00+00:00",
+            "label": "Eden, Nicky 2019-09-18",
+            "to": "2019-09-19T00:00:00+00:00",
+            "count": 2,
+            "total": 8,
+            "onInvoice": 8,
+            "fractionBilled": 1
+        },
+        {
+            "employee": {
+                "@id": "/employees/9",
+                "@type": "Employee",
+                "label": "Horlings, John"
+            },
+            "from": "2019-09-18T00:00:00+00:00",
+            "label": "Horlings, John 2019-09-18",
+            "to": "2019-09-19T00:00:00+00:00",
+            "count": 1,
+            "total": 4,
+            "onInvoice": 0,
+            "fractionBilled": 0
+        },
+        {
+            "employee": {
+                "@id": "/employees/11",
+                "@type": "Employee",
+                "label": "Eden, Nicky"
+            },
+            "from": "2019-09-20T00:00:00+00:00",
+            "label": "Eden, Nicky 2019-09-20",
+            "to": "2019-09-21T00:00:00+00:00",
+            "count": 1,
+            "total": 8,
+            "onInvoice": 8,
+            "fractionBilled": 1
+        }
+    ],
+    "hydra:totalItems": 3,
+    "hydra:view": {
+        "@id": "/hours/dayreport?start%5Bafter%5D=2019-09-18T00%3A00%3A00",
+        "@type": "hydra:PartialCollectionView"
     },
-    {
-      "employee": {
-        "@id": "/employees/9",
-        "@type": "Employee",
-        "label": "Horlings, John"
-      },
-      "from": "2019-09-18T00:00:00+00:00",
-      "label": "Horlings, John 2019-09-18",
-      "to": "2019-09-19T00:00:00+00:00",
-      "count": 1,
-      "total": 4,
-      "onInvoice": 0,
-      "fractionBilled": 0
-    },
-    {
-      "employee": {
-        "@id": "/employees/11",
-        "@type": "Employee",
-        "label": "Eden, Nicky"
-      },
-      "from": "2019-09-20T00:00:00+00:00",
-      "label": "Eden, Nicky 2019-09-20",
-      "to": "2019-09-21T00:00:00+00:00",
-      "count": 1,
-      "total": 8,
-      "onInvoice": 8,
-      "fractionBilled": 1
-    }
-  ],
-  "hydra:totalItems": 3,
-  "hydra:view": {
-    "@id": "/hours/dayreport?start%5Bafter%5D=2019-09-18T00%3A00%3A00",
-    "@type": "hydra:PartialCollectionView"
-  },
-(...)
+    (...)
 ```
 
-Swagger docs<a name="SwaggerDecorator"></a>
+Openapi docs<a name="SwaggerDecorator"></a>
 ============
 
-If you scroll back the Swagger UI to the start of the operation /hours​/dayreport you will see that
-despite the configuration 
+If you scroll back the Swagger UI to the start of the operation /hours/dayreport you will see that
+despite the configuration
 ```php class @ApiResource
 "output"=DayTotalsPerEmployee::class,
 ```
 it did not pick up the class comment of DayTotalsPerEmployee "Totals per day per Employee"
 but still shows the class comment of Hours "Registration of time worked by an Employee".
-Also the swagger documentation at https://localhost:8443/docs.json under paths./hours​/dayreport.get.summary is still
- "Registration of time worked by an Employee". There are several other places with a description about /hours​/dayreport that 
+Also the swagger documentation at https://localhost/docs.json under paths./hours/dayreport.get.summary is still
+"Registration of time worked by an Employee". There are several other places with a description about /hours/dayreport that
 do not reflect the output being DayTotalsPerEmployee.
 
 Adding the following to @ApiResource of Hours below "get_day_report"={ does not work:
@@ -437,7 +437,7 @@ Adding the following to @ApiResource of Hours below "get_day_report"={ does not 
  *             "swagger_context"={"summary"="Totals per day per Employee"}
 ```
 
-But the API Platform documentation has an example of [Overriding the OpenAPI Specification](https://api-platform.com/docs/core/swagger/#overriding-the-openapi-specification) by creating a SwaggerDecorator service. 
+But the API Platform documentation once had an example of [Overriding the OpenAPI Specification](https://api-platform.com/docs/core/swagger/#overriding-the-openapi-specification) by creating a SwaggerDecorator service.
 Add a new folder Swagger to api/src and create a file SwaggerDecorator.php with the following content:
 
 ```php
@@ -492,17 +492,17 @@ final class SwaggerDecorator implements NormalizerInterface
 To configure the service add the following to api/config/services.yaml:
 ```yaml
     'App\Swagger\SwaggerDecorator':
-        decorates: 'api_platform.swagger.normalizer.api_gateway'
+        decorates: 'api_platform.openapi.normalizer.api_gateway'
         arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
 ```
 
-If you retrieve https://localhost:8443/docs.json again the summary and descriptions about /hours​/dayreport
+If you retrieve https://localhost/docs.json again the summary and descriptions about /hours/dayreport
 should be more appropriate. In the Swagger Ui the corresponding info should have changed too.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
 git diff chapter10-api 
@@ -510,5 +510,5 @@ git diff chapter10-api
 will compare your own version with code one of chapter10-api. You mau also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter9-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react) 
+After committing your changes you may check out branch chapter9-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
 and follow the instructions. Or if you only follow the api branches: you have finished the tutorial. Congratulations!
