@@ -30,10 +30,12 @@ log
 # except for known API paths and paths with extensions handled by API Platform
 @client expression ( \
         ({header.Accept}.matches('\\btext/html\\b') || {path}.startsWith('/static/')) \
+        && !{header.Accept}.startsWith('*.*') \
         && !{path}.startsWith('/admin') \
         && !{path}.startsWith('/_next') \
         && !{path}.matches('(?i)(?:^/docs|^/graphql|^/bundles/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))') \
     ) \
+    || {path} == '/nofavicon.ico' \
     || {path} == '/logo512.png' \
     || {path} == '/logo192.png' \
     || {path} == '/sockjs-node'
