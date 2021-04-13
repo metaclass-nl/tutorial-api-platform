@@ -169,7 +169,7 @@ Credits
 
 The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021.
 
-It is based on version 2.6.1 of the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
+It is based on version 2.6 of the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
 created by [Kévin Dunglas](https://dunglas.fr). 
 
 
