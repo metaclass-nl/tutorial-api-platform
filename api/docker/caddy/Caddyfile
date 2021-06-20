@@ -40,21 +40,6 @@ log
     || {path} == '/logo192.png' \
     || {path} == '/sockjs-node'
 
-# added for tutorial react client
-# Matches requests for HTML documents and .js files
-# except for known API paths and paths with extensions handled by API Platform
-@client expression ( \
-        ({header.Accept}.matches('\\btext/html\\b') || {path}.startsWith('/static/')) \
-        && !{header.Accept}.startsWith('*.*') \
-        && !{path}.startsWith('/admin') \
-        && !{path}.startsWith('/_next') \
-        && !{path}.matches('(?i)(?:^/docs|^/graphql|^/bundles/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))') \
-    ) \
-    || {path} == '/nofavicon.ico' \
-    || {path} == '/logo512.png' \
-    || {path} == '/logo192.png' \
-    || {path} == '/sockjs-node'
-
 route {
     root * /srv/api/public
     mercure {
@@ -78,9 +63,6 @@ route {
     header ?Link `</docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation", </.well-known/mercure>; rel="mercure"`
     # Disable Google FLOC tracking if not enabled explicitly: https://plausible.io/blog/google-floc
     header ?Permissions-Policy "interest-cohort=()"
-
-    # added for tutorial react client
-    reverse_proxy @client http://client:3000
 
     # added for tutorial react client
     reverse_proxy @client http://client:3000
