@@ -1,4 +1,6 @@
 security:
+    # https://symfony.com/doc/current/security/experimental_authenticators.html
+    enable_authenticator_manager: true
     encoders:
         App\Entity\User:
             algorithm: argon2i
@@ -15,8 +17,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            stateless: true
-            anonymous: true
             lazy: true
             provider: app_user_provider
             json_login:
