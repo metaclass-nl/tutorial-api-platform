@@ -26,7 +26,7 @@ const Welcome = () => (
                     <a
                         target="_blank"
                         rel="noopener noreferrer"
-                        href="https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/README.md"
+                        href="https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter2-react/README.md"
                         className="main__button"
                     >
                         Get started<Arrow />
