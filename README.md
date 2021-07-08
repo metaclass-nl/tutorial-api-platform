@@ -98,7 +98,7 @@ In client/src/components/employee/List.js below
 ```javascript jsx
     <table className="table table-responsive table-striped table-hover">
 ```
-columns address, zipcode, city, and label be removed.
+columns address, zipcode, city, and label can be removed.
 
 This will result in the following output on http://localhost/employees/ 
 
