@@ -7,9 +7,9 @@ of building a simple application with api platform and the react client generato
 
 Chapters and branches
 ---------------------
-1. Employee base [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) 
-2. Hours registration [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react)
-3. Localization and Internationalization [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react)
+1. Employee base [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-next)
+2. Hours registration [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-next)
+3. Localization and Internationalization [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-next)
 4. Labels and Entity Select [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react)
 5. Search [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react)
 6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react)
