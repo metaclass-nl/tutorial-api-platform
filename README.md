@@ -1,514 +1,93 @@
-Chapter 2: Hours registration
-=============================
+Chapter 1: Employee base - Next.js client
+=========================================
 
-The environment is te same as in the chapter1-api branche, except:
-- instructions from README.md of chapter1-api where applied
+This chapter adds the user interface for an entity class Employee.
 
-This chapter adds an entity class Hours that has an n to 1 relation with Employee and adds a menu (client only).  
+The environment is the same as in the chapter1-api branche, except:
+- instructions from README.md of chapter1-api where applied.
 
-Entity<a name="Entity"></a>
-------
-Before you add the Entity class 'Hours', make sure the database schema is in sync. 
-When you do docker-compose up migrations are executed automatically, but 
-you can explicitly execute those that are not yet executed: 
+To test the client point your browser to https://localhost/. Make a security exception for
+the self-signed certificate. You may have to do this every time after you
+have closed the browser. You should then see the welcome screen with title "Tutorial API Platform".
+
+! If you did not apply the instructions from README.md of chapter1-api
+yourself, you do need to go back to branch chapter1-api and apply
+the instuction to add  the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
+You can install it from the command line:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
+docker-compose exec php composer req --dev orm-fixtures
 ```
-
-Then add the Entity class 'Hours' by copying the 
-following code to a new file api/src/Entity/Employee.php:
-```php
-<?php
-
-namespace App\Entity;
-
-use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/**
- * Registration of time worked by an Employee on a day
- *
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"}
- * })
- * @ORM\Entity
- * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
- */
-class Hours
-{
-    /**
-     * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @var float number of hours
-     * @ORM\Column(type="float")
-     * @Assert\NotNull
-     * @Assert\GreaterThanOrEqual(0.1)
-     */
-    private $nHours = 1.0;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     * @Assert\NotNull
-     */
-    private $start;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $onInvoice = true;
-
-    /**
-     * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=255)
-     */
-    private $description;
-
-    /**
-     * @var Employee
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
-     * @Assert\NotNull
-     */
-    private $employee;
-
-    public function __construct()
-    {
-        // initialize start on now
-        $this->setStart(new \DateTime());
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return float
-     */
-    public function getNHours(): float
-    {
-        return $this->nHours;
-    }
-
-    /**
-     * @param float $nHours
-     * @return Hours
-     */
-    public function setNHours(float $nHours): Hours
-    {
-        $this->nHours = $nHours;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getStart(): \DateTime
-    {
-        return $this->start;
-    }
-
-    /**
-     * @param \DateTime $start
-     * @return Hours
-     */
-    public function setStart(\DateTime $start): Hours
-    {
-        $this->start = $start;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOnInvoice(): bool
-    {
-        return $this->onInvoice;
-    }
-
-    /**
-     * @param bool|null $onInvoice
-     * @return Hours
-     */
-    public function setOnInvoice(?bool $onInvoice): Hours
-    {
-        $this->onInvoice = (bool) $onInvoice;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     * @return Hours
-     */
-    public function setDescription(string $description): Hours
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return Employee|null
-     */
-    public function getEmployee(): ? Employee
-    {
-        return $this->employee;
-    }
-
-    /**
-     * @param Employee $employee
-     * @return Hours
-     */
-    public function setEmployee(Employee $employee)
-    {
-        $this->employee = $employee;
-        return $this;
-    }
-
-
-    /** Represent the entity to the user in a single string
-     * @return string
-     */
-    public function getLabel() {
-        return $this->getStart()->format('Y-m-d H:i:s')
-            . ' '. $this->getDescription();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDay() {
-        return $this->getStart()->format('D');
-    }
-}
-```
-It's another quite common Doctrine Entity class. To see the pagination
-buttons in the client an ApiResource attribute "pagination_items_per_page" was added:
-```php
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"}
- * })
-```
-Once again the attribute "order" specifies the default order. This time an index 
-was added to improve the performance of sorting and of searching by $start:
-```php
- * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
-```
-
-A Doctrine annotation defines the relationship with Employee: 
-```php
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
-```
-
-It also refers to a property 'hours' on Employee you need to add to Employee:
-```php
-    /**
-     * @var Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
-     */
-    private $hours;
-```
-And of course the corresponding methods:
-```php
-    /**
-     * @return Collection
-     */
-    public function getHours(): Collection
-    {
-        return $this->hours;
-    }
-
-    /**
-     * @param mixed $hours
-     * @return Employee
-     */
-    public function setHours($hours)
-    {
-        $this->hours = $hours;
-        return $this;
-    }
-```
-
-Now you have the new entity class you can generate a database migration:
-```shell
-docker-compose exec php ./bin/console doctrine:migrations:diff
-```
-
-And execute it by:
-```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
-```
-
-To test the new Hours class point your browser at https://localhost/docs. 
-You should see a new model Hours. When you try out Get /hours there should
-be an example value model like
-```json
-{
-  "hydra:member": [
-    {
-      "@context": "string",
-      "@id": "string",
-      "@type": "string",
-      "id": 0,
-      "NHours": 0,
-      "start": "2020-02-21T16:34:31.774Z",
-      "onInvoice": true,
-      "description": "string",
-      "employee": "string",
-      "label": "string",
-      "day": "string"
-    },
-```
-
-Fixtures<a name="Fixtures"></a>
---------
-To add data create a new file api/src/DataFixtures/HoursFixtures.php.
-(also create the necessary folders). Then copy the following to the file:
-
-```php
-<?php
-
-namespace App\DataFixtures;
-
-use App\Entity\Hours;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-
-class HoursFixtures extends Fixture implements DependentFixtureInterface
-{
-    public function getDependencies()
-    {
-        return array(
-            EmployeeFixtures::class,
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load(ObjectManager $manager)
-    {
-        $entity = new Hours();
-        $entity->setDescription('developoment invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(6.15)
-            ->setStart(new \DateTime('2019-09-13T09:30:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('unit tests invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-16T14:30:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('new requirements invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-17T10:10:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('debugging invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::HORLINGS_REFERENCE))
-            ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-18T13:12:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('starting project coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(9.00)
-            ->setStart(new \DateTime('2019-09-10T08:54:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('meeting with customer')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-12T22:09:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('handling issues with invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(6.00)
-            ->setStart(new \DateTime('2019-09-11T07:37:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('bookkeeper')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-12T15:01:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('presentation invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::PETERS_REFERENCE))
-            ->setNHours(10.00)
-            ->setStart(new \DateTime('2019-09-13T10:21:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('architecture for coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(6.00)
-            ->setStart(new \DateTime('2019-09-18T09:09:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('conference on Kubernetes')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(2.00)
-            ->setStart(new \DateTime('2019-09-18T08:16:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('lecture on package design')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(2.00)
-            ->setStart(new \DateTime('2019-09-13T16:33:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('architecture for coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(8.00)
-            ->setStart(new \DateTime('2019-09-20T08:47:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('architecture for invoice generator')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-10T10:27:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('meeting with customer')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(5.00)
-            ->setStart(new \DateTime('2019-09-12T11:18:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('study')
-            ->setEmployee($this->getReference(EmployeeFixtures::EDEN_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-11T14:15:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(7.00)
-            ->setStart(new \DateTime('2019-09-11T05:18:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(9.00)
-            ->setStart(new \DateTime('2019-09-12T08:34:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('adapting layout of invoices')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(5.00)
-            ->setStart(new \DateTime('2019-09-13T12:27:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(8.00)
-            ->setStart(new \DateTime('2019-09-16T09:30:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('wireframe for coolkids')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(4.00)
-            ->setStart(new \DateTime('2019-09-17T14:54:00'))
-            ->setOnInvoice(true);
-        $manager->persist($entity);
-
-        $entity = new Hours();
-        $entity->setDescription('design eco shop')
-            ->setEmployee($this->getReference(EmployeeFixtures::JACOBS_REFERENCE))
-            ->setNHours(3.00)
-            ->setStart(new \DateTime('2019-09-13T15:03:00'))
-            ->setOnInvoice(false);
-        $manager->persist($entity);
-        $manager->flush();
-    }
-}
-```
-
-To clear the database and execute the fixtures enter the following command:
+After switching back to this branch restart docker-compose to apply the migrations.
+Finally apply the DataFixtures by:
 ```shell
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
-Say yes to "Careful, database "api" will be purged. Do you want to continue?"
-(You will loose all data in the database of your api-platform install).
 
-To test the new Entity class point your browser at https://localhost/docs. 
-When you try out Get /hours the response body should contain the data of the hours.
+Next.js client<a name="Client"></a>
+--------------
+To scaffold (generate code) files for the client for the new Employee class, you can
+type at the command prompt:
+
+```shell
+docker-compose exec pwa generate-api-platform-client --generator next
+```
+
+If you refresh https://localhost/ you will see nothing has changed.
+This is because the client generator does not adapt pwa/pages/index.tsx. We will do so in chapter2.
+For now to test the generated client point your browser to https://localhost/employees.
+You should see something like [Employees list](resources/Employees.png)
+
+The following files are generated under pwa/pages/employees:
+- index.tsx
+- create.tsx
+- \[id\]/index.tsx
+- \[id\]/edit.tsx
+
+Please take a look at each of these files to see the Next.js pages
+that where generated. As you can see all pages have a static method
+getInitialProps. This is the old equivalent of [getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering). 
+It makes Next.js render the page on the server if a browser retrieves the page 
+from outside the client app. To make the page interactive
+the equivalent javascripts are then retrieved and run in the browser.
+
+Each of the pages uses the type pwa/types/Employee.ts. 
+Furthermore under pwa/components/employee the following components where generated:
+- Form.tsx
+- List.tsx
+- Show.tsx
+
+All are functional components. List.tsx is interesting because it uses Link from Next.js. This takes care
+of the dynamic retrieval of the linked page as a javascript update and render it client side. 
+The javascript updates may even be preloaded. If you close the browser and restart it, then open the Web Developer tools 
+and select the Network tab, then go to https://localhost/employees you will see a lot is being retrieved. 
+But when you click on a link in the Employee list only some small updates may be retrieved and 
+the Employee data is fetched from the api.
+
+Form.tsx is interesting because it contains a form that is managed by [Formik](https://formik.org/). 
+This kind of replaces Redux Form, of course without the use of Redux. 
+If you don't know it you are advised to [give its tutorial a quick read](https://formik.org/docs/tutorial).
+
+You may already have noticed Redux is not used in the generated client at all. 
+Instead async await is used combination with try catch and the errors thrown from 
+the fetch function from pwa/utils/dataAccess.ts. 
+
+Furthermore the following generics where generated:
+- pwa/components/common/ReferenceLinks.tsx takes care of rendering multiple links
+- pwa/types/Collection.ts contains the type for PagedCollection according to the Hydra collections retrieved from the api
+- pwa/utils/dataAccess.ts retrieves data from the api.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter3-api 
+git diff chapter2-next ./pwa
 ```
-will compare your own version with code one of chapter3-api. You may also add the path
-to a folder of file to make the diff more specific.
+will compare your own version with code one of chapter2-next. You may also extend the path
+to a folder of file to make the diff more specific. There may be some differences because the 
+client generator is under development and you may have used a newer version then the 
+one used when the tutorial was made.
 
-After committing your changes you may check out branch chapter2-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react) 
-and follow the instructions. Or if you only follow the api branches chapter3-api.
+After committing your changes check out branch chapter2-api.
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api)
+and follow the instructions.
