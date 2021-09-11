@@ -167,9 +167,9 @@ be tested with you application before use in production.
 Credits
 -------
 
-The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021.
+The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021. [MetaClass](https://www.metaclass.nl/) offers software development and support in the Netherlands for Symfony, API Platform, React.js and Next.js
 
-It is based on version 2.6 of the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
+The tutorial is based on version 2.6 of the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
 created by [Kévin Dunglas](https://dunglas.fr). 
 
 
