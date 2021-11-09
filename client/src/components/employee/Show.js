@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { retrieve, reset } from '../../actions/employee/show';
-import { del } from '../../actions/employee/delete';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
+import { retrieve, reset } from "../../actions/employee/show";
+import { del } from "../../actions/employee/delete";
 
 class Show extends Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class Show extends Component {
     deleteError: PropTypes.string,
     deleteLoading: PropTypes.bool.isRequired,
     deleted: PropTypes.object,
-    del: PropTypes.func.isRequired
+    del: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -28,7 +28,7 @@ class Show extends Component {
   }
 
   del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
+    if (window.confirm("Are you sure you want to delete this item?"))
       this.props.del(this.props.retrieved);
   };
 
@@ -39,7 +39,7 @@ class Show extends Component {
 
     return (
       <div>
-        <h1>Show {item && item['@id']}</h1>
+        <h1>Show {item && item["@id"]}</h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
@@ -48,13 +48,13 @@ class Show extends Component {
         )}
         {this.props.error && (
           <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{" "}
             {this.props.error}
           </div>
         )}
         {this.props.deleteError && (
           <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{" "}
             {this.props.deleteError}
           </div>
         )}
@@ -70,39 +70,39 @@ class Show extends Component {
             <tbody>
               <tr>
                 <th scope="row">firstName</th>
-                <td>{item['firstName']}</td>
+                <td>{item["firstName"]}</td>
               </tr>
               <tr>
                 <th scope="row">lastName</th>
-                <td>{item['lastName']}</td>
+                <td>{item["lastName"]}</td>
               </tr>
               <tr>
                 <th scope="row">function</th>
-                <td>{item['function']}</td>
+                <td>{item["function"]}</td>
               </tr>
               <tr>
                 <th scope="row">address</th>
-                <td>{item['address']}</td>
+                <td>{item["address"]}</td>
               </tr>
               <tr>
                 <th scope="row">zipcode</th>
-                <td>{item['zipcode']}</td>
+                <td>{item["zipcode"]}</td>
               </tr>
               <tr>
                 <th scope="row">city</th>
-                <td>{item['city']}</td>
+                <td>{item["city"]}</td>
               </tr>
               <tr>
                 <th scope="row">birthDate</th>
-                <td>{item['birthDate']}</td>
+                <td>{item["birthDate"]}</td>
               </tr>
               <tr>
                 <th scope="row">arrival</th>
-                <td>{item['arrival']}</td>
+                <td>{item["arrival"]}</td>
               </tr>
               <tr>
                 <th scope="row">label</th>
-                <td>{item['label']}</td>
+                <td>{item["label"]}</td>
               </tr>
             </tbody>
           </table>
@@ -111,7 +111,7 @@ class Show extends Component {
           Back to list
         </Link>
         {item && (
-          <Link to={`/employees/edit/${encodeURIComponent(item['@id'])}`}>
+          <Link to={`/employees/edit/${encodeURIComponent(item["@id"])}`}>
             <button className="btn btn-warning">Edit</button>
           </Link>
         )}
@@ -137,23 +137,20 @@ class Show extends Component {
   };
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   retrieved: state.employee.show.retrieved,
   error: state.employee.show.error,
   loading: state.employee.show.loading,
   eventSource: state.employee.show.eventSource,
   deleteError: state.employee.del.error,
   deleteLoading: state.employee.del.loading,
-  deleted: state.employee.del.deleted
+  deleted: state.employee.del.deleted,
 });
 
-const mapDispatchToProps = dispatch => ({
-  retrieve: id => dispatch(retrieve(id)),
-  del: item => dispatch(del(item)),
-  reset: eventSource => dispatch(reset(eventSource))
+const mapDispatchToProps = (dispatch) => ({
+  retrieve: (id) => dispatch(retrieve(id)),
+  del: (item) => dispatch(del(item)),
+  reset: (eventSource) => dispatch(reset(eventSource)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Show);
+export default connect(mapStateToProps, mapDispatchToProps)(Show);

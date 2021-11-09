@@ -1,14 +1,14 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export function retrieveError(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_RETRIEVE_ERROR':
+    case "EMPLOYEE_UPDATE_RETRIEVE_ERROR":
       return action.retrieveError;
 
-    case 'EMPLOYEE_UPDATE_MERCURE_DELETED':
-      return `${action.retrieved['@id']} has been deleted by another user.`;
+    case "EMPLOYEE_UPDATE_MERCURE_DELETED":
+      return `${action.retrieved["@id"]} has been deleted by another user.`;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return null;
 
     default:
@@ -18,10 +18,10 @@ export function retrieveError(state = null, action) {
 
 export function retrieveLoading(state = false, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_RETRIEVE_LOADING':
+    case "EMPLOYEE_UPDATE_RETRIEVE_LOADING":
       return action.retrieveLoading;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return false;
 
     default:
@@ -31,11 +31,11 @@ export function retrieveLoading(state = false, action) {
 
 export function retrieved(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_RETRIEVE_SUCCESS':
-    case 'EMPLOYEE_UPDATE_MERCURE_MESSAGE':
+    case "EMPLOYEE_UPDATE_RETRIEVE_SUCCESS":
+    case "EMPLOYEE_UPDATE_MERCURE_MESSAGE":
       return action.retrieved;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return null;
 
     default:
@@ -45,10 +45,10 @@ export function retrieved(state = null, action) {
 
 export function updateError(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_UPDATE_ERROR':
+    case "EMPLOYEE_UPDATE_UPDATE_ERROR":
       return action.updateError;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return null;
 
     default:
@@ -58,10 +58,10 @@ export function updateError(state = null, action) {
 
 export function updateLoading(state = false, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_UPDATE_LOADING':
+    case "EMPLOYEE_UPDATE_UPDATE_LOADING":
       return action.updateLoading;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return false;
 
     default:
@@ -71,10 +71,10 @@ export function updateLoading(state = false, action) {
 
 export function updated(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_UPDATE_SUCCESS':
+    case "EMPLOYEE_UPDATE_UPDATE_SUCCESS":
       return action.updated;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return null;
 
     default:
@@ -84,10 +84,10 @@ export function updated(state = null, action) {
 
 export function eventSource(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_UPDATE_MERCURE_OPEN':
+    case "EMPLOYEE_UPDATE_MERCURE_OPEN":
       return action.eventSource;
 
-    case 'EMPLOYEE_UPDATE_RESET':
+    case "EMPLOYEE_UPDATE_RESET":
       return null;
 
     default:
@@ -102,5 +102,5 @@ export default combineReducers({
   updateError,
   updateLoading,
   updated,
-  eventSource
+  eventSource,
 });

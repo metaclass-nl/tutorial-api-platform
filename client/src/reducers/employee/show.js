@@ -1,14 +1,14 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export function error(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_SHOW_ERROR':
+    case "EMPLOYEE_SHOW_ERROR":
       return action.error;
 
-    case 'EMPLOYEE_SHOW_MERCURE_DELETED':
-      return `${action.retrieved['@id']} has been deleted by another user.`;
+    case "EMPLOYEE_SHOW_MERCURE_DELETED":
+      return `${action.retrieved["@id"]} has been deleted by another user.`;
 
-    case 'EMPLOYEE_SHOW_RESET':
+    case "EMPLOYEE_SHOW_RESET":
       return null;
 
     default:
@@ -18,10 +18,10 @@ export function error(state = null, action) {
 
 export function loading(state = false, action) {
   switch (action.type) {
-    case 'EMPLOYEE_SHOW_LOADING':
+    case "EMPLOYEE_SHOW_LOADING":
       return action.loading;
 
-    case 'EMPLOYEE_SHOW_RESET':
+    case "EMPLOYEE_SHOW_RESET":
       return false;
 
     default:
@@ -31,11 +31,11 @@ export function loading(state = false, action) {
 
 export function retrieved(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_SHOW_SUCCESS':
-    case 'EMPLOYEE_SHOW_MERCURE_MESSAGE':
+    case "EMPLOYEE_SHOW_SUCCESS":
+    case "EMPLOYEE_SHOW_MERCURE_MESSAGE":
       return action.retrieved;
 
-    case 'EMPLOYEE_SHOW_RESET':
+    case "EMPLOYEE_SHOW_RESET":
       return null;
 
     default:
@@ -45,10 +45,10 @@ export function retrieved(state = null, action) {
 
 export function eventSource(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_SHOW_MERCURE_OPEN':
+    case "EMPLOYEE_SHOW_MERCURE_OPEN":
       return action.eventSource;
 
-    case 'EMPLOYEE_SHOW_RESET':
+    case "EMPLOYEE_SHOW_RESET":
       return null;
 
     default:
