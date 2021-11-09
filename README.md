@@ -18,7 +18,7 @@ Chapters and branches
 9. Report [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
 10. End [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-react)
 
-Each chapter has one 'api' branche in git and one 'react' branche.
+Each chapter has one 'api' branch in git and one 'react' branch.
 The 'api' branches only contain api code, the 'react' branches
 contain both api code and react code. If you are only interested in the api side
 you can skip the react branches. The api branches only use the Swagger UI
@@ -27,15 +27,15 @@ and curl for testing and do not depend on react.
 Each branch builds on top of the previous one of the same type.
 Each 'react' branch also contains the code from the corresponding 'api' branch.
 To see the code resulting from a branch you can check out
-the next branche of the same type, or browse it on github.
-Or better: let git compare your current code with the branche
+the next branch of the same type, or browse it on github.
+Or better: let git compare your current code with the branch
 of the next chapter so that you can see the differences right away.
 
-In addition to this tutorial an [extended react client generator](https://github.com/metaclass-nl/client-generator)
+In addition to this tutorial an [extended client generator for react and nextJS](https://github.com/metaclass-nl/client-generator)
 is available that puts what you have learnt into use for scaffolding your own application.
 
 As of api-platform version 2.6 the standard distribution contains a nextJS client
-instead of the react client. This tutorial does not (yet?) have nextJS branches.
+instead of the react client. This tutorial has nextJS branches and an extended client generator for the first 3 chapters only.
 
 Required knowledge
 ------------------
@@ -53,7 +53,7 @@ You don't need to be an expert in these domains, basic working experience should
 
 Requirements
 ------------
-The master branche that was checked out when cloning the repository contains
+The master branch that was checked out when cloning the repository contains
 an allmost unmodified (1) Api Platform Distribution. You need [Docker](https://docs.docker.com/install/) 
 (recent version with docker-compose) to run it. On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/)
  is supported. Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. 
@@ -102,7 +102,7 @@ to apply the migrations. Then apply the DataFixtures by:
 ```shell
 docker-compose exec php bin/console doctrine:fixtures:load
 ```                     
-For a react branche you may also need to update yarn:
+For a react branch you may also need to update yarn:
 ```shell
 docker-compose exec client yarn install
 ```                     
