@@ -1,6 +1,9 @@
 security:
-    # https://symfony.com/doc/current/security/experimental_authenticators.html
+    # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     encoders:
         App\Entity\User:
             algorithm: argon2i
