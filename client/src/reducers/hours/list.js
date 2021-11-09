@@ -1,14 +1,14 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export function error(state = null, action) {
   switch (action.type) {
-    case 'HOURS_LIST_ERROR':
+    case "HOURS_LIST_ERROR":
       return action.error;
 
-    case 'HOURS_LIST_MERCURE_DELETED':
-      return `${action.retrieved['@id']} has been deleted by another user.`;
+    case "HOURS_LIST_MERCURE_DELETED":
+      return `${action.retrieved["@id"]} has been deleted by another user.`;
 
-    case 'HOURS_LIST_RESET':
+    case "HOURS_LIST_RESET":
       return null;
 
     default:
@@ -18,10 +18,10 @@ export function error(state = null, action) {
 
 export function loading(state = false, action) {
   switch (action.type) {
-    case 'HOURS_LIST_LOADING':
+    case "HOURS_LIST_LOADING":
       return action.loading;
 
-    case 'HOURS_LIST_RESET':
+    case "HOURS_LIST_RESET":
       return false;
 
     default:
@@ -31,26 +31,26 @@ export function loading(state = false, action) {
 
 export function retrieved(state = null, action) {
   switch (action.type) {
-    case 'HOURS_LIST_SUCCESS':
+    case "HOURS_LIST_SUCCESS":
       return action.retrieved;
 
-    case 'HOURS_LIST_RESET':
+    case "HOURS_LIST_RESET":
       return null;
 
-    case 'HOURS_LIST_MERCURE_MESSAGE':
+    case "HOURS_LIST_MERCURE_MESSAGE":
       return {
         ...state,
-        'hydra:member': state['hydra:member'].map(item =>
-          item['@id'] === action.retrieved['@id'] ? action.retrieved : item
-        )
+        "hydra:member": state["hydra:member"].map((item) =>
+          item["@id"] === action.retrieved["@id"] ? action.retrieved : item
+        ),
       };
 
-    case 'HOURS_LIST_MERCURE_DELETED':
+    case "HOURS_LIST_MERCURE_DELETED":
       return {
         ...state,
-        'hydra:member': state['hydra:member'].filter(
-          item => item['@id'] !== action.retrieved['@id']
-        )
+        "hydra:member": state["hydra:member"].filter(
+          (item) => item["@id"] !== action.retrieved["@id"]
+        ),
       };
 
     default:
@@ -60,10 +60,10 @@ export function retrieved(state = null, action) {
 
 export function eventSource(state = null, action) {
   switch (action.type) {
-    case 'HOURS_LIST_MERCURE_OPEN':
+    case "HOURS_LIST_MERCURE_OPEN":
       return action.eventSource;
 
-    case 'HOURS_LIST_RESET':
+    case "HOURS_LIST_RESET":
       return null;
 
     default:

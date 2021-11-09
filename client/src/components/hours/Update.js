@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import Form from './Form';
-import { retrieve, update, reset } from '../../actions/hours/update';
-import { del } from '../../actions/hours/delete';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
+import Form from "./Form";
+import { retrieve, update, reset } from "../../actions/hours/update";
+import { del } from "../../actions/hours/delete";
 
 class Update extends Component {
   static propTypes = {
@@ -21,7 +21,7 @@ class Update extends Component {
     retrieve: PropTypes.func.isRequired,
     update: PropTypes.func.isRequired,
     del: PropTypes.func.isRequired,
-    reset: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -33,7 +33,7 @@ class Update extends Component {
   }
 
   del = () => {
-    if (window.confirm('Are you sure you want to delete this item?'))
+    if (window.confirm("Are you sure you want to delete this item?"))
       this.props.del(this.props.retrieved);
   };
 
@@ -44,16 +44,16 @@ class Update extends Component {
 
     return (
       <div>
-        <h1>Edit {item && item['@id']}</h1>
+        <h1>Edit {item && item["@id"]}</h1>
 
         {this.props.created && (
           <div className="alert alert-success" role="status">
-            {this.props.created['@id']} created.
+            {this.props.created["@id"]} created.
           </div>
         )}
         {this.props.updated && (
           <div className="alert alert-success" role="status">
-            {this.props.updated['@id']} updated.
+            {this.props.updated["@id"]} updated.
           </div>
         )}
         {(this.props.retrieveLoading ||
@@ -65,26 +65,26 @@ class Update extends Component {
         )}
         {this.props.retrieveError && (
           <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{" "}
             {this.props.retrieveError}
           </div>
         )}
         {this.props.updateError && (
           <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{" "}
             {this.props.updateError}
           </div>
         )}
         {this.props.deleteError && (
           <div className="alert alert-danger" role="alert">
-            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{' '}
+            <span className="fa fa-exclamation-triangle" aria-hidden="true" />{" "}
             {this.props.deleteError}
           </div>
         )}
 
         {item && (
           <Form
-            onSubmit={values => this.props.update(item, values)}
+            onSubmit={(values) => this.props.update(item, values)}
             initialValues={item}
           />
         )}
@@ -99,7 +99,7 @@ class Update extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   retrieved: state.hours.update.retrieved,
   retrieveError: state.hours.update.retrieveError,
   retrieveLoading: state.hours.update.retrieveLoading,
@@ -110,17 +110,14 @@ const mapStateToProps = state => ({
   eventSource: state.hours.update.eventSource,
   created: state.hours.create.created,
   deleted: state.hours.del.deleted,
-  updated: state.hours.update.updated
+  updated: state.hours.update.updated,
 });
 
-const mapDispatchToProps = dispatch => ({
-  retrieve: id => dispatch(retrieve(id)),
+const mapDispatchToProps = (dispatch) => ({
+  retrieve: (id) => dispatch(retrieve(id)),
   update: (item, values) => dispatch(update(item, values)),
-  del: item => dispatch(del(item)),
-  reset: eventSource => dispatch(reset(eventSource))
+  del: (item) => dispatch(del(item)),
+  reset: (eventSource) => dispatch(reset(eventSource)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Update);
+export default connect(mapStateToProps, mapDispatchToProps)(Update);

@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { Field, reduxForm } from "redux-form";
+import PropTypes from "prop-types";
 
 class Form extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    error: PropTypes.string
+    error: PropTypes.string,
   };
 
-  renderField = data => {
-    data.input.className = 'form-control';
+  renderField = (data) => {
+    data.input.className = "form-control";
 
     const isInvalid = data.meta.touched && !!data.meta.error;
     if (isInvalid) {
-      data.input.className += ' is-invalid';
-      data.input['aria-invalid'] = true;
+      data.input.className += " is-invalid";
+      data.input["aria-invalid"] = true;
     }
 
     if (this.props.error && data.meta.touched && !data.meta.error) {
-      data.input.className += ' is-valid';
+      data.input.className += " is-valid";
     }
 
     return (
@@ -50,8 +50,9 @@ class Form extends Component {
           name="nHours"
           type="number"
           step="0.1"
-          placeholder=""
-          normalize={v => parseFloat(v)}
+          placeholder="number of hours"
+          required={true}
+          normalize={(v) => parseFloat(v)}
         />
         <Field
           component={this.renderField}
@@ -90,7 +91,7 @@ class Form extends Component {
 }
 
 export default reduxForm({
-  form: 'hours',
+  form: "hours",
   enableReinitialize: true,
-  keepDirtyOnReinitialize: true
+  keepDirtyOnReinitialize: true,
 })(Form);
