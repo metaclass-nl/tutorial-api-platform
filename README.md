@@ -10,7 +10,7 @@ Chapters and branches
 1. Employee base [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-next)
 2. Hours registration [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-next)
 3. Localization and Internationalization [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-next)
-4. Labels and Entity Select [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react)
+4. Labels and Entity Select [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react) [next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-next)
 5. Search [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react)
 6. Sorting and Custom Filter [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react)
 7. Authentication (JWT) [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
@@ -18,11 +18,11 @@ Chapters and branches
 9. Report [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter9-react)
 10. End [api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-api) [react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter10-react)
 
-Each chapter has one 'api' branch in git and one 'react' branch.
-The 'api' branches only contain api code, the 'react' branches
-contain both api code and react code. If you are only interested in the api side
-you can skip the react branches. The api branches only use the Swagger UI
-and curl for testing and do not depend on react.
+Each chapter has one 'api' branch in git, one 'react' branch and some also a 'next' branch.
+The 'api' branches only contain api code, the 'react' and 'next' branches
+contain both api code and react/next code. If you are only interested in the api side
+you can skip the react and next branches. The api branches only use the Swagger UI
+and curl for testing and do not depend on react or next.
 
 Each branch builds on top of the previous one of the same type.
 Each 'react' branch also contains the code from the corresponding 'api' branch.
@@ -150,8 +150,8 @@ Limitations
 -----------
 This is a work in progess and needs more testing.
 
-This tutorial currently only supports the api core and the (scaffolded) React client 
-user interface.  
+This tutorial currently only supports the api core, the (scaffolded) React client 
+user interface and some chapters about the (scaffolded) Next.js client user interface.  
 
 This distribuition is only for educational purposes and will not be updated frequently. 
 If you want to run a client container for react within the standard distribution of 
