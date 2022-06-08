@@ -4,7 +4,7 @@ import Link from "next/link";
 const Welcome = () => (
   <>
     <Head>
-      <title>Welcome to API Platform!</title>
+      <title>Tutorial API Platform</title>
     </Head>
 
     <div className="welcome">
@@ -31,7 +31,7 @@ const Welcome = () => (
         </div>
         <div className="main__content">
           <h1>
-            Welcome to <strong>API Platform</strong>!
+            Tutorial API Platform
           </h1>
           <div className="main__before-starting">
             <p>
