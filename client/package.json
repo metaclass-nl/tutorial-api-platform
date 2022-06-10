@@ -5,14 +5,12 @@
   "dependencies": {
     "@api-platform/client-generator": "^0.4.0",
     "@fortawesome/fontawesome-free": "^5.12.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.4.0",
     "connected-react-router": "^6.7.0",
     "lodash.get": "^4.4.2",
     "lodash.has": "^4.5.2",
     "lodash.mapvalues": "^4.6.0",
+    "pretty-format": "<27.0.0",
     "prop-types": "^15.6.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -44,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.8",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^7.1.2"
   }
 }
