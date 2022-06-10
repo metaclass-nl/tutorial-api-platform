@@ -5,7 +5,7 @@ The environment is te same as in the master branche, except:
 - Entity Greetings was removed
 - A migration was added to adjust the database
 - Switched off mercure to avoid it's viral agpl license
-- Changed client/public/index.html title to "API Platform Tutorial"
+- New welcome page (pwa/pages/index.tsx) 
 
 This chapter adds an entity class Employee.
 
