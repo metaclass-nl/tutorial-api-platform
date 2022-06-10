@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export function error(state = null, action) {
   switch (action.type) {
-    case 'HOURS_CREATE_ERROR':
+    case "HOURS_CREATE_ERROR":
       return action.error;
 
     default:
@@ -12,7 +12,7 @@ export function error(state = null, action) {
 
 export function loading(state = false, action) {
   switch (action.type) {
-    case 'HOURS_CREATE_LOADING':
+    case "HOURS_CREATE_LOADING":
       return action.loading;
 
     default:
@@ -22,7 +22,7 @@ export function loading(state = false, action) {
 
 export function created(state = null, action) {
   switch (action.type) {
-    case 'HOURS_CREATE_SUCCESS':
+    case "HOURS_CREATE_SUCCESS":
       return action.created;
 
     default:

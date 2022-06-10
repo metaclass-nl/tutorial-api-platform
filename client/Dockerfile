@@ -3,7 +3,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG NODE_VERSION=13
+ARG NODE_VERSION=16
 ARG NGINX_VERSION=1.17
 
 
@@ -14,12 +14,14 @@ EXPOSE 3000
 
 WORKDIR /usr/src/client
 
-RUN yarn global add @api-platform/client-generator
+# causes error
+#RUN yarn global add @api-platform/client-generator
 
 # prevent the reinstallation of node modules at every changes in the source code
 COPY package.json yarn.lock ./
-RUN set -eux; \
-	yarn install
+# causes error
+#RUN set -eux; \
+#	yarn install
 
 COPY . ./
 
