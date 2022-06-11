@@ -169,12 +169,6 @@
         "version": "2.0.0"
     },
     "lcobucci/jwt": {
-        "version": "4.1.5"
-    },
-    "lcobucci/clock": {
-        "version": "2.0.0"
-    },
-    "lcobucci/jwt": {
         "version": "3.3.2"
     },
     "league/html-to-markdown": {
@@ -451,15 +445,6 @@
     "symfony/polyfill-php56": {
         "version": "v1.20.0"
     },
-    "symfony/polyfill-php56": {
-        "version": "v1.20.0"
-    },
-    "symfony/polyfill-php56": {
-        "version": "v1.20.0"
-    },
-    "symfony/polyfill-php70": {
-        "version": "v1.20.0"
-    },
     "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
@@ -506,9 +491,6 @@
     "symfony/security-csrf": {
         "version": "v5.3.4"
     },
-    "symfony/security-guard": {
-        "version": "v5.3.7"
-    },
     "symfony/security-http": {
         "version": "v5.3.8"
     },
@@ -523,6 +505,19 @@
     },
     "symfony/string": {
         "version": "v5.3.7"
+    },
+    "symfony/translation": {
+        "version": "5.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "da64f5a2b6d96f5dc24914517c0350a5f91dee43"
+        },
+        "files": [
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
+        ]
     },
     "symfony/translation-contracts": {
         "version": "v2.4.0"
