@@ -169,12 +169,6 @@
         "version": "2.0.0"
     },
     "lcobucci/jwt": {
-        "version": "4.1.5"
-    },
-    "lcobucci/clock": {
-        "version": "2.0.0"
-    },
-    "lcobucci/jwt": {
         "version": "3.3.2"
     },
     "league/html-to-markdown": {
@@ -451,9 +445,6 @@
     "symfony/polyfill-php56": {
         "version": "v1.20.0"
     },
-    "symfony/polyfill-php70": {
-        "version": "v1.20.0"
-    },
     "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
@@ -499,9 +490,6 @@
     },
     "symfony/security-csrf": {
         "version": "v5.3.4"
-    },
-    "symfony/security-guard": {
-        "version": "v5.3.7"
     },
     "symfony/security-http": {
         "version": "v5.3.8"
