@@ -47,7 +47,7 @@
         "version": "3.1.2"
     },
     "doctrine/data-fixtures": {
-        "version": "v1.3.2"
+        "version": "1.4.4"
     },
     "doctrine/dbal": {
         "version": "2.13.3"
@@ -159,11 +159,11 @@
     "laminas/laminas-code": {
         "version": "4.4.3"
     },
-    "lcobucci/clock": {
-        "version": "2.0.0"
+    "laminas/laminas-eventmanager": {
+        "version": "3.3.1"
     },
-    "lcobucci/jwt": {
-        "version": "4.1.5"
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.2.0"
     },
     "lcobucci/clock": {
         "version": "2.0.0"
@@ -445,9 +445,6 @@
     "symfony/polyfill-php56": {
         "version": "v1.20.0"
     },
-    "symfony/polyfill-php70": {
-        "version": "v1.20.0"
-    },
     "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
@@ -494,9 +491,6 @@
     "symfony/security-csrf": {
         "version": "v5.3.4"
     },
-    "symfony/security-guard": {
-        "version": "v5.3.7"
-    },
     "symfony/security-http": {
         "version": "v5.3.8"
     },
@@ -513,12 +507,12 @@
         "version": "v5.3.7"
     },
     "symfony/translation": {
-        "version": "3.3",
+        "version": "5.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "3.3",
-            "ref": "2ad9d2545bce8ca1a863e50e92141f0b9d87ffcd"
+            "branch": "main",
+            "version": "5.3",
+            "ref": "da64f5a2b6d96f5dc24914517c0350a5f91dee43"
         },
         "files": [
             "config/packages/translation.yaml",

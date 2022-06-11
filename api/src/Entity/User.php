@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -27,7 +28,7 @@ use ApiPlatform\Core\Annotation\ApiProperty;
  *     }
  * )
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -132,6 +133,13 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+
+    /** {@inheritdoc} */
+    public function getUserIdentifier(): string
+    {
+        return $this->getEmail();
     }
 
     /** Represent the entity to the user in a single string
