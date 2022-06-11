@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
@@ -16,7 +16,7 @@ class UserFixtures extends Fixture
 
     private $passwordEncoder;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordHasherInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
     }
@@ -29,7 +29,7 @@ class UserFixtures extends Fixture
         // Create Users
         $entity = new User();
         $entity->setEmail('j.horlings@amsterdam.nl')
-            ->setPassword($this->passwordEncoder->encodePassword(
+            ->setPassword($this->passwordEncoder->hashPassword(
                 $entity,
                 'j.horlings_password'));
         $manager->persist($entity);
@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
         $entity = new User();
         $entity->setEmail('d.peters@leiden.nl')
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($this->passwordEncoder->encodePassword(
+            ->setPassword($this->passwordEncoder->hashPassword(
                 $entity,
                 'd.peters_password'));
         $manager->persist($entity);
@@ -46,7 +46,7 @@ class UserFixtures extends Fixture
 
         $entity = new User();
         $entity->setEmail('n.eden@groningen.nl')
-            ->setPassword($this->passwordEncoder->encodePassword(
+            ->setPassword($this->passwordEncoder->hashPassword(
                 $entity,
                 'n.eden_password'));
         $manager->persist($entity);
@@ -54,7 +54,7 @@ class UserFixtures extends Fixture
 
         $entity = new User();
         $entity->setEmail('s.jacobs@groningen.nl')
-            ->setPassword($this->passwordEncoder->encodePassword(
+            ->setPassword($this->passwordEncoder->hashPassword(
                 $entity,
                 's.jacobs_password'));
         $manager->persist($entity);

@@ -4,7 +4,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.0
+ARG PHP_VERSION=8.1
 ARG CADDY_VERSION=2
 
 # "php" stage
@@ -24,20 +24,18 @@ RUN apk add --no-cache \
 # see https://github.com/docker-library/php/issues/240#issuecomment-763112749
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.21
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
 		icu-dev \
 		libzip-dev \
-		postgresql-dev \
 		zlib-dev \
 	; \
 	\
 	docker-php-ext-configure zip; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
-		pdo_pgsql \
 		zip \
 	; \
 	pecl install \
@@ -60,6 +58,12 @@ RUN set -eux; \
 	apk del .build-deps
 
 ###> recipes ###
+###> doctrine/doctrine-bundle ###
+RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
+	docker-php-ext-install -j$(nproc) pdo_pgsql; \
+	apk add --no-cache --virtual .pgsql-rundeps so:libpq.so.5; \
+	apk del .pgsql-deps
+###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
