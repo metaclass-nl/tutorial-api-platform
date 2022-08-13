@@ -1,69 +1,78 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from 'next/router';
 
-const Welcome = () => (
-  <div className="welcome">
-    <Head>
-      <title>Tutorial API Platform</title>
-    </Head>
-    <header className="welcome__top">
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://api-platform.com"
-      >
-      </a>
-      <br/> <br/> <br/> <br/> <br/>
-    </header>
-    <section className="welcome__main">
-      <div className="main__content">
-        <h1>
-          <strong>Tutorial API Platform</strong>
-        </h1>
-        <br/>
-        <div className="main__before-starting">
-          <p>
-            This container will host your{' '}
-            <a href={`https://nextjs.org/`}><b>Next.js</b></a> application.
-          </p>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter1-api/README.md"
-            className="main__button"
-          >
-            Get started<Arrow />
-          </a>
-        </div>
-        <div className="main__other">
-          <h2>Available services:</h2>
-          <div className="other__bloc" >
-            <div className="other__content">
-              <h3><a href={`/docs`}>API</a></h3>
+const Welcome = () => {
+  const router = useRouter();
+
+  const adminClicked = () => {
+    alert('The Admin only works if the API has at least one Entity');
+    router.push("/admin");
+  }
+
+  return (
+    <div className="welcome">
+      <Head>
+        <title>Tutorial API Platform</title>
+      </Head>
+      <header className="welcome__top">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://api-platform.com"
+        >
+        </a>
+        <br/> <br/> <br/> <br/> <br/>
+      </header>
+      <section className="welcome__main">
+        <div className="main__content">
+          <h1>
+            <strong>Tutorial API Platform</strong>
+          </h1>
+          <br/>
+          <div className="main__before-starting">
+            <p>
+              This container will host your{' '}
+              <a href={`https://nextjs.org/`}><b>Next.js</b></a> application.
+            </p>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter1-api/README.md"
+              className="main__button"
+            >
+              Get started<Arrow/>
+            </a>
+          </div>
+          <div className="main__other">
+            <h2>Available services:</h2>
+            <div className="other__bloc">
+              <div className="other__content">
+                <h3><a href={`/docs`}>API</a></h3>
+              </div>
+            </div>
+            <div className="other__bloc">
+              <div className="other__content">
+                <h3><a href="#" onClick={adminClicked}>Admin</a></h3>
+              </div>
             </div>
           </div>
-          <div className="other__bloc" >
-            <div className="other__content">
-              <h3><Link href={`/admin`}><a>Admin</a></Link></h3>
-            </div>
-          </div>
         </div>
+      </section>
+      <div className="welcome__help">
+        <h2>Need help?</h2>
+        <HelpButton
+          url="https://stackoverflow.com/questions/tagged/api-platform.com"
+          Image={Sto}
+          title="Ask your questions on Stack Overflow!"
+        />
+        <HelpButton
+          url="https://symfony.com/slack"
+          Image={Slack}
+          title="Chat with the community on Slack!"
+        />
       </div>
-    </section>
-    <div className="welcome__help">
-      <h2>Need help?</h2>
-      <HelpButton
-        url="https://stackoverflow.com/questions/tagged/api-platform.com"
-        Image={Sto}
-        title="Ask your questions on Stack Overflow!"
-      />
-      <HelpButton
-        url="https://symfony.com/slack"
-        Image={Slack}
-        title="Chat with the community on Slack!"
-      />
-    </div>
-    <style jsx global>{`
+      <style jsx global>{`
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Slab:300,700');
 
 body {
@@ -380,8 +389,9 @@ a.other__button {
     }
 }
             `}</style>
-  </div>
-);
+    </div>
+  );
+}
 
 const HelpButton = ({ Image, url, title }) => (
   <a

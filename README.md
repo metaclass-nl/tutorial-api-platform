@@ -12,14 +12,14 @@ This chapter adds an entity class Employee.
 Entity<a name="Entity"></a>
 ------
 Your first task is to add the Entity class 'Employee', but before you do so,
-make sure the database schema is in sync. 
-When you do docker-compose up migrations are executed automatically, but 
-you can explicitly execute those that are not yet executed: 
+make sure the database schema is in sync.
+When you do docker-compose up migrations are executed automatically, but
+you can explicitly execute those that are not yet executed:
 ```shell
 docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
-Then add the Entity class 'Employee' by copying the 
+Then add the Entity class 'Employee' by copying the
 following code to a new file api/src/Entity/Employee.php:
 ```php
 <?php
@@ -70,7 +70,7 @@ class Employee
      * @Assert\NotBlank
      * @Assert\Length(max=40)
      */
-    private $function;
+    private $job;
 
     /**
      * @var string
@@ -152,18 +152,18 @@ class Employee
     /**
      * @return string
      */
-    public function getFunction(): string
+    public function getJob(): string
     {
-        return $this->function;
+        return $this->job;
     }
 
     /**
-     * @param string $function
+     * @param string $job
      * @return Employee
      */
-    public function setFunction(string $function): Employee
+    public function setJob(string $job): Employee
     {
-        $this->function = $function;
+        $this->job = $job;
         return $this;
     }
 
@@ -267,15 +267,15 @@ class Employee
 
 }
 ```
-It's a quite common Doctrine Entity class for registering employees. 
+It's a quite common Doctrine Entity class for registering employees.
 One thing specific to api-platform is the annotation
 ```php
   * @ApiResource(
   *     attributes={"order"={"lastName", "firstName"}}
   * )
 ```
-This tells api-platform to make the class accessable in the api and sets 
-a default ordering for Employee by lastName, undersorting by firstName. 
+This tells api-platform to make the class accessable in the api and sets
+a default ordering for Employee by lastName, undersorting by firstName.
 
 Now you have the new entity class you can generate a database migration:
 ```shell
@@ -287,7 +287,7 @@ And execute it by:
 docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
-To test the new Entity class point your browser at https://localhost/docs. 
+To test the new Entity class point your browser at https://localhost/docs.
 You may need to make a security exception for the self-signed certificate that your
 browser may report as not safe.
 
@@ -303,7 +303,7 @@ be an example value model like
       "id": 0,
       "firstName": "string",
       "lastName": "string",
-      "function": "string",
+      "job": "string",
       "address": "string",
       "zipcode": "string",
       "city": "string",
@@ -354,7 +354,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Amsterdam')
             ->setBirthDate(new \DateTime('1971-02-18'))
             ->setArrival(new \DateTime('08:30'))
-            ->setFunction('programmer');
+            ->setJob('programmer');
         $manager->persist($entity);
         $this->addReference(self::HORLINGS_REFERENCE, $entity);
 
@@ -366,7 +366,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Leiden')
             ->setBirthDate(new \DateTime('1965-09-03'))
             ->setArrival(new \DateTime('08:00'))
-            ->setFunction('director');
+            ->setJob('director');
         $manager->persist($entity);
         $this->addReference(self::PETERS_REFERENCE, $entity);
 
@@ -378,7 +378,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Groningen')
             ->setBirthDate(new \DateTime('1982-01-28'))
             ->setArrival(new \DateTime('09:30'))
-            ->setFunction('architect');
+            ->setJob('architect');
         $manager->persist($entity);
         $this->addReference(self::EDEN_REFERENCE, $entity);
 
@@ -390,7 +390,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Utrecht')
             ->setBirthDate(new \DateTime('1958-12-16'))
             ->setArrival(new \DateTime('12:30'))
-            ->setFunction('designer');
+            ->setJob('designer');
         $manager->persist($entity);
         $this->addReference(self::JACOBS_REFERENCE, $entity);
 
@@ -413,14 +413,14 @@ four employees.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter2-api ./api/src/Entity/Employee.php
+git diff origin/chapter2-api ./api/src/Entity/Employee.php
 ```
 will compare your own version of ./api/src/Entity/Employee.php with
 the one of chapter2-api.
 
-After committing your changes check out branch chapter1-react. 
-Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react) 
+After committing your changes check out branch chapter1-react or chapter1-next and restart docker-compose.
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react)
 and follow the instructions. Or if you only follow the api branches chapter2-api.
