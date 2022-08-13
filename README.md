@@ -81,7 +81,7 @@ Next
 Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter2-next ./pwa
+git diff origin/chapter2-next ./pwa
 ```
 will compare your own version with code one of chapter2-next. You may also extend the path
 to a folder of file to make the diff more specific. There may be some differences because the 
