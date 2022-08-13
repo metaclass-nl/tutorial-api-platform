@@ -169,10 +169,11 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter4-api 
+git diff origin/chapter4-api 
 ```
 will compare your own version with code one of chapter4-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter3-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react) 
+After committing your changes you may check out branch chapter3-react or chapter3-next,
+restart docker-compose and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react) 
 and follow the instructions. Or if you only follow the api branches chapter4-api.
