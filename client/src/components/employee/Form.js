@@ -60,7 +60,7 @@ class Form extends Component {
         />
         <Field
           component={this.renderField}
-          name="function"
+          name="job"
           type="text"
           placeholder=""
           required={true}
