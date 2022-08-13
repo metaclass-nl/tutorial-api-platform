@@ -27,7 +27,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Amsterdam')
             ->setBirthDate(new \DateTime('1971-02-18'))
             ->setArrival(new \DateTime('08:30'))
-            ->setFunction('programmer');
+            ->setJob('programmer');
         $manager->persist($entity);
         $this->addReference(self::HORLINGS_REFERENCE, $entity);
 
@@ -39,7 +39,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Leiden')
             ->setBirthDate(new \DateTime('1965-09-03'))
             ->setArrival(new \DateTime('08:00'))
-            ->setFunction('director');
+            ->setJob('director');
         $manager->persist($entity);
         $this->addReference(self::PETERS_REFERENCE, $entity);
 
@@ -51,7 +51,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Groningen')
             ->setBirthDate(new \DateTime('1982-01-28'))
             ->setArrival(new \DateTime('09:30'))
-            ->setFunction('architect');
+            ->setJob('architect');
         $manager->persist($entity);
         $this->addReference(self::EDEN_REFERENCE, $entity);
 
@@ -63,7 +63,7 @@ class EmployeeFixtures extends Fixture
             ->setCity('Utrecht')
             ->setBirthDate(new \DateTime('1958-12-16'))
             ->setArrival(new \DateTime('12:30'))
-            ->setFunction('designer');
+            ->setJob('designer');
         $manager->persist($entity);
         $this->addReference(self::JACOBS_REFERENCE, $entity);
 
