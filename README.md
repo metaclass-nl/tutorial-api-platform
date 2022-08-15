@@ -16,7 +16,7 @@ welcome screen with title "Tutorial API Platform".
 
 ! If you did not apply the instructions from README.md of chapter1-api
 yourself, you do need to go back to branch chapter1-api and apply
-the instuction to add  the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
+the instruction to add  the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
 You can install it from the command line:
 ```shell
 docker-compose exec php composer req --dev orm-fixtures
@@ -109,7 +109,7 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter2-react ./client
+git diff origin/chapter2-react ./client
 ```
 will compare your own version with code one of chapter2-react. You may also extend the path
 to a folder of file to make the diff more specific.
