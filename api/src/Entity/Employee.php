@@ -55,7 +55,7 @@ class Employee
      * @Assert\NotBlank
      * @Assert\Length(max=40)
      */
-    private $function;
+    private $job;
 
     /**
      * @var string
@@ -149,18 +149,18 @@ class Employee
     /**
      * @return string
      */
-    public function getFunction(): string
+    public function getJob(): string
     {
-        return $this->function;
+        return $this->job;
     }
 
     /**
-     * @param string $function
+     * @param string $job
      * @return Employee
      */
-    public function setFunction(string $function): Employee
+    public function setJob(string $job): Employee
     {
-        $this->function = $function;
+        $this->job = $job;
         return $this;
     }
 
