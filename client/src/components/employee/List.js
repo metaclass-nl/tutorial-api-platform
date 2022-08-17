@@ -63,7 +63,7 @@ class List extends Component {
               <th>id</th>
               <th>firstName</th>
               <th>lastName</th>
-              <th>function</th>
+              <th>job</th>
               <th>address</th>
               <th>zipcode</th>
               <th>city</th>
@@ -84,7 +84,7 @@ class List extends Component {
                   </th>
                   <td>{item["firstName"]}</td>
                   <td>{item["lastName"]}</td>
-                  <td>{item["function"]}</td>
+                  <td>{item["job"]}</td>
                   <td>{item["address"]}</td>
                   <td>{item["zipcode"]}</td>
                   <td>{item["city"]}</td>

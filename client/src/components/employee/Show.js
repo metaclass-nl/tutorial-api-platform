@@ -77,8 +77,8 @@ class Show extends Component {
                 <td>{item["lastName"]}</td>
               </tr>
               <tr>
-                <th scope="row">function</th>
-                <td>{item["function"]}</td>
+                <th scope="row">job</th>
+                <td>{item["job"]}</td>
               </tr>
               <tr>
                 <th scope="row">address</th>

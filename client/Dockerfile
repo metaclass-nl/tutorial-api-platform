@@ -18,26 +18,25 @@ WORKDIR /usr/src/client
 #RUN yarn global add @api-platform/client-generator
 
 # prevent the reinstallation of node modules at every changes in the source code
-COPY package.json yarn.lock ./
-# causes error
+#COPY package.json yarn.lock ./
+# does not work
 #RUN set -eux; \
-#	yarn install
+#    npm install
 
-COPY . ./
+#COPY . ./
 
-VOLUME /usr/src/client/node_modules
+#VOLUME /usr/src/client/node_modules
 
-CMD ["yarn", "start"]
-
+#CMD ["yarn", "start"]
+CMD ["docker/cmd.sh"]
 
 # "build" stage
 # depends on the "development" stage above
 FROM api_platform_client_development AS api_platform_client_build
 
 ARG REACT_APP_API_ENTRYPOINT
-
 RUN set -eux; \
-	yarn build
+	npm run build
 
 # "nginx" stage
 # depends on the "build" stage above
