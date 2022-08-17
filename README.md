@@ -210,7 +210,7 @@ When you try out Get //employees there should be response body like:
     {
       "@id": "/employees/55",
       "@type": "Employee",
-      "function": "architect",
+      "job": "architect",
       "birthDate": "1982-01-28T00:00:00+00:00",
       "arrival": "1970-01-01T09:30:00+00:00",
       "label": "Eden, Nicky"
@@ -226,7 +226,7 @@ there should be response body like:
   "@type": "Employee",
   "firstName": "Nicky",
   "lastName": "Eden",
-  "function": "architect",
+  "job": "architect",
   "address": "Zuiderdiep 17",
   "zipcode": "9722 AB",
   "city": "Groningen",
@@ -241,10 +241,11 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter5-api 
+git diff origin/chapter5-api 
 ```
 will compare your own version with code one of chapter5-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter4-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react) 
+After committing your changes you may check out branch chapter4-react or chapter4-next, 
+restart docker-compose and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react) 
 and follow the instructions. Or if you only follow the api branches chapter5-api.
