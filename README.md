@@ -174,9 +174,9 @@ use App\Filter\SimpleSearchFilter;
 ```
 and in the class comment:
 ```php comment
- * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "function", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
+ * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "job", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
 ```
-This makes the SimpleSearchFilter search in the properties "lastName", "firstName", "function", "address", "zipcode" and "city".
+This makes the SimpleSearchFilter search in the properties "lastName", "firstName", "job", "address", "zipcode" and "city".
 It will look for query parameter "search" instead of the default 'simplesearch'.
 
 You can now test the filter at https://localhost/docs 
@@ -192,10 +192,11 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter7-api 
+git diff origin/chapter7-api 
 ```
 will compare your own version with code one of chapter7-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter6-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react) 
+After committing your changes you may check out branch chapter6-react, restart docker-compose, 
+point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter6-react) 
 and follow the instructions. Or if you only follow the api branches chapter7-api.
