@@ -67,7 +67,7 @@ class List extends Component {
               <th>id</th>
               <th><FormattedMessage id="employee.firstName" default="firstName"/></th>
               <th><FormattedMessage id="employee.lastName" default="lastName"/></th>
-              <th><FormattedMessage id="employee.function" default="function"/></th>
+              <th><FormattedMessage id="employee.job" default="function"/></th>
               <th><FormattedMessage id="employee.address" default="address"/></th>
               <th><FormattedMessage id="employee.zipcode" default="zipcode"/></th>
               <th><FormattedMessage id="employee.city" default="city"/></th>
@@ -94,7 +94,7 @@ class List extends Component {
                   {item['lastName']}
                   </td>
                   <td>
-                  {item['function']}
+                  {item['job']}
                   </td>
                   <td>
                   {item['address']}

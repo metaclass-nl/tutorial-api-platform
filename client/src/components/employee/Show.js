@@ -90,9 +90,9 @@ class Show extends Component {
                 </td>
               </tr>
               <tr>
-                <th scope="row"><FormattedMessage id="employee.function" defaultMessage="function"/></th>
+                <th scope="row"><FormattedMessage id="employee.job" defaultMessage="function"/></th>
                 <td>
-                    {item['function']}
+                    {item['job']}
                 </td>
               </tr>
               <tr>
