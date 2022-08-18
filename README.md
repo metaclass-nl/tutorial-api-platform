@@ -17,21 +17,21 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 ```
 
-The search form should contain all persistent properties of 
+The search form should contain all persistent properties of
 Hours except id and onInvoice. It should also contain the
-function of the related employee.
+job of the related employee.
 
 Most of this can be implemented by adding the folowing ApiFilter annotation
 to the Entity class Hours:
 ```php
 /**
 (..)
- * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
+ * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.job": "ipartial"})
  * @ORM\Entity
  */
 class Hours
 ```
-This way "description" and "employee.function" will be searched case insensitive for the
+This way "description" and "employee.job" will be searched case insensitive for the
 specified substring anywhere in the property, but "employee" will be searched for exactly
 the specified value.
 
@@ -46,8 +46,8 @@ For example for searching for 2.2 with a precision of 0.1 the client would
 specify "nHours[gte]=2.15&nHours[lt]2.25".
 
 The property start contains datetimes. At the time of writing
-SearchFilter probably has a bug leading to an internal server error 
-"Could not convert PHP value '2020-01-01T00:00:00' of type 'string' to type 'datetime'". 
+SearchFilter probably has a bug leading to an internal server error
+"Could not convert PHP value '2020-01-01T00:00:00' of type 'string' to type 'datetime'".
 The alternative is to use a DateFilter:
 ```php comment
  * @ApiFilter(DateFilter::class, properties={"start"})
@@ -60,13 +60,14 @@ Because both explessions are inclusive so only the exact value will match both.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter6-api 
+git diff origin/chapter6-api 
 ```
 will compare your own version with code one of chapter6-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter5-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react) 
+After committing your changes you may check out branch chapter5-react, restart docker-compose 
+and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react)
 and follow the instructions. Or if you only follow the api branches chapter6-api.
