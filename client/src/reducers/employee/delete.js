@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 export function error(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_DELETE_ERROR':
+    case "EMPLOYEE_DELETE_ERROR":
       return action.error;
 
     default:
@@ -12,7 +12,7 @@ export function error(state = null, action) {
 
 export function loading(state = false, action) {
   switch (action.type) {
-    case 'EMPLOYEE_DELETE_LOADING':
+    case "EMPLOYEE_DELETE_LOADING":
       return action.loading;
 
     default:
@@ -22,7 +22,7 @@ export function loading(state = false, action) {
 
 export function deleted(state = null, action) {
   switch (action.type) {
-    case 'EMPLOYEE_DELETE_SUCCESS':
+    case "EMPLOYEE_DELETE_SUCCESS":
       return action.deleted;
 
     default:

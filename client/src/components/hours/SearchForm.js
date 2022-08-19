@@ -58,9 +58,9 @@ class SearchForm extends Component {
           />
         <Field
           component={this.renderField}
-          name="employee.function"
+          name="employee.job"
           type="text"
-          label={<FormattedMessage id="employee.function" defaultMessage="function" />}
+          label={<FormattedMessage id="employee.job" defaultMessage="job" />}
           placeholder=""
           />
         <button type="submit" className="btn btn-success">

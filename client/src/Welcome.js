@@ -34,12 +34,12 @@ const Welcome = () => (
                 </div>
                 <div className="main__other">
                     <h2>Available services:</h2>
-                    <div className="other__bloc" style={{"width": "200px", "padding-left": "80px"}}>
+                    <div className="other__bloc" style={{"width": "200px", "paddingLeft": "80px"}}>
                         <div className="other__content">
                           <h3><a href={`https://${document.domain}/docs`}>API</a></h3>
                         </div>
                     </div>
-                    <div className="other__bloc" style={{"width": "200px", "padding-left": "65px"}}>
+                    <div className="other__bloc" style={{"width": "200px", "paddingLeft": "65px"}}>
                         <div className="other__content">
                           <h3><a href={`https://${document.domain}/admin`}>Admin</a></h3>
                         </div>

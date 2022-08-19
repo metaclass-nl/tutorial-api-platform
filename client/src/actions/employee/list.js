@@ -2,36 +2,36 @@ import {
   fetch,
   normalize,
   extractHubURL,
-  mercureSubscribe as subscribe
-} from '../../utils/dataAccess';
-import { success as deleteSuccess } from './delete';
+  mercureSubscribe as subscribe,
+} from "../../utils/dataAccess";
+import { success as deleteSuccess } from "./delete";
 
 export function error(error) {
-  return { type: 'EMPLOYEE_LIST_ERROR', error };
+  return { type: "EMPLOYEE_LIST_ERROR", error };
 }
 
 export function loading(loading) {
-  return { type: 'EMPLOYEE_LIST_LOADING', loading };
+  return { type: "EMPLOYEE_LIST_LOADING", loading };
 }
 
 export function success(retrieved) {
-  return { type: 'EMPLOYEE_LIST_SUCCESS', retrieved };
+  return { type: "EMPLOYEE_LIST_SUCCESS", retrieved };
 }
 
 export function query(query) {
   return { type: 'EMPLOYEE_LIST_QUERY', query };
 }
 
-export function list(page = 'employees') {
-  return dispatch => {
+export function list(page = "employees") {
+  return (dispatch) => {
     dispatch(loading(true));
-    dispatch(error(''));
+    dispatch(error(""));
 
     fetch(page)
-      .then(response =>
+      .then((response) =>
         response
           .json()
-          .then(retrieved => ({ retrieved, hubURL: extractHubURL(response) }))
+          .then((retrieved) => ({ retrieved, hubURL: extractHubURL(response) }))
       )
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
@@ -39,15 +39,15 @@ export function list(page = 'employees') {
         dispatch(loading(false));
         dispatch(success(retrieved));
 
-        if (hubURL && retrieved['hydra:member'].length)
+        if (hubURL && retrieved["hydra:member"].length)
           dispatch(
             mercureSubscribe(
               hubURL,
-              retrieved['hydra:member'].map(i => i['@id'])
+              retrieved["hydra:member"].map((i) => i["@id"])
             )
           );
       })
-      .catch(e => {
+      .catch((e) => {
         dispatch(loading(false));
         dispatch(error(e.message));
       });
@@ -55,35 +55,35 @@ export function list(page = 'employees') {
 }
 
 export function reset(eventSource) {
-  return dispatch => {
+  return (dispatch) => {
     if (eventSource) eventSource.close();
 
-    dispatch({ type: 'EMPLOYEE_LIST_RESET' });
+    dispatch({ type: "EMPLOYEE_LIST_RESET" });
     dispatch(deleteSuccess(null));
   };
 }
 
 export function mercureSubscribe(hubURL, topics) {
-  return dispatch => {
+  return (dispatch) => {
     const eventSource = subscribe(hubURL, topics);
     dispatch(mercureOpen(eventSource));
-    eventSource.addEventListener('message', event =>
+    eventSource.addEventListener("message", (event) =>
       dispatch(mercureMessage(normalize(JSON.parse(event.data))))
     );
   };
 }
 
 export function mercureOpen(eventSource) {
-  return { type: 'EMPLOYEE_LIST_MERCURE_OPEN', eventSource };
+  return { type: "EMPLOYEE_LIST_MERCURE_OPEN", eventSource };
 }
 
 export function mercureMessage(retrieved) {
-  return dispatch => {
+  return (dispatch) => {
     if (1 === Object.keys(retrieved).length) {
-      dispatch({ type: 'EMPLOYEE_LIST_MERCURE_DELETED', retrieved });
+      dispatch({ type: "EMPLOYEE_LIST_MERCURE_DELETED", retrieved });
       return;
     }
 
-    dispatch({ type: 'EMPLOYEE_LIST_MERCURE_MESSAGE', retrieved });
+    dispatch({ type: "EMPLOYEE_LIST_MERCURE_MESSAGE", retrieved });
   };
 }

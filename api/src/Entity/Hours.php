@@ -37,7 +37,7 @@ use App\Validator\Constraints\CommonUserHoursStartConstraint;
  *          "post"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"}
  *     }
  * )
- * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
+ * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.job": "ipartial"})
  * @ApiFilter(DateFilter::class, properties={"start"})
  * @ApiFilter(RangeFilter::class, properties={"nHours"})
  * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
