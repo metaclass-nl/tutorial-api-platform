@@ -34,7 +34,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
  *          "post"
  *     }
  * )
- * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
+ * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.job": "ipartial"})
  * @ApiFilter(DateFilter::class, properties={"start"})
  * @ApiFilter(RangeFilter::class, properties={"nHours"})
  * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
