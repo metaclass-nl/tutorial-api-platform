@@ -22,7 +22,7 @@ But the search form should not be entirely the same as the edit form:
 - the 'start' field requires the user to enter an exact date and time, but it is
   unlikely that the user knows both by head. To make it more usefull the start
   field should only require a date to search for all Hours that start on that date
-- a field for employee.function should be added
+- a field for employee.job should be added
 - Redux Form should know the form under a different name so that it keeps a separate state 
 
 As requirements change in the future the search form may be expected to change and divert
@@ -53,17 +53,17 @@ employee, description, start, nHours.
 To make the start field a date field in stead of datetime-local, change its type to "date" and
 replace the formatting and normalizing functions by their date counterparts.
 
-To support searching by the function of the related employee, add the following field:
+To support searching by the job of the related employee, add the following field:
 ```javascript jsx
         <Field
           component={this.renderField}
-          name="employee.function"
+          name="employee.job"
           type="text"
-          label=<FormattedMessage id="employee.function" defaultMessage="function" />
+          label=<FormattedMessage id="employee.job" defaultMessage="job" />
           placeholder=""
           />
 ```
-But this introduces a problem: if a value is present in employee.function, 
+But this introduces a problem: if a value is present in employee.job, 
 this results in a nested object to be the value of employee, but employee
 already may have a string value from the employee select. This can be solved
 by renaming the employee select to employee.id:
@@ -72,7 +72,7 @@ by renaming the employee select to employee.id:
           component={this.renderField}
           name="employee.id"
 ```
-This way both employee.id and employee.function will be put together in the nested
+This way both employee.id and employee.job will be put together in the nested
 object in employee.
 
 At te bottom of the form in the reduxForm call change the value of form:
@@ -385,8 +385,8 @@ class SearchTool extends Component {
         // need to strip /employees/
         req.employee = this.constructor.idFromIri(employee.id.);
       }
-      if (employee.function) {
-        req["employee.function"] = employee.function;
+      if (employee.job) {
+        req["employee.job"] = employee.job;
       }
     }
     if (nHours) {
@@ -515,8 +515,8 @@ together with a query string for the api. This is how the query string is create
         // need to strip /employees/
         req.employee = this.constructor.idFromIri(employee.id.);
       }
-      if (employee.function) {
-        req["employee.function"] = employee.function;
+      if (employee.job) {
+        req["employee.job"] = employee.job;
       }
     }
     if (nHours) {
@@ -790,7 +790,7 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter6-react 
+git diff origin/chapter6-react 
 ```
 will compare your own version with code one of chapter6-react. You may also add the path
 to a folder of file to make the diff more specific.

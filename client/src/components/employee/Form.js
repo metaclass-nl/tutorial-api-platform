@@ -37,7 +37,7 @@ class Form extends Component {
           component={this.renderField}
           name="job"
           type="text"
-          label={<FormattedMessage id="employee.job" defaultMessage="function" />}
+          label={<FormattedMessage id="employee.job" defaultMessage="job" />}
           placeholder=""
           required={true}/>
         <Field
