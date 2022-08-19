@@ -35,7 +35,7 @@ class EmployeeFixtures extends Fixture implements DependentFixtureInterface
             ->setCity('Amsterdam')
             ->setBirthDate(new \DateTime('1971-02-18'))
             ->setArrival(new \DateTime('08:30'))
-            ->setFunction('programmer')
+            ->setJob('programmer')
             ->setUser($this->getReference(UserFixtures::HORLINGS_REFERENCE));
         $manager->persist($entity);
         $this->addReference(self::HORLINGS_REFERENCE, $entity);
@@ -48,7 +48,7 @@ class EmployeeFixtures extends Fixture implements DependentFixtureInterface
             ->setCity('Leiden')
             ->setBirthDate(new \DateTime('1965-09-03'))
             ->setArrival(new \DateTime('08:00'))
-            ->setFunction('director')
+            ->setJob('director')
             ->setUser($this->getReference(UserFixtures::PETERS_REFERENCE));
         $manager->persist($entity);
         $this->addReference(self::PETERS_REFERENCE, $entity);
@@ -61,7 +61,7 @@ class EmployeeFixtures extends Fixture implements DependentFixtureInterface
             ->setCity('Groningen')
             ->setBirthDate(new \DateTime('1982-01-28'))
             ->setArrival(new \DateTime('09:30'))
-            ->setFunction('architect')
+            ->setJob('architect')
             ->setUser($this->getReference(UserFixtures::EDEN_REFERENCE));
         $manager->persist($entity);
         $this->addReference(self::EDEN_REFERENCE, $entity);
@@ -74,7 +74,7 @@ class EmployeeFixtures extends Fixture implements DependentFixtureInterface
             ->setCity('Utrecht')
             ->setBirthDate(new \DateTime('1958-12-16'))
             ->setArrival(new \DateTime('12:30'))
-            ->setFunction('designer')
+            ->setJob('designer')
             ->setUser($this->getReference(UserFixtures::JACOBS_REFERENCE));
         $manager->persist($entity);
         $this->addReference(self::JACOBS_REFERENCE, $entity);
