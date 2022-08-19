@@ -3,24 +3,16 @@ Chapter 7: Authentication - Api
 
 The environment is te same as in the chapter6-api branche, except:
 - instructions from README.md of chapter6-api where applied,
-- api/config/packages/lexik_jwt_authentication.yaml was added,
-- environment variables for the LexikJWTAuthenticationBundle where added to the .env file.
 
 This chapter adds JWT authentication
 
-Error after installing this branch<a name="Error"></a>
-----------------------------------
-After installing this branch the api will allways return an Internal Server Error
-with a description like 'There is no extension able to load the configuration for "lexik_jwt_authentication"'.
-This will be solved by installing the LexikJWTAuthenticationBundle, more specifically, 
-by the composer install command.
 
-LexikJWTAuthenticationBundle environment<a name="LexikJWTAuthenticationBundle"></a>
-----------------------------------------
+Installing LexikJWTAuthenticationBundle
+---------------------------------------
+Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#installing-lexikjwtauthenticationbundle)
+under "Installing LexikJWTAuthenticationBundle".
 
-Before installing the LexikJWTAuthenticationBundle you should be aware that
-environment variables for its configuration where already added to 
-this branch:
+This will add the following to api/.env:
 ```shell environment
 ###> lexik/jwt-authentication-bundle ###
 JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
@@ -28,32 +20,17 @@ JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
 JWT_PASSPHRASE=9fe20a8b7757fa9e800b6eb23dfb0145
 ###< lexik/jwt-authentication-bundle ###
 ```
-This has the effect that your JWT_PASSPHRASE will be the same as for
-everyone who uses this tutorial. Of course this is kind of a
-security risk but it has the advantage that you can switch to
-the chapter7-react branche and chapter 8 and higher branches
-and back to this branch without the JWT_PASSPHRASE getting changed. 
-Because the corrsponding public and private keys are not in git they will remain unchanged 
-so that the LexikJWTAuthenticationBundle will no longer work properly if the
-JWT_PASSPHRASE is changed by git checkout.
 
-If you don't want this you should remove the above addition to the .env file now,
-so that it will be generated to a unique value autmatically that you then need to
-paste in the .env file every time you swith to another branch.
+The JWT_PASSPHRASE corresponds to the secret and public keys in the key files that where
+also generated. The key files are not in git, so if the JWT_PASSPHRASE is in git and
+you switch to another branch it gets replaced by our version and that will not work.
 
-If  you don't remove it you are advised to make sure not to use an environment with 
-the above JWT_PASSPHRASE in production.
+Cut the line with JWT_PASSPHRASE, Create a new file api/.env.local
+and paste the line there. Because the file api/.env.local is not in git, it will
+not be replaced by our version when you switch to some other branch.
 
-
-Installing LexikJWTAuthenticationBundle
----------------------------------------
-Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#installing-lexikjwtauthenticationbundle)
-under "Installing LexikJWTAuthenticationBundle". 
-
-Because the api/config/packages/lexik_jwt_authentication.yaml was already included in this branch
-it will not be owned by root so that you can check it out from some other branch without
-git running into authorization problems. 
-
+The downside may be that if you install the app in production using git the passphrase will
+nog get installed. But this tutorial is not meant for production so that should be no problem.
 
 User classes<a name="User"></a>
 ------------
@@ -319,7 +296,7 @@ Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
 Configuring the Symfony SecurityBundle<a name="Configuration"></a>
 --------------------------------------
 Please follow the instruction in [the api platform documentation](https://api-platform.com/docs/core/jwt/#configuring-the-symfony-securitybundle) under "update the security configuration" except for the dev: firewall and
- "declare the route used for /authentication_token".
+"declare the route used for /authentication_token".
 
 To enable testing the api through https://localhost/docs 
 you also need to add the configuration from 
@@ -355,13 +332,14 @@ get the normal response instead of 401 Unauthorized.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter8-api 
+git diff origin/chapter8-api 
 ```
 will compare your own version with code one of chapter8-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter7-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react) 
+After committing your changes you may check out branch chapter7-react,
+restart docker-compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
 and follow the instructions. Or if you only follow the api branches chapter8-api.

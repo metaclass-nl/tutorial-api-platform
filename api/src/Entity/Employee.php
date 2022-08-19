@@ -34,7 +34,7 @@ use App\Filter\SimpleSearchFilter;
  *     }
  * )
  * @ApiFilter(OrderFilter::class)
- * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "function", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
+ * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "job", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
  * @ORM\Entity
  */
 class Employee
