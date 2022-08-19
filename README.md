@@ -244,8 +244,8 @@ When the ThSort is clicked it will call a function. Add this to the List compone
 
 Because it is simpeler, start with replacing the second column header:
 ```javascript jsx
-              <ThSort orderBy={ {"function": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="employee.function" default="function"/>
+              <ThSort orderBy={ {"job": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.job" default="job"/>
               </ThSort>
 ```
 
@@ -533,7 +533,7 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter7-react 
+git diff origin/chapter7-react 
 ```
 will compare your own version with code one of chapter7-react. You mau also add the path
 to a folder of file to make the diff more specific.

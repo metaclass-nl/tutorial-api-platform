@@ -39,8 +39,8 @@ class SearchTool extends Component {
         // need to strip /employees/
         req.employee = employee.id.substring(11);
       }
-      if (employee.function) {
-        req["employee.function"] = employee.function;
+      if (employee.job) {
+        req["employee.job"] = employee.job;
       }
     }
     if (nHours) {
