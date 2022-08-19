@@ -33,7 +33,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *          "post"
  *     }
  * )
- * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.function": "ipartial"})
+ * @ApiFilter(SearchFilter::class, properties={"description": "ipartial", "employee": "exact", "employee.job": "ipartial"})
  * @ApiFilter(DateFilter::class, properties={"start"})
  * @ApiFilter(RangeFilter::class, properties={"nHours"})
  * @ORM\Entity
