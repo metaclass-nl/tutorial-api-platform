@@ -34,7 +34,7 @@ use App\Filter\SimpleSearchFilter;
  *     }
  * )
  * @ApiFilter(OrderFilter::class)
- * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "function", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
+ * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "job", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
  * @ORM\Entity
  */
 class Employee
@@ -77,7 +77,7 @@ class Employee
      * @Assert\Length(max=40)
      * @Groups({"employee_get", "employee_list"})
      */
-    private $function;
+    private $job;
 
     /**
      * @var string
@@ -176,18 +176,18 @@ class Employee
     /**
      * @return string
      */
-    public function getFunction(): string
+    public function getJob(): string
     {
-        return $this->function;
+        return $this->job;
     }
 
     /**
-     * @param string $function
+     * @param string $job
      * @return Employee
      */
-    public function setFunction(string $function): Employee
+    public function setJob(string $job): Employee
     {
-        $this->function = $function;
+        $this->job = $job;
         return $this;
     }
 
