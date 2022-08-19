@@ -409,7 +409,7 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter8-react 
+git diff origin/chapter8-react 
 ```
 will compare your own version with code one of chapter8-react. You mau also add the path
 to a folder of file to make the diff more specific.
