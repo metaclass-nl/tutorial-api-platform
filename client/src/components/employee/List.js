@@ -64,7 +64,7 @@ class List extends Component {
           <thead>
             <tr>
               <th><FormattedMessage id="employee.item" default="Employee"/></th>
-              <th><FormattedMessage id="employee.function" default="function"/></th>
+              <th><FormattedMessage id="employee.job" default="job"/></th>
               <th><FormattedMessage id="employee.birthDate" default="birthDate"/></th>
               <th><FormattedMessage id="employee.arrival" default="arrival"/></th>
               <th colSpan={3} />
@@ -80,7 +80,7 @@ class List extends Component {
                     </Link>
                   </th>
                   <td>
-                  {item['function']}
+                  {item['job']}
                   </td>
                   <td>
                   <defined.FormattedLocalDate value={item['birthDate']} />

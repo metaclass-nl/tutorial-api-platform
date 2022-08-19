@@ -1,7 +1,7 @@
 export default {
   "employee.firstName": "First Name",
   "employee.lastName": "Surname",
-  "employee.function": "Function",
+  "employee.job": "Job",
   "employee.address": "Address",
   "employee.zipcode": "Zipcode",
   "employee.city": "City",
