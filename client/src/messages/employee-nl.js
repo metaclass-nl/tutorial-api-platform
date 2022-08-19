@@ -1,7 +1,7 @@
 export default {
     "employee.firstName": "Voornaam",
     "employee.lastName": "Achternaam",
-    "employee.function": "Functie",
+    "employee.job": "Functie",
     "employee.address": "Adres",
     "employee.zipcode": "Postcode",
     "employee.city": "Woonplaats",

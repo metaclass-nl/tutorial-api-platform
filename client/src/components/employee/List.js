@@ -95,8 +95,8 @@ class List extends Component {
               <ThSort orderBy={ {"lastName": "asc", "firstName": "asc"} }  isDefault={true} order={this.values.order} onClick={order=>this.order(order)}>
                 <FormattedMessage id="employee.item" default="Employee"/>
               </ThSort>
-              <ThSort orderBy={ {"function": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
-                <FormattedMessage id="employee.function" default="function"/>
+              <ThSort orderBy={ {"job": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
+                <FormattedMessage id="employee.job" default="job"/>
               </ThSort>
               <ThSort orderBy={ {"birthDate": "asc"} } order={this.values.order} onClick={order=>this.order(order)}>
                 <FormattedMessage id="employee.birthDate" default="birthDate"/>
@@ -117,7 +117,7 @@ class List extends Component {
                     </Link>
                   </th>
                   <td>
-                  {item['function']}
+                  {item['job']}
                   </td>
                   <td>
                   <defined.FormattedLocalDate value={item['birthDate']} />
