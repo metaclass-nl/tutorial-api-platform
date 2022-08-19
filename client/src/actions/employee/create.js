@@ -1,30 +1,30 @@
-import { SubmissionError } from 'redux-form';
-import { fetch } from '../../utils/dataAccess';
+import { SubmissionError } from "redux-form";
+import { fetch } from "../../utils/dataAccess";
 
 export function error(error) {
-  return { type: 'EMPLOYEE_CREATE_ERROR', error };
+  return { type: "EMPLOYEE_CREATE_ERROR", error };
 }
 
 export function loading(loading) {
-  return { type: 'EMPLOYEE_CREATE_LOADING', loading };
+  return { type: "EMPLOYEE_CREATE_LOADING", loading };
 }
 
 export function success(created) {
-  return { type: 'EMPLOYEE_CREATE_SUCCESS', created };
+  return { type: "EMPLOYEE_CREATE_SUCCESS", created };
 }
 
 export function create(values) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(loading(true));
 
-    return fetch('employees', { method: 'POST', body: JSON.stringify(values) })
-      .then(response => {
+    return fetch("employees", { method: "POST", body: JSON.stringify(values) })
+      .then((response) => {
         dispatch(loading(false));
 
         return response.json();
       })
-      .then(retrieved => dispatch(success(retrieved)))
-      .catch(e => {
+      .then((retrieved) => dispatch(success(retrieved)))
+      .catch((e) => {
         dispatch(loading(false));
 
         if (e instanceof SubmissionError) {
@@ -38,7 +38,7 @@ export function create(values) {
 }
 
 export function reset() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(loading(false));
     dispatch(error(null));
   };
