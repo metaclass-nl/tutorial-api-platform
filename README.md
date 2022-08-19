@@ -66,7 +66,7 @@ docker-compose exec php ./bin/console doctrine:migrations:migrate
 The data itself also needs to be changed. In api/src/DataFixtures/EmployeeFixtures.php
 on the line with
 ```php
-            ->setFunction('programmer');
+            ->setJob('programmer');
 ```
 replace the ; by a new line with:
 ```php
@@ -453,10 +453,11 @@ Next
 Let git compare your own code with the branche of the next chapter 
 so that you can see the differences right away. For example:
 ```shell
-git diff chapter9-api 
+git diff origin/chapter9-api 
 ```
 will compare your own version with code one of chapter9-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter8-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react) 
+After committing your changes you may check out branch chapter8-react,
+restart docker-compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react) 
 and follow the instructions. Or if you only follow the api branches chapter9-api.
