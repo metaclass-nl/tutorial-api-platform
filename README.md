@@ -12,7 +12,9 @@ The environment is te same as in the chapter1-api branche, except:
 
 This chapter adds the user interface for an entity class Employee.
 
-In order to activate the new angular container you need to restart docker-compose.
+More information on installing and running the tutorial see [the main branch]( https://github.com/metaclass-nl/tutorial-api-platform).
+
+In order to activate the new angular container you need to check out this branch and restart docker-compose.
 To test it point your browser to https://localhost/. Once you made the 
 security exception for the self signed https certificate you should see the
 welcome screen with title "Tutorial API Platform". Click on "Angular Web App"
