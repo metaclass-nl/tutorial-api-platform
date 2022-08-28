@@ -25,6 +25,27 @@ log
     || {path}.startsWith("/_next")
     || {path}.startsWith("/sitemap")`
 
+@angular expression ( \
+        ({header.Accept}.matches('\\btext/html\\b') || {path}.startsWith('/static/')) \
+        && !{header.Accept}.startsWith('*.*') \
+        && !{path}.startsWith('/admin') \
+        && !{path}.startsWith('/_next') \
+        && !{path}.matches('(?i)(?:^/docs|^/graphql|^/bundles/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))') \
+    ) \
+    || {path} == '/nofavicon.ico' \
+    || {path} == '/logo512.png' \
+    || {path} == '/logo192.png' \
+    || {path} == '/styles.css' \
+    || {path} == '/runtime.js' \
+    || {path} == '/polyfills.js' \
+    || {path} == '/styles.js' \
+    || {path} == '/vendor.js' \
+    || {path} == '/main.js' \
+    || {path} == '/polyfills.js' \
+    || {path} == '/ng-cli-ws' \
+    || {path} == '/styles.css.map' \
+    || {path} == '/sockjs-node'
+
 route {
     root * /srv/api/public
     mercure {
@@ -48,6 +69,9 @@ route {
     header ?Link `</docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation", </.well-known/mercure>; rel="mercure"`
     # Disable Google FLOC tracking if not enabled explicitly: https://plausible.io/blog/google-floc
     header ?Permissions-Policy "interest-cohort=()"
+
+    # added for tutorial angular client
+    reverse_proxy @angular http://angular:4200
 
     # Comment the following line if you don't want Next.js to catch requests for HTML documents.
     # In this case, they will be handled by the PHP app.
