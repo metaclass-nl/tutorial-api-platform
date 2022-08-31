@@ -1,5 +1,7 @@
 <h1>Employee List</h1>
-
+<a routerLink="/employees/create" class="btn btn-primary">
+Create
+</a>
 <table class="table table-responsive table-striped table-hover">
   <thead>
   <tr>
@@ -19,7 +21,9 @@
   <tbody>
     <tr *ngFor="let item of items" id="{{item['@id']}}" >
       <th scope="row">
-        {{item["@id"]}}
+        <a routerLink="{{item['@id']}}">
+          {{item["@id"]}}
+        </a>
       </th>
       <td>{{item["firstName"]}}</td>
       <td>{{item["lastName"]}}</td>
@@ -31,13 +35,16 @@
       <td>{{item["arrival"]}}</td>
       <td>{{item["label"]}}</td>
       <td>
-        <fa-icon [icon]="icons.faSearch"></fa-icon>
-        <span class="sr-only">Show</span>
+        <a routerLink="{{item['@id']}}">
+          <fa-icon [icon]="icons.faSearch"></fa-icon>
+          <span class="sr-only">Show</span>
+        </a>
       </td>
       <td>
-        <fa-icon [icon]="icons.faPencil"></fa-icon>
-        <span class="sr-only">Edit</span>
-
+        <a routerLink="{{item['@id']}}/edit">
+          <fa-icon [icon]="icons.faPencil"></fa-icon>
+          <span class="sr-only">Edit</span>
+        </a>
       </td>
     </tr>
   </tbody>

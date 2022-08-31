@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Employee } from '../employee/employee';
+import { Employee } from '../employee';
 import { EmployeeService } from '../employee.service';
 import { faSearch, faPencil } from '@fortawesome/free-solid-svg-icons';
 
@@ -30,6 +30,6 @@ export class EmployeeListComponent implements OnInit {
 
   delete(item: Employee): void {
     this.items = this.items.filter(h => h !== item);
-    this.itemService.deleteEmployee(item).subscribe();
+    this.itemService.deleteItem(item).subscribe();
   }
 }

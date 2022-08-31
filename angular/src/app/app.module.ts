@@ -4,25 +4,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { MessagesComponent } from './messages/messages.component';
+import { MessagesComponent } from './shared/messages/messages.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WelcomeComponent } from './welcome/welcome.component';
-import {EmployeeListComponent} from "./employee-list/employee-list.component";
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EmployeeModule} from "./employee/employee.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     MessagesComponent,
     WelcomeComponent,
-    EmployeeListComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    FontAwesomeModule,
+    EmployeeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

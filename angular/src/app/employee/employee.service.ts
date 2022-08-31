@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ENTRYPOINT } from "./config/entrypoint";
-import { Employee } from './employee/employee';
+import { ENTRYPOINT } from "../core/entrypoint";
+import { Employee } from './employee';
 import { Observable, of } from 'rxjs';
-import { MessageService } from './message.service';
+import { MessageService } from '../shared/message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import {HydraResponse} from "./hydra-response";
+import { HydraCollectionResponse } from "../shared/hydra";
+import {HydraConstraintViolationResponse} from "../shared/hydra";
 
 const MIME_TYPE = "application/ld+json";
 
@@ -13,13 +14,11 @@ const MIME_TYPE = "application/ld+json";
   providedIn: 'root'
 })
 export class EmployeeService {
-  employeesUrl = ENTRYPOINT + 'employees';
+  employeesUrl = ENTRYPOINT + '/employees';
   httpOptions = {
-//    responseType: 'text' as const,
-//    observe: 'response' as const,
     headers: new HttpHeaders({
       "Accept": MIME_TYPE,
-//      'Content-Type': MIME_TYPE,
+      'Content-Type': MIME_TYPE,
     })
   };
 
@@ -28,12 +27,12 @@ export class EmployeeService {
     private messageService: MessageService) { }
 
   /** GET employees from the server */
-  getList(): Observable<HydraResponse> {
+  getList(): Observable<HydraCollectionResponse> {
 
-    const response = this.http.get<HydraResponse>(this.employeesUrl, this.httpOptions)
+    const response = this.http.get<HydraCollectionResponse>(this.employeesUrl, this.httpOptions)
       .pipe(
         tap(_ => this.log('fetched employees list')),
-        catchError(this.handleError<Object>(this.employeesUrl, []))
+        catchError(this.handleError<HydraCollectionResponse>(this.employeesUrl))
       );
 //    response.subscribe(found => this.log(JSON.stringify(found)));
     return response;
@@ -50,24 +49,25 @@ export class EmployeeService {
 
   /** PUT: update the employee on the server */
   updateItem(item: Employee): Observable<any> {
-    return this.http.put(this.employeesUrl, item, this.httpOptions).pipe(
+    const id = item['@id'];
+    return this.http.put( `${ENTRYPOINT}${id}`, item, this.httpOptions).pipe(
       tap(_ => this.log(`updated employee id=${item['@id']}`)),
-      catchError(this.handleError<any>('update Item'))
+      catchError(this.handleError<Employee>('update Item'))
     );
   }
 
   /** POST: add a new employee to the server */
-  addEmployee(employee: Employee): Observable<Employee> {
+  addItem(employee: Employee): Observable<Object> {
     return this.http.post<Employee>(this.employeesUrl, employee, this.httpOptions).pipe(
       tap((newEmployee: Employee) => this.log(`added employee w/ id=${newEmployee['@id']}`)),
-      catchError(this.handleError<Employee>('add Item'))
+      catchError(this.handleError<Object>('add Item'))
     );
   }
 
   /** DELETE: delete the employee from the server */
-  deleteEmployee(item: Employee): Observable<Employee> {
+  deleteItem(item: Employee): Observable<Employee> {
     const id = item['@id'];
-    const url = `${this.employeesUrl}/${id}`;
+    const url = `${ENTRYPOINT}${id}`;
 
     return this.http.delete<Employee>(url, this.httpOptions).pipe(
       tap(_ => this.log(`deleted employee id=${id}`)),
@@ -96,6 +96,10 @@ export class EmployeeService {
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
 
+      if (error.status == 422) {
+          // this.log(JSON.stringify(error.error));
+          return of(error.error as T);
+      }
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };

@@ -36,9 +36,7 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Under Construction
 ------------------
 
-This chapter is still being developed and currently it only contains a first working
-version of the code for the Employee List. The code will be restructured and the 
-components will be added for viewing, creating, updating and deleting an Employee.
+All main functions are working but the messaging (MessageService) needs to be improved.
 
-Finally the code itself will be replaced by step by step instructions in this readme 
+Later the code itself will be replaced by step by step instructions in this readme 
 for developing or generating the client. 

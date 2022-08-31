@@ -9,8 +9,8 @@ export class Employee {
     public address?: string,
     public zipcode?: string,
     public city?: string,
-    public birthDate?: Date,
-    public arrival?: Date,
+    public birthDate?: string,
+    public arrival?: string,
     public label?: string
   ) {
     this["@id"] = _id;

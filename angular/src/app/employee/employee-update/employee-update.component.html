@@ -1,0 +1,4 @@
+<div *ngIf="item">
+  <h1>Edit Employee {{item["@id"]}} </h1>
+  <app-employee-form [item]="item" (itemSubmit)="itemUpdated($event)"></app-employee-form>
+</div>
