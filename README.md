@@ -36,7 +36,7 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Under Construction
 ------------------
 
-All main functions are working but the messaging (MessageService) needs to be improved.
+This branch contains is a complete working version of the chapter1 app for angular.io. 
 
 Later the code itself will be replaced by step by step instructions in this readme 
 for developing or generating the client. 
