@@ -1,5 +1,5 @@
 <p>Form Status: {{ employeeForm.status }}</p>
-<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="edit">
   <div class="form-group">
     <label for="first-name" class="form-control-label">First Name</label>
     <input id="first-name" type="text" formControlName="firstName" class="form-control">
@@ -86,6 +86,3 @@
 
   <button type="submit" [disabled]="!employeeForm.valid" class="btn btn-success">Submit</button>
 </form>
-<a routerLink="/employees" class="btn btn-primary">
-  Back to list
-</a>

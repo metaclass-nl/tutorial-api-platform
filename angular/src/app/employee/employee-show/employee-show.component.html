@@ -1,4 +1,4 @@
-<div *ngIf="item">
+<span *ngIf="item">
   <h1>Show {{item["@id"]}}</h1>
   <table class="table table-responsive table-striped table-hover">
     <thead>
@@ -47,13 +47,13 @@
     </tbody>
   </table>
 
-  <a routerLink="/employees" class="btn btn-primary">
-  Back to list
-  </a>
   <a routerLink="{{item['@id']}}/edit/">
     <button class="btn btn-warning">Edit</button>
   </a>
   <button (click)="delete(item)" class="btn btn-danger">
     Delete
   </button>
-</div>
+</span>
+<a routerLink="/employees" class="btn btn-primary">
+  Back to list
+</a>

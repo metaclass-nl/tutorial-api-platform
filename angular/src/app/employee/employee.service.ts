@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ENTRYPOINT } from "../core/entrypoint";
 import { Employee } from './employee';
 import { Observable, of } from 'rxjs';
-import { MessageService } from '../shared/message.service';
+import { MessageService } from '../shared/message/message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { HydraCollectionResponse } from "../shared/hydra";
@@ -31,10 +31,9 @@ export class EmployeeService {
 
     const response = this.http.get<HydraCollectionResponse>(this.employeesUrl, this.httpOptions)
       .pipe(
-        tap(_ => this.log('fetched employees list')),
+        //tap(_ =>this.messageService.info('fetched employees list')),
         catchError(this.handleError<HydraCollectionResponse>(this.employeesUrl))
       );
-//    response.subscribe(found => this.log(JSON.stringify(found)));
     return response;
   }
 
@@ -42,7 +41,7 @@ export class EmployeeService {
   getItem(id: number): Observable<Employee> {
     const url = `${this.employeesUrl}/${id}`;
     return this.http.get<Employee>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`fetched employee id=${id}`)),
+      //tap(_ => this.messageService.info(`fetched employee id=${id}`)),
       catchError(this.handleError<Employee>(`get Item id=${id}`))
     );
   }
@@ -51,7 +50,7 @@ export class EmployeeService {
   updateItem(item: Employee): Observable<any> {
     const id = item['@id'];
     return this.http.put( `${ENTRYPOINT}${id}`, item, this.httpOptions).pipe(
-      tap(_ => this.log(`updated employee id=${item['@id']}`)),
+      tap(_ => this.messageService.success(`updated employee id=${item['@id']}`)),
       catchError(this.handleError<Employee>('update Item'))
     );
   }
@@ -59,7 +58,7 @@ export class EmployeeService {
   /** POST: add a new employee to the server */
   addItem(employee: Employee): Observable<Object> {
     return this.http.post<Employee>(this.employeesUrl, employee, this.httpOptions).pipe(
-      tap((newEmployee: Employee) => this.log(`added employee w/ id=${newEmployee['@id']}`)),
+      tap((newEmployee: Employee) => this.messageService.success(`added employee w/ id=${newEmployee['@id']}`)),
       catchError(this.handleError<Object>('add Item'))
     );
   }
@@ -70,14 +69,9 @@ export class EmployeeService {
     const url = `${ENTRYPOINT}${id}`;
 
     return this.http.delete<Employee>(url, this.httpOptions).pipe(
-      tap(_ => this.log(`deleted employee id=${id}`)),
+      tap(_ => this.messageService.success(`deleted employee id=${id}`)),
       catchError(this.handleError<Employee>('delete Item'))
     );
-  }
-
-  /** Log a EmployeeService message with the MessageService */
-  private log(message: string) {
-    this.messageService.add(`EmployeeService: ${message}`);
   }
 
   /**
@@ -94,7 +88,7 @@ export class EmployeeService {
       console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
+      this.messageService.danger(`${operation} failed: ${error.message}`);
 
       if (error.status == 422) {
           // this.log(JSON.stringify(error.error));

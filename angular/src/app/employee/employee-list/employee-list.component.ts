@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Employee } from '../employee';
 import { EmployeeService } from '../employee.service';
 import { faSearch, faPencil } from '@fortawesome/free-solid-svg-icons';
+import {MessageService} from "../../shared/message/message.service";
 
 @Component({
   selector: 'app-employee-list',
@@ -15,10 +16,17 @@ export class EmployeeListComponent implements OnInit {
 
   items: Employee[] = [];
 
-  constructor(private itemService: EmployeeService) { }
+  constructor(
+    private itemService: EmployeeService,
+    private messageService: MessageService,
+    ) { }
 
   ngOnInit(): void {
     this.getEmployees();
+  }
+
+  ngOnDestroy(): void {
+      this.messageService.clear();
   }
 
   getEmployees(): void {

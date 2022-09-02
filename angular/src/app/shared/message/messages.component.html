@@ -1,0 +1,6 @@
+<div *ngIf="messageService.messages.length">
+  <hr>
+  <div *ngFor='let data of messageService.messages' [class]="data.className" role="data.role">
+    {{data.msg}}
+  </div>
+</div>

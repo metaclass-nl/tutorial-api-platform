@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Employee} from "../employee";
 import { EmployeeService } from '../employee.service';
 import {Router} from "@angular/router";
+import {MessageService} from "../../shared/message/message.service";
 
 @Component({
   selector: 'app-employee-create',
@@ -11,16 +12,26 @@ import {Router} from "@angular/router";
 export class EmployeeCreateComponent implements OnInit {
 
   item = new Employee();
+  private clearMessagesOnDistroy = true;
 
   constructor(
     private employeeService: EmployeeService,
+    private messageService: MessageService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
+    this.clearMessagesOnDistroy = true
+  }
+
+  ngOnDestroy(): void {
+    if (this.clearMessagesOnDistroy) {
+      this.messageService.clear();
+    }
   }
 
   itemCreated(item: Employee) {
+    this.clearMessagesOnDistroy = false;
     this.router.navigate(["/employees"])
   }
 }

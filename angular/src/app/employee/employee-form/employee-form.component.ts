@@ -3,7 +3,7 @@ import { FormGroup, FormControl, ValidationErrors, Validators } from '@angular/f
 import {Employee} from "../employee";
 import {ConstraintViolation, HydraConstraintViolationResponse} from "../../shared/hydra";
 import {EmployeeService} from "../employee.service";
-import {MessageService} from "../../shared/message.service";
+import {MessageService} from "../../shared/message/message.service";
 
 @Component({
   selector: 'app-employee-form',
@@ -71,6 +71,7 @@ export class EmployeeFormComponent implements OnInit {
       }
     }
 
+    this.messageService.clear();
     const employee = this.employeeForm.value as Employee;
     if (!employee.arrival) {
       employee.arrival = undefined;
@@ -99,7 +100,7 @@ export class EmployeeFormComponent implements OnInit {
         );
       } else {
         // use message service
-        this.messageService.add(violation.propertyPath + " invalid: " + violation.message);
+        this.messageService.danger(violation.propertyPath + " invalid: " + violation.message);
       }
     });
   }
