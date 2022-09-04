@@ -13,7 +13,7 @@
     <div *ngIf="shouldShowErrors(controls.lastName)"
          class="text-danger">
       <div *ngIf="controls.lastName.errors?.['required']">
-        This value should not be blank
+        This value is required
       </div>
      </div>
     <div *ngIf="controls.lastName.errors?.['fromServer']" class="text-danger">
@@ -22,11 +22,11 @@
   </div>
 
   <div class="form-group">
-    <label for="job" class="form-control-label">Job</label>
+    <label for="job" class="form-control-label">Job *</label>
     <input id="job" type="text" formControlName="job" class="form-control">
     <div *ngIf="shouldShowErrors(controls.job)" class="text-danger">
       <div *ngIf="controls.job.errors?.['required']">
-        This value should not be blank
+        This value is required
       </div>
       <div *ngIf="controls.job.errors?.['fromServer']">
         {{controls.job.errors?.['fromServer']}}
@@ -34,11 +34,11 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="address" class="form-control-label">Address</label>
+    <label for="address" class="form-control-label">Address *</label>
     <input id="address" type="text" formControlName="address" class="form-control">
     <div *ngIf="shouldShowErrors(controls.address)" class="text-danger">
       <div *ngIf="controls.address.errors?.['required']">
-        This value should not be blank
+        This value is required
       </div>
       <div *ngIf="controls.address.errors?.['fromServer']">
         {{controls.address.errors?.['fromServer']}}
@@ -53,11 +53,11 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="city" class="form-control-label">City</label>
+    <label for="city" class="form-control-label">City *</label>
     <input id="city" type="text" formControlName="city" class="form-control">
     <div *ngIf="shouldShowErrors(controls.city)" class="text-danger">
       <div *ngIf="controls.city.errors?.['required']">
-        This value should not be blank
+        This value is required
       </div>
       <div *ngIf="controls.city.errors?.['fromServer']">
         {{controls.city.errors?.['fromServer']}}
@@ -65,11 +65,11 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="birthDate" class="form-control-label">Date of birth</label>
+    <label for="birthDate" class="form-control-label">Date of birth *</label>
     <input id="birthDate" type="text" formControlName="birthDate" class="form-control">
     <div *ngIf="shouldShowErrors(controls.birthDate)" class="text-danger">
       <div *ngIf="controls.birthDate.errors?.['required']">
-        This value should not be blank
+        This value is required
       </div>
       <div *ngIf="controls.birthDate.errors?.['fromServer']">
         {{controls.birthDate.errors?.['fromServer']}}

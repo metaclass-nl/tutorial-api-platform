@@ -16,11 +16,11 @@ export class EmployeeFormComponent implements OnInit {
     firstName: new FormControl(''),
     lastName: new FormControl('', Validators.required),
 
-    job: new FormControl(''),
-    address: new FormControl(''),
+    job: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
     zipcode: new FormControl(''),
-    city: new FormControl(''),
-    birthDate: new FormControl(''),
+    city: new FormControl(''), // , Validators.required), left out to test processing of server side validation results
+    birthDate: new FormControl('', Validators.required),
     arrival: new FormControl(''),
   }
   employeeForm = new FormGroup(this.controls);
