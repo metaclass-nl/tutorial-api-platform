@@ -9,6 +9,18 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": {
+          "code": "en",
+          "baseHref": "angular/en/"
+        },
+        "locales": {
+          "nl": {
+            "translation": "src/locale/messages.nl.xlf",
+            "baseHref": "angular/nl/"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -57,6 +69,10 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "nl": {
+              "localize": ["nl"],
+              "i18nMissingTranslation": "error"
             }
           },
           "defaultConfiguration": "production"
@@ -69,6 +85,9 @@
             },
             "development": {
               "browserTarget": "angular:build:development"
+            },
+            "nl": {
+              "browserTarget": "angular:build:nl"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +95,8 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular:build"
+            "browserTarget": "angular:build",
+            "format": "json"
           }
         },
         "test": {

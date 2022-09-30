@@ -5,3 +5,11 @@ controllers:
 kernel:
     resource: ../src/Kernel.php
     type: annotation
+
+load_client:
+    path: /angular/{path}
+    controller: \App\Controller\LoadClientController::load
+    requirements:
+        path: .*
+    defaults:
+        path: ""

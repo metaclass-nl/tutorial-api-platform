@@ -1,59 +1,59 @@
 <span *ngIf="item">
-  <h1>Show {{item["@id"]}}</h1>
+  <h1 i18n="@@employee.show">Show {{item["@id"]}}</h1>
   <table class="table table-responsive table-striped table-hover">
     <thead>
       <tr>
-        <th>Field</th>
-        <th>Value</th>
+        <th i18n="@@field">Field</th>
+        <th i18n="@@value">Value</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <th scope="row">firstName</th>
+        <th scope="row" i18n="@@employee.firstName">firstName</th>
         <td>{{item["firstName"]}}</td>
       </tr>
       <tr>
-        <th scope="row">lastName</th>
+        <th scope="row" i18n="@@employee.lastName">lastName</th>
         <td>{{item["lastName"]}}</td>
       </tr>
       <tr>
-        <th scope="row">job</th>
+        <th scope="row" i18n="@@employee.job">job</th>
         <td>{{item["job"]}}</td>
       </tr>
       <tr>
-        <th scope="row">address</th>
+        <th scope="row" i18n="@@employee.address">address</th>
         <td>{{item["address"]}}</td>
       </tr>
       <tr>
-        <th scope="row">zipcode</th>
+        <th scope="row" i18n="@@employee.zipcode">zipcode</th>
         <td>{{item["zipcode"]}}</td>
       </tr>
       <tr>
-        <th scope="row">city</th>
+        <th scope="row" i18n="@@employee.city">city</th>
         <td>{{item["city"]}}</td>
       </tr>
       <tr>
-        <th scope="row">birthDate</th>
-        <td>{{item["birthDate"]}}</td>
+        <th scope="row" i18n="@@employee.birthDate">birthDate</th>
+        <td>{{item["birthDate"] | date }}</td>
       </tr>
       <tr>
-        <th scope="row">arrival</th>
-        <td>{{item["arrival"]}}</td>
+        <th scope="row" i18n="@@employee.arrival">arrival</th>
+        <td>{{item["arrival"] | date: 'shortTime' }}</td>
       </tr>
       <tr>
-        <th scope="row">label</th>
+        <th scope="row" i18n="@@employee.label">label</th>
         <td>{{item["label"]}}</td>
       </tr>
     </tbody>
   </table>
 
   <a routerLink="{{item['@id']}}/edit/">
-    <button class="btn btn-warning">Edit</button>
+    <button class="btn btn-warning" i18n="@@edit">Edit</button>
   </a>
-  <button (click)="delete(item)" class="btn btn-danger">
+  <button (click)="delete(item)" class="btn btn-danger" i18n="@@delete">
     Delete
   </button>
 </span>
-<a routerLink="/employees" class="btn btn-primary">
+<a routerLink="/employees" class="btn btn-primary" i18n="@@backToList">
   Back to list
 </a>

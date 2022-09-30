@@ -1,16 +1,10 @@
-Chapter 1: Employee Registration - Angular Client
-=================================================
+Chapter 3: Localization - Angular Client
+========================================
 
-The environment is te same as in the chapter1-api branche, except:
-- instructions from README.md of chapter1-api where applied,
-- an extra container named "angular" has been added that runs the Angular.io 
-  development server on port 4200,
-- api/docker/caddy/Caddyfile was augmented to route client requests to the http server
-  of the angulart container. Probably only works in development mode.
-- Boottrap and Font Awesome where added to package.json and Angular was configured 
-  to make them available in the app   
+The environment is te same as in the chapter1-angular branche, except:
+- instructions from README.md of chapter2-api and chapter3-api where applied
 
-This chapter adds the user interface for an entity class Employee.
+This chapter adds Internationalization and Localization
 
 More information on installing and running the tutorial see [the main branch]( https://github.com/metaclass-nl/tutorial-api-platform).
 
@@ -36,7 +30,16 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Under Construction
 ------------------
 
-This branch contains is a complete working version of the chapter1 app for angular.io. 
+This branch will contain a localized and internationalized version of the chapter1 app for angular.io.
+Currently only the employee-show and -list components are translated and localized.
+Development uses locale nl.
+Angulars production apps become available after build and then restart of docker-compose
+under https://localhost/angular/
 
-Later the code itself will be replaced by step by step instructions in this readme 
+To do: -update, -create and form. The form inputs need localized data in a specific format
+(yet to investigate).
+
+Code from chapter2-angular is may be added and localized and internationalized later.
+
+Later the code itself may be replaced by step by step instructions in this readme 
 for developing or generating the client. 

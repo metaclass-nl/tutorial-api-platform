@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="nl" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="employee.show" datatype="html">
+        <source>Show <x id="INTERPOLATION" equiv-text="label"/></source>
+        <target>Toon <x id="INTERPOLATION" equiv-text="label"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="field" datatype="html">
+        <source>Field</source>
+        <target>Veld</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="value" datatype="html">
+        <source>Value</source>
+        <target>Waarde</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.firstName" datatype="html">
+        <source>firstName</source>
+        <target>Voornaam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.lastName" datatype="html">
+        <source>lastName</source>
+        <target>Achternaam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.job" datatype="html">
+        <source>job</source>
+        <target>Functie</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.address" datatype="html">
+        <source>address</source>
+        <target>Adres</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.zipcode" datatype="html">
+        <source>zipcode</source>
+        <target>Postcode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.city" datatype="html">
+        <source>city</source>
+        <target>Plaats</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.birthDate" datatype="html">
+        <source>birthDate</source>
+        <target>Geboortedatum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.arrival" datatype="html">
+        <source>arrival</source>
+        <target>Aankomsttijd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.label" datatype="html">
+        <source>label</source>
+        <target>Naam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="show" datatype="html">
+        <source>Show <x id="INTERPOLATION" equiv-text="label"/></source>
+        <target>Toon <x id="INTERPOLATION" equiv-text="label"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="create" datatype="html">
+        <source> Create </source>
+        <target>Maak nieuwe</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-lsit.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="edit" datatype="html">
+        <source>Edit</source>
+        <target>Bewerk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="delete" datatype="html">
+        <source> Delete </source>
+        <target>Verwijder</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="backToList" datatype="html">
+        <source> Back to list</source>
+        <target>Lijst</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">57,59</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
