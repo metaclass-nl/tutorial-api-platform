@@ -1,53 +1,41 @@
 <?php
 
-namespace App\DataProvider;
+namespace App\State;
 
-use ApiPlatform\Core\Api\OperationType;
-use App\Model\DayTotalsPerEmployee;
-use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\CollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
 use App\Entity\Hours;
+use App\Model\DayTotalsPerEmployee;
 
-class DayTotalsPerEmployeeCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
+class DayTotalsPerEmployeeCollectionProvider implements ProviderInterface
 {
-    /** @var CollectionDataProviderInterface */
+    /** @var ProviderInterface */
     private $dataProvider;
 
     /**
-     * DayTotalsPerEmployeeCollectionDataProvider constructor.
-     * @param CollectionDataProviderInterface $dataProvider The built-in orm CollectionDataProvider of API Platform
+     * DayTotalsPerEmployeeCollectionProvider constructor.
+     * @param ProviderInterface $dataProvider The built-in orm CollectionDataProvider of API Platform
      */
-    public function __construct(CollectionDataProviderInterface $dataProvider)
+    public function __construct(ProviderInterface $dataProvider)
     {
         $this->dataProvider = $dataProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        return Hours::class === $resourceClass
-            && $operationName == 'get_day_report';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): array
-    {
+        $resourceClass = $operation->getClass();
         if (!isset($context["filters"]["start"]["after"]) && !isset($context["filters"]["start"]["strictly_after"])) {
             $context["filters"]["start"]["after"] = date('Y-m-dTH:i:s', strtotime("-1 week"));
         }
 
-        $hours = $this->dataProvider->getCollection($resourceClass, $operationName, $context);
+        $hours = $this->dataProvider->provide($operation, $uriVariables, $context);
 
         $afterTime = isset($context["filters"]["start"]["after"])
             ? strtotime($context["filters"]["start"]["after"])
             : strtotime($context["filters"]["start"]["strictly_after"])+1;
 
         $totals = [];
+        /** @var Hours $item */
         foreach ($hours as $item) {
             $startTime = $item->getStart()->getTimestamp();
             $dayIndex = floor(($startTime - $afterTime) / 86400);

@@ -1,18 +1,16 @@
 <?php
 namespace App\Doctrine;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\Employee;
 use App\Entity\Hours;
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryBuilderHelper;
 
 class CurrentUserExtension implements QueryCollectionExtensionInterface
-//   , QueryItemExtensionInterface
 {
     private $security;
 
@@ -21,15 +19,10 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
         $this->security = $security;
     }
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
         $this->addWhere($queryBuilder, $resourceClass, $queryNameGenerator);
     }
-
-//    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
-//    {
-//        $this->addWhere($queryBuilder, $resourceClass, $queryNameGenerator);
-//    }
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass, QueryNameGeneratorInterface $queryNameGenerator): void
     {
@@ -50,7 +43,8 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
                 $queryBuilder->andWhere(sprintf('%s.user = :current_user_id', $rootAlias));
                 break;
             case Hours::class:
-                $alias = QueryBuilderHelper::addJoinOnce($queryBuilder, $queryNameGenerator, $rootAlias, 'employee', null);
+                $alias = $queryNameGenerator->generateJoinAlias('employee');
+                $queryBuilder->innerJoin("$rootAlias.employee", $alias);
                 $queryBuilder->andWhere(sprintf('%s.user = :current_user_id', $alias));
                 break;
             default:

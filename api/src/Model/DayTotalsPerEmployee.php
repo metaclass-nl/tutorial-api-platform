@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Get;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Employee;
 use App\Entity\Hours;
@@ -10,16 +11,17 @@ use App\Entity\Hours;
 /**
  * Totals per day per Employee
  */
+
 class DayTotalsPerEmployee
 {
     /** @var Employee
-     * @Groups({"day_totals_per_employee"})
      */
+    #[Groups(["day_totals_per_employee"])]
     private $employee;
 
     /** @var \DateTime
-     * @Groups({"day_totals_per_employee"})
      */
+    #[Groups(["day_totals_per_employee"])]
     private $from;
 
     /** @var Hours[] */
@@ -61,10 +63,11 @@ class DayTotalsPerEmployee
         return $this;
     }
 
-    /** @ApiProperty(identifier=true)
-     * @Groups({"day_totals_per_employee"})
+    /**
      * @return string
      */
+    #[Groups(["day_totals_per_employee"])]
+    #[ApiProperty(identifier: true)]
     public function getId()
     {
         return $this->employee->getId(). '_'. $this->from->format('Y-m-d H:i:s');
@@ -72,9 +75,9 @@ class DayTotalsPerEmployee
 
     /**
      * @return string
-     * @ApiProperty(iri="http://schema.org/name")
-     * @Groups({"day_totals_per_employee"})
-     */
+      */
+    #[Groups(["day_totals_per_employee"])]
+    #[ApiProperty(iris: ['http://schema.org/name'])]
     public function getLabel()
     {
         return $this->employee->getLabel(). ' '. $this->from->format('Y-m-d');
@@ -82,9 +85,9 @@ class DayTotalsPerEmployee
 
     /**
      * @return \DateTime
-     * @Groups({"day_totals_per_employee"})
      * @throws \Exception
      */
+    #[Groups(["day_totals_per_employee"])]
     public function getTo()
     {
         $result = clone $this->from;
@@ -112,8 +115,8 @@ class DayTotalsPerEmployee
 
     /**
      * @return int
-     * @Groups({"day_totals_per_employee"})
      */
+    #[Groups(["day_totals_per_employee"])]
     public function getCount()
     {
         return count($this->getHours());
@@ -122,8 +125,8 @@ class DayTotalsPerEmployee
     /**
      * @return float|int
      * @throws \Exception
-     * @Groups({"day_totals_per_employee"})
      */
+    #[Groups(["day_totals_per_employee"])]
     public function getTotal()
     {
         $result = 0;
@@ -136,8 +139,8 @@ class DayTotalsPerEmployee
     /**
      * @return float|int
      * @throws \Exception
-     * @Groups({"day_totals_per_employee"})
      */
+    #[Groups(["day_totals_per_employee"])]
     public function getOnInvoice()
     {
         $result = 0;
@@ -153,8 +156,8 @@ class DayTotalsPerEmployee
     /**
      * @return float|int|null
      * @throws \Exception
-     * @Groups({"day_totals_per_employee"})
      */
+    #[Groups(["day_totals_per_employee"])]
     public function getFractionBilled()
     {
         if ($this->getTotal() == 0) return null;

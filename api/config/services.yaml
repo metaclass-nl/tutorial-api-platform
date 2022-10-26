@@ -28,9 +28,9 @@ services:
         arguments:
             $searchParameterName: 'ignoored'
 
-    'App\DataProvider\DayTotalsPerEmployeeCollectionDataProvider':
+    'App\State\DayTotalsPerEmployeeCollectionProvider':
         arguments:
-            $dataProvider: '@api_platform.doctrine.orm.default.collection_data_provider'
+            $dataProvider: '@api_platform.doctrine.orm.state.collection_provider'
     'App\Swagger\SwaggerDecorator':
         decorates: 'api_platform.openapi.normalizer.api_gateway'
         arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
