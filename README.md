@@ -25,30 +25,39 @@ you can skip the react and next branches. The api branches only use the Swagger 
 and curl for testing and do not depend on react or next.
 
 Each branch builds on top of the previous one of the same type.
-Each 'react' branch also contains the code from the corresponding 'api' branch.
+Each client branch also contains the code from the corresponding 'api' branch.
 To see the code resulting from a branch you can check out
 the next branch of the same type, or browse it on github.
 Or better: let git compare your current code with the branch
 of the next chapter so that you can see the differences right away.
 
-In addition to this tutorial an [extended client generator for react and nextJS](https://github.com/metaclass-nl/client-generator)
+In addition to this tutorial an [extended client generator for react and next.js](https://github.com/metaclass-nl/client-generator)
 is available that puts what you have learnt into use for scaffolding your own application.
 
 As of api-platform version 2.6 the standard distribution contains a nextJS client
-instead of the react client. This tutorial has nextJS branches and an extended client generator for the first 3 chapters only.
+instead of the react client. This tutorial has next.js branches and an extended client generator for the first 4 chapters only.
+The angular.io branches are still under development and currently only contain code and no instructions. 
 
 Required knowledge
 ------------------
 - maybe docker and docker-compose
 APi branches:
 - PHP 7 or 8
-- Symfony 4 or 5
+- Symfony 5
 - Doctrine ORM
 React branches:
 - ES6
 - React.js
 - Redux
 - React Router
+Next branches:
+- ES6
+- Next.js
+- React.js
+Angular example branches:
+- ES6
+- Angular.io
+
 You don't need to be an expert in these domains, basic working experience should be enough. 
 
 Requirements
@@ -92,9 +101,9 @@ Getting Started
 To start at the beginning check out branch chapter1-api and point your browser to 
 [the same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-api)
 to get a nicely rendered version of its readme. When you are finished
-with the instructions you commit your changes and check out chapter1-react,
+with the instructions you commit your changes and check out a client branch: chapter1-react or chapter1-next,
 select it in your browser as well, etc. Then follows chapter2-api, chapter2-react etc.  
-If you only want to do the api branches you can skip the react ones.  
+If you only want to do the api branches you can skip the client ones.  
 
 But you can start with any branch by checking it out and following its instructions.
 However, if you skip a chapter you need to restart docker-compose
@@ -102,15 +111,19 @@ to apply the migrations. Then apply the DataFixtures by:
 ```shell
 docker-compose exec php bin/console doctrine:fixtures:load
 ```                     
-For a react branch you may also need to update yarn:
+For a react or next branch you may also need to update yarn:
 ```shell
 docker-compose exec client yarn install
 ```                     
-Wait for yarn to complete, then:
+For next replace client by pwa:
+```shell
+docker-compose exec pwa yarn install
+```  
+Wait for yarn to complete, then (for next replace client by pwa):
 ```shell
 docker-compose exec client yarn update
 ```                     
-With chapter 4 react and higher if you still get an error on missing react-intl:
+With chapter 4 react and higher if you still get an error on missing react-intl (for next replace client by pwa):
 ```shell
 docker-compose exec client yarn add react-intl
 ```
@@ -148,20 +161,21 @@ Therefore branches for the 'admin' user interface are left out for now.
 
 Limitations
 -----------
-This is a work in progess and needs more testing.
+This is a work in progess and needs more testing. 
 
 This tutorial currently only supports the api core, the (scaffolded) React client 
-user interface and some chapters about the (scaffolded) Next.js client user interface.  
+user interface and some chapters about the (scaffolded) Next.js client user interface. 
+The angular.io branches are still under development and currently only contain code and no instructions.
 
 This distribuition is only for educational purposes and will not be updated frequently. 
-If you want to run a client container for react within the standard distribution of 
+If you want to run a client container for react or angular within the standard distribution of 
 api platform you are advised to create your own fork and add a similar container there
 yourself. You will need to keep your fork up to date yourself. For most of it you can pull 
 updates from Api Platform, but they will not supply updates for your client container, 
 you will need to maintain it yourself, especially its package.json. You also need to
 maintain yourself any generated code as well as any components from the tutorial that you use. 
 Old software versions are prone to have known security vurnerabilities but new versions need to 
-be tested with you application before use in production.
+be tested with your application before use in production.
 
 
 Credits
