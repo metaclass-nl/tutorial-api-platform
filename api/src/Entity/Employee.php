@@ -94,8 +94,8 @@ class Employee
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
      */
+    #[ORM\OneToMany(targetEntity:"App\Entity\Hours", mappedBy:"employee")]
     private $hours;
 
     public function getId(): int
