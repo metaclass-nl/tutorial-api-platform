@@ -4,84 +4,82 @@ Chapter 2: Hours registration
 The environment is te same as in the chapter1-api branche, except:
 - instructions from README.md of chapter1-api where applied
 
-This chapter adds an entity class Hours that has an n to 1 relation with Employee and adds a menu (client only).  
+This chapter adds an entity class Hours that has an n to 1 relation with Employee and adds a menu (client only).
 
 Entity<a name="Entity"></a>
 ------
-Before you add the Entity class 'Hours', make sure the database schema is in sync. 
-When you do docker-compose up migrations are executed automatically, but 
-you can explicitly execute those that are not yet executed: 
+Before you add the Entity class 'Hours', make sure the database schema is in sync.
+When you do docker-compose up migrations are executed automatically, but
+you can explicitly execute those that are not yet executed:
 ```shell
 docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
-Then add the Entity class 'Hours' by copying the 
+Then add the Entity class 'Hours' by copying the
 following code to a new file api/src/Entity/Employee.php:
 ```php
 <?php
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Registration of time worked by an Employee on a day
  *
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"}
- * })
- * @ORM\Entity
- * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
+#[ORM\Entity]
+#[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
+#[ApiResource(
+    paginationItemsPerPage: 10,
+    order: ['start' => 'DESC', 'description' => 'ASC'])
+]
 class Hours
 {
     /**
      * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:"integer")]
     private $id;
 
     /**
      * @var float number of hours
-     * @ORM\Column(type="float")
-     * @Assert\NotNull
-     * @Assert\GreaterThanOrEqual(0.1)
      */
+    #[ORM\Column(type:"float")]
+    #[Assert\NotNull]
+    #[Assert\GreaterThanOrEqual(0.1)]
     private $nHours = 1.0;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     * @Assert\NotNull
      */
+    #[ORM\Column(type:"datetime")]
+    #[Assert\NotNull]
     private $start;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
      */
+    #[ORM\Column(type:'boolean', nullable:true)]
     private $onInvoice = true;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=255)
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:255)]
     private $description;
 
     /**
      * @var Employee
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
-     * @Assert\NotNull
      */
+    #[ORM\ManyToOne(targetEntity:"App\Entity\Employee", inversedBy:"hours")]
+    #[Assert\NotNull]
     private $employee;
 
     public function __construct()
@@ -90,7 +88,7 @@ class Hours
         $this->setStart(new \DateTime());
     }
 
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
@@ -98,7 +96,7 @@ class Hours
     /**
      * @return float
      */
-    public function getNHours(): float
+    public function getNHours() : float
     {
         return $this->nHours;
     }
@@ -107,7 +105,7 @@ class Hours
      * @param float $nHours
      * @return Hours
      */
-    public function setNHours(float $nHours): Hours
+    public function setNHours(float $nHours) : Hours
     {
         $this->nHours = $nHours;
         return $this;
@@ -116,7 +114,7 @@ class Hours
     /**
      * @return \DateTime
      */
-    public function getStart(): \DateTime
+    public function getStart() : \DateTime
     {
         return $this->start;
     }
@@ -125,7 +123,7 @@ class Hours
      * @param \DateTime $start
      * @return Hours
      */
-    public function setStart(\DateTime $start): Hours
+    public function setStart(\DateTime $start) : Hours
     {
         $this->start = $start;
         return $this;
@@ -134,7 +132,7 @@ class Hours
     /**
      * @return bool
      */
-    public function isOnInvoice(): bool
+    public function isOnInvoice() : bool
     {
         return $this->onInvoice;
     }
@@ -143,7 +141,7 @@ class Hours
      * @param bool|null $onInvoice
      * @return Hours
      */
-    public function setOnInvoice(?bool $onInvoice): Hours
+    public function setOnInvoice(?bool $onInvoice) : Hours
     {
         $this->onInvoice = (bool) $onInvoice;
         return $this;
@@ -152,7 +150,7 @@ class Hours
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return $this->description;
     }
@@ -161,7 +159,7 @@ class Hours
      * @param string $description
      * @return Hours
      */
-    public function setDescription(string $description): Hours
+    public function setDescription(string $description) : Hours
     {
         $this->description = $description;
         return $this;
@@ -170,7 +168,7 @@ class Hours
     /**
      * @return Employee|null
      */
-    public function getEmployee(): ? Employee
+    public function getEmployee() : ?Employee
     {
         return $this->employee;
     }
@@ -205,28 +203,28 @@ class Hours
 It's another quite common Doctrine Entity class. To see the pagination
 buttons in the client an ApiResource attribute "pagination_items_per_page" was added:
 ```php
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"}
- * })
+#[ApiResource(
+    paginationItemsPerPage: 10,
+    order: ['start' => 'DESC', 'description' => 'ASC'])
+]
 ```
-Once again the attribute "order" specifies the default order. This time an index 
+Once again the attribute "order" specifies the default order. This time an index
 was added to improve the performance of sorting and of searching by $start:
 ```php
- * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
+#[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
 ```
 
-A Doctrine annotation defines the relationship with Employee: 
+A Doctrine attribute defines the relationship with Employee:
 ```php
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
+    #[ORM\ManyToOne(targetEntity:"App\Entity\Employee", inversedBy:"hours")]
 ```
 
 It also refers to a property 'hours' on Employee you need to add to Employee:
 ```php
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
      */
+    #[ORM\OneToMany(targetEntity:"App\Entity\Hours", mappedBy:"employee")]
     private $hours;
 ```
 And of course the corresponding methods:
@@ -260,7 +258,7 @@ And execute it by:
 docker-compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
-To test the new Hours class point your browser at https://localhost/docs. 
+To test the new Hours class point your browser at https://localhost/docs.
 You should see a new model Hours. When you try out Get /hours there should
 be an example value model like
 ```json
@@ -497,12 +495,12 @@ docker-compose exec php bin/console doctrine:fixtures:load
 Say yes to "Careful, database "api" will be purged. Do you want to continue?"
 (You will loose all data in the database of your api-platform install).
 
-To test the new Entity class point your browser at https://localhost/docs. 
+To test the new Entity class point your browser at https://localhost/docs.
 When you try out Get /hours the response body should contain the data of the hours.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
 git diff origin/chapter3-api 
@@ -510,5 +508,6 @@ git diff origin/chapter3-api
 will compare your own version with code one of chapter3-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter2-react and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react) 
-and follow the instructions. Or if you only follow the api branches chapter3-api.
+After committing your changes you may check out branch [chapter2-react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-react) or [chapter2-next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-next)  
+and point your browser to the same branch on github and follow the instructions. 
+Or if you only follow the api branches [chapter3-api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-api) .
