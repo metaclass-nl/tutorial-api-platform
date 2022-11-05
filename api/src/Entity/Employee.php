@@ -2,39 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Metadata\ApiProperty;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class defining entities with data about an Employees
- *
- * @ApiResource(
- *     attributes={"order"={"lastName", "firstName"}},
- *     itemOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"employee_get"}}
- *          },
- *          "put",
- *          "patch",
- *          "delete"
- *     },
- *     collectionOperations={
- *         "get"={
- *              "normalization_context"={"groups"={"employee_list"}}
- *          },
- *          "post"
- *     }
- * )
- * @ORM\Entity
  */
 #[ORM\Entity]
-#[ApiResource(
-    order: ["lastName", "firstName"]
-)
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['employee_get']]),
+        new Put(),
+        new Patch(),
+        new Delete(),
+        new GetCollection(normalizationContext: ['groups' => ['employee_list']]),
+        new Post()
+    ],
+    order: ['lastName', 'firstName'])
 ]
 class Employee
 {
@@ -53,70 +47,70 @@ class Employee
 
     /**
      * @var string
-     * @Groups({"employee_get"})
      */
     #[ORM\Column(nullable:true)]
     #[Assert\Length(max:20)]
+    #[Groups(["employee_get"])]
     private $firstName;
 
     /**
      * @var string
-     * @Groups({"employee_get"})
      */
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:80)]
+    #[Groups(["employee_get"])]
     private $lastName;
 
     /**
      * @var string
-     * @Groups({"employee_get", "employee_list"})
      */
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:40)]
+    #[Groups(["employee_get", "employee_list"])]
     private $job;
 
     /**
      * @var string
-     * @Groups({"employee_get"})
      */
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:80)]
+    #[Groups(["employee_get"])]
     private $address;
 
     /**
      * @var string|null
-     * @Groups({"employee_get"})
      */
     #[ORM\Column(nullable:true)]
     #[Assert\Length(max:10)]
+    #[Groups(["employee_get"])]
     private $zipcode;
 
     /**
      * @var string
-     * @Groups({"employee_get"})
      */
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:40)]
+    #[Groups(["employee_get"])]
     private $city;
 
     /**
      * @var \DateTime Date of birth
-     * @Groups({"employee_get", "employee_list"})
      */
     #[ORM\Column (type:"date")]
     #[Assert\NotNull]
+    #[Groups (["employee_get", "employee_list"])]
     #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#date'])]
     private $birthDate;
 
     /**
      * @var \DateTime Time the employee usually arrives at work
-     * @Groups({"employee_get", "employee_list"})
      */
     #[ORM\Column (type:"time", nullable:true)]
+    #[Groups (["employee_get", "employee_list"])]
     #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#time'])]
     private $arrival;
 
@@ -278,7 +272,7 @@ class Employee
     /**
      * @return Collection
      */
-    public function getHours(): Collection
+    public function getHours() : Collection
     {
         return $this->hours;
     }
@@ -297,11 +291,12 @@ class Employee
      * Represent the entity to the user in a single string
      *
      * @return string
-     * @ApiProperty(iri="http://schema.org/name")
-     * @Groups({"employee_get", "employee_list", "hours_get", "hours_list"})
      */
-    function getLabel() {
-        return $this->getLastName(). ', '. $this->getFirstName();
+    #[Groups(["employee_get", "employee_list", "hours_get", "hours_list"])]
+    #[ApiProperty(iris: ['http://schema.org/name'])]
+    function getLabel()
+    {
+        return $this->getLastName() . ', ' . $this->getFirstName();
     }
 
 }
