@@ -2,36 +2,34 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class defining entities with data about an Employees
- *
- * @ApiResource(
- *     attributes={"order"={"lastName", "firstName"}},
- *     itemOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"employee_get"}}
- *          },
- *          "put",
- *          "patch",
- *          "delete"
- *     },
- *     collectionOperations={
- *         "get"={
- *              "normalization_context"={"groups"={"employee_list"}}
- *          },
- *          "post"
- *     }
- * )
- * @ORM\Entity
  */
+#[ORM\Entity]
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['employee_get']]),
+        new Put(),
+        new Patch(),
+        new Delete(),
+        new GetCollection(normalizationContext: ['groups' => ['employee_list']]),
+        new Post()
+    ],
+    order: ['lastName', 'firstName'])
+]
 class Employee
 {
     public function __construct()
@@ -41,90 +39,85 @@ class Employee
 
     /**
      * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:"integer")]
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(nullable=true)
-     * @Assert\Length(max=20)
-     * @Groups({"employee_get"})
      */
+    #[ORM\Column(nullable:true)]
+    #[Assert\Length(max:20)]
+    #[Groups(["employee_get"])]
     private $firstName;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=80)
-     * @Groups({"employee_get"})
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:80)]
+    #[Groups(["employee_get"])]
     private $lastName;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=40)
-     * @Groups({"employee_get", "employee_list"})
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:40)]
+    #[Groups(["employee_get", "employee_list"])]
     private $job;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=80)
-     * @Groups({"employee_get"})
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:80)]
+    #[Groups(["employee_get"])]
     private $address;
 
     /**
      * @var string|null
-     * @ORM\Column(nullable=true)
-     * @Assert\Length(max=10)
-     * @Groups({"employee_get"})
      */
+    #[ORM\Column(nullable:true)]
+    #[Assert\Length(max:10)]
+    #[Groups(["employee_get"])]
     private $zipcode;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=40)
-     * @Groups({"employee_get"})
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:40)]
+    #[Groups(["employee_get"])]
     private $city;
 
     /**
      * @var \DateTime Date of birth
-     * @ORM\Column(type="date")
-     * @Assert\NotNull
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#date"}
-     * )
-     * @Groups({"employee_get", "employee_list"})
      */
+    #[ORM\Column (type:"date")]
+    #[Assert\NotNull]
+    #[Groups (["employee_get", "employee_list"])]
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#date'])]
     private $birthDate;
 
     /**
      * @var \DateTime Time the employee usually arrives at work
-     * @ORM\Column(type="time", nullable=true)
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#time"}
-     * )
-     * @Groups({"employee_get", "employee_list"})
      */
+    #[ORM\Column (type:"time", nullable:true)]
+    #[Groups (["employee_get", "employee_list"])]
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#time'])]
     private $arrival;
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
      */
+    #[ORM\OneToMany(targetEntity:"App\Entity\Hours", mappedBy:"employee")]
     private $hours;
 
     public function getId(): int
@@ -135,7 +128,7 @@ class Employee
     /**
      * @return string|null
      */
-    public function getFirstName(): ?string
+    public function getFirstName() : ?string
     {
         return $this->firstName;
     }
@@ -144,7 +137,7 @@ class Employee
      * @param string|null $firstName
      * @return Employee
      */
-    public function setFirstName(?string $firstName): Employee
+    public function setFirstName(?string $firstName) : Employee
     {
         $this->firstName = $firstName;
         return $this;
@@ -153,7 +146,7 @@ class Employee
     /**
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName() : string
     {
         return $this->lastName;
     }
@@ -162,7 +155,7 @@ class Employee
      * @param string $lastName
      * @return Employee
      */
-    public function setLastName(string $lastName): Employee
+    public function setLastName(string $lastName) : Employee
     {
         $this->lastName = $lastName;
         return $this;
@@ -171,7 +164,7 @@ class Employee
     /**
      * @return string
      */
-    public function getJob(): string
+    public function getJob() : string
     {
         return $this->job;
     }
@@ -180,7 +173,7 @@ class Employee
      * @param string $job
      * @return Employee
      */
-    public function setJob(string $job): Employee
+    public function setJob(string $job) : Employee
     {
         $this->job = $job;
         return $this;
@@ -189,7 +182,7 @@ class Employee
     /**
      * @return string
      */
-    public function getAddress(): string
+    public function getAddress() : string
     {
         return $this->address;
     }
@@ -198,7 +191,7 @@ class Employee
      * @param string $address
      * @return Employee
      */
-    public function setAddress(string $address): Employee
+    public function setAddress(string $address) : Employee
     {
         $this->address = $address;
         return $this;
@@ -207,7 +200,7 @@ class Employee
     /**
      * @return string|null
      */
-    public function getZipcode(): ?string
+    public function getZipcode() : ?string
     {
         return $this->zipcode;
     }
@@ -216,7 +209,7 @@ class Employee
      * @param string $zipcode|null
      * @return Employee
      */
-    public function setZipcode(?string $zipcode): Employee
+    public function setZipcode(?string $zipcode) : Employee
     {
         $this->zipcode = $zipcode;
         return $this;
@@ -225,7 +218,7 @@ class Employee
     /**
      * @return string
      */
-    public function getCity(): string
+    public function getCity() : string
     {
         return $this->city;
     }
@@ -234,7 +227,7 @@ class Employee
      * @param string $city
      * @return Employee
      */
-    public function setCity(string $city): Employee
+    public function setCity(string $city) : Employee
     {
         $this->city = $city;
         return $this;
@@ -243,7 +236,7 @@ class Employee
     /**
      * @return \DateTime
      */
-    public function getBirthDate(): \DateTime
+    public function getBirthDate() : \DateTime
     {
         return $this->birthDate;
     }
@@ -252,7 +245,7 @@ class Employee
      * @param \DateTime $birthDate
      * @return Employee
      */
-    public function setBirthDate(\DateTime $birthDate): Employee
+    public function setBirthDate(\DateTime $birthDate) : Employee
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -261,7 +254,7 @@ class Employee
     /**
      * @return \DateTime|null
      */
-    public function getArrival(): ?\DateTime
+    public function getArrival() : ?\DateTime
     {
         return $this->arrival;
     }
@@ -270,7 +263,7 @@ class Employee
      * @param \DateTime|null $arrival
      * @return Employee
      */
-    public function setArrival(\DateTime $arrival=null): Employee
+    public function setArrival(\DateTime $arrival = null) : Employee
     {
         $this->arrival = $arrival;
         return $this;
@@ -279,7 +272,7 @@ class Employee
     /**
      * @return Collection
      */
-    public function getHours(): Collection
+    public function getHours() : Collection
     {
         return $this->hours;
     }
@@ -296,12 +289,14 @@ class Employee
 
     /**
      * Represent the entity to the user in a single string
+     *
      * @return string
-     * @ApiProperty(iri="http://schema.org/name")
-     * @Groups({"employee_get", "employee_list", "hours_get", "hours_list"})
      */
-    function getLabel() {
-        return $this->getLastName(). ', '. $this->getFirstName();
+    #[Groups(["employee_get", "employee_list", "hours_get", "hours_list"])]
+    #[ApiProperty(iris: ['http://schema.org/name'])]
+    function getLabel()
+    {
+        return $this->getLastName() . ', ' . $this->getFirstName();
     }
 
 }
