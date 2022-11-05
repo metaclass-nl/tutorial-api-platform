@@ -2,21 +2,23 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
 
 /**
  * Class defining entities with data about an Employees
  *
- * @ApiResource(
- *     attributes={"order"={"lastName", "firstName"}}
- * )
  * @ORM\Entity
  */
+#[ORM\Entity]
+#[ApiResource(
+    order: ["lastName", "firstName"]
+)
+]
 class Employee
 {
     public function __construct()
@@ -26,82 +28,77 @@ class Employee
 
     /**
      * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:"integer")]
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(nullable=true)
-     * @Assert\Length(max=20)
      */
+    #[ORM\Column(nullable:true)]
+    #[Assert\Length(max:20)]
     private $firstName;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=80)
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:80)]
     private $lastName;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=40)
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:40)]
     private $job;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=80)
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:80)]
     private $address;
 
     /**
      * @var string|null
-     * @ORM\Column(nullable=true)
-     * @Assert\Length(max=10)
      */
+    #[ORM\Column(nullable:true)]
+    #[Assert\Length(max:10)]
     private $zipcode;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=40)
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:40)]
     private $city;
 
     /**
      * @var \DateTime Date of birth
-     * @ORM\Column(type="date")
-     * @Assert\NotNull
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#date"}
-     * )
      */
+    #[ORM\Column (type:"date")]
+    #[Assert\NotNull]
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#date'])]
     private $birthDate;
 
     /**
      * @var \DateTime Time the employee usually arrives at work
-     * @ORM\Column(type="time", nullable=true)
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#time"}
-     * )
      */
+    #[ORM\Column (type:"time", nullable:true)]
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#time'])]
     private $arrival;
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="App\Entity\Hours", mappedBy="employee")
      */
+    #[ORM\OneToMany(targetEntity:"App\Entity\Hours", mappedBy:"employee")]
     private $hours;
 
     public function getId(): int
@@ -112,7 +109,7 @@ class Employee
     /**
      * @return string|null
      */
-    public function getFirstName(): ?string
+    public function getFirstName() : ?string
     {
         return $this->firstName;
     }
@@ -121,7 +118,7 @@ class Employee
      * @param string|null $firstName
      * @return Employee
      */
-    public function setFirstName(?string $firstName): Employee
+    public function setFirstName(?string $firstName) : Employee
     {
         $this->firstName = $firstName;
         return $this;
@@ -130,7 +127,7 @@ class Employee
     /**
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName() : string
     {
         return $this->lastName;
     }
@@ -139,7 +136,7 @@ class Employee
      * @param string $lastName
      * @return Employee
      */
-    public function setLastName(string $lastName): Employee
+    public function setLastName(string $lastName) : Employee
     {
         $this->lastName = $lastName;
         return $this;
@@ -148,7 +145,7 @@ class Employee
     /**
      * @return string
      */
-    public function getJob(): string
+    public function getJob() : string
     {
         return $this->job;
     }
@@ -157,7 +154,7 @@ class Employee
      * @param string $job
      * @return Employee
      */
-    public function setJob(string $job): Employee
+    public function setJob(string $job) : Employee
     {
         $this->job = $job;
         return $this;
@@ -166,7 +163,7 @@ class Employee
     /**
      * @return string
      */
-    public function getAddress(): string
+    public function getAddress() : string
     {
         return $this->address;
     }
@@ -175,7 +172,7 @@ class Employee
      * @param string $address
      * @return Employee
      */
-    public function setAddress(string $address): Employee
+    public function setAddress(string $address) : Employee
     {
         $this->address = $address;
         return $this;
@@ -184,7 +181,7 @@ class Employee
     /**
      * @return string|null
      */
-    public function getZipcode(): ?string
+    public function getZipcode() : ?string
     {
         return $this->zipcode;
     }
@@ -193,7 +190,7 @@ class Employee
      * @param string $zipcode|null
      * @return Employee
      */
-    public function setZipcode(?string $zipcode): Employee
+    public function setZipcode(?string $zipcode) : Employee
     {
         $this->zipcode = $zipcode;
         return $this;
@@ -202,7 +199,7 @@ class Employee
     /**
      * @return string
      */
-    public function getCity(): string
+    public function getCity() : string
     {
         return $this->city;
     }
@@ -211,7 +208,7 @@ class Employee
      * @param string $city
      * @return Employee
      */
-    public function setCity(string $city): Employee
+    public function setCity(string $city) : Employee
     {
         $this->city = $city;
         return $this;
@@ -220,7 +217,7 @@ class Employee
     /**
      * @return \DateTime
      */
-    public function getBirthDate(): \DateTime
+    public function getBirthDate() : \DateTime
     {
         return $this->birthDate;
     }
@@ -229,7 +226,7 @@ class Employee
      * @param \DateTime $birthDate
      * @return Employee
      */
-    public function setBirthDate(\DateTime $birthDate): Employee
+    public function setBirthDate(\DateTime $birthDate) : Employee
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -238,7 +235,7 @@ class Employee
     /**
      * @return \DateTime|null
      */
-    public function getArrival(): ?\DateTime
+    public function getArrival() : ?\DateTime
     {
         return $this->arrival;
     }
@@ -247,7 +244,7 @@ class Employee
      * @param \DateTime|null $arrival
      * @return Employee
      */
-    public function setArrival(\DateTime $arrival=null): Employee
+    public function setArrival(\DateTime $arrival = null) : Employee
     {
         $this->arrival = $arrival;
         return $this;
@@ -273,6 +270,7 @@ class Employee
 
     /**
      * Represent the entity to the user in a single string
+     *
      * @return string
      */
     function getLabel() {
