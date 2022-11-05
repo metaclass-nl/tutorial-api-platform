@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -29,60 +28,63 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "post"
  *     }
  * )
- * @ORM\Entity
- * @ORM\Table(indexes={ @ORM\Index(columns={"start", "description"}) })
  */
+#[ORM\Entity]
+#[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
+#[ApiResource(
+    paginationItemsPerPage: 10,
+    order: ['start' => 'DESC', 'description' => 'ASC'])
+]
 class Hours
 {
     /**
      * @var int The entity Id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:"integer")]
     private $id;
 
     /**
      * @var float number of hours
-     * @ORM\Column(type="float")
-     * @Assert\NotNull
-     * @Assert\GreaterThanOrEqual(0.1)
      * @Groups({"hours_get", "hours_list"})
      */
+    #[ORM\Column(type:"float")]
+    #[Assert\NotNull]
+    #[Assert\GreaterThanOrEqual(0.1)]
     private $nHours = 1.0;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime")
-     * @Assert\NotNull
      * @Groups({"hours_get", "hours_list"})
      */
+    #[ORM\Column(type:"datetime")]
+    #[Assert\NotNull]
     private $start;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"hours_get"})
      */
+    #[ORM\Column(type:'boolean', nullable:true)]
     private $onInvoice = true;
 
     /**
      * @var string
-     * @ORM\Column
-     * @Assert\NotBlank
-     * @Assert\Length(max=255)
      * @Groups({"hours_get", "hours_list"})
      */
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Length(max:255)]
     private $description;
 
     /**
      * @var Employee
-     * @ORM\ManyToOne(targetEntity="App\Entity\Employee", inversedBy="hours")
-     * @Assert\NotNull
      * @Groups({"hours_get", "hours_list"})
      */
+    #[ORM\ManyToOne(targetEntity:"App\Entity\Employee", inversedBy:"hours")]
+    #[Assert\NotNull]
     private $employee;
 
     public function __construct()
@@ -91,7 +93,7 @@ class Hours
         $this->setStart(new \DateTime());
     }
 
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
@@ -99,7 +101,7 @@ class Hours
     /**
      * @return float
      */
-    public function getNHours(): float
+    public function getNHours() : float
     {
         return $this->nHours;
     }
@@ -108,7 +110,7 @@ class Hours
      * @param float $nHours
      * @return Hours
      */
-    public function setNHours(float $nHours): Hours
+    public function setNHours(float $nHours) : Hours
     {
         $this->nHours = $nHours;
         return $this;
@@ -117,7 +119,7 @@ class Hours
     /**
      * @return \DateTime
      */
-    public function getStart(): \DateTime
+    public function getStart() : \DateTime
     {
         return $this->start;
     }
@@ -126,7 +128,7 @@ class Hours
      * @param \DateTime $start
      * @return Hours
      */
-    public function setStart(\DateTime $start): Hours
+    public function setStart(\DateTime $start) : Hours
     {
         $this->start = $start;
         return $this;
@@ -135,7 +137,7 @@ class Hours
     /**
      * @return bool
      */
-    public function isOnInvoice(): bool
+    public function isOnInvoice() : bool
     {
         return $this->onInvoice;
     }
@@ -144,7 +146,7 @@ class Hours
      * @param bool|null $onInvoice
      * @return Hours
      */
-    public function setOnInvoice(?bool $onInvoice): Hours
+    public function setOnInvoice(?bool $onInvoice) : Hours
     {
         $this->onInvoice = (bool) $onInvoice;
         return $this;
@@ -153,7 +155,7 @@ class Hours
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return $this->description;
     }
@@ -162,7 +164,7 @@ class Hours
      * @param string $description
      * @return Hours
      */
-    public function setDescription(string $description): Hours
+    public function setDescription(string $description) : Hours
     {
         $this->description = $description;
         return $this;
@@ -171,7 +173,7 @@ class Hours
     /**
      * @return Employee|null
      */
-    public function getEmployee(): ? Employee
+    public function getEmployee() : ?Employee
     {
         return $this->employee;
     }
