@@ -13,36 +13,32 @@ Most of the work has to be done on the client, but the api can provide some hint
 for the client (generator) in the jsonld metadata.
 
 To see the metadata without the hints point your browser at [https://localhost/docs.jsonld](https://localhost/docs.jsonld).
-Under property "hydra:supportedClass" at index 0 (@id: "#Employee") 
-under its property "hydra:supportedProperty: at index 6 (hydra:title: "birthDate") 
+Under property "hydra:supportedClass" at index 0 (@id: "#Employee")
+under its property "hydra:supportedProperty: at index 6 (hydra:title: "birthDate")
 under its property "hydra:property": you find
 "range": "xmls:dateTime".
-This makes the client generator produce a form with an input type "dateTime" for arrival. But 
+This makes the client generator produce a form with an input type "dateTime" for arrival. But
 according to the ORM the property only contains a date:
 ```php
-     * @ORM\Column(type="date")
-'''
+    #[ORM\Column (type:"date")]
+```
 
-In order to get an input type "date", in Entity Employee at the field doc above private $birthDate add:
+In order to get an input type "date", in Entity Employee above private $birthDate add:
 ```php
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#date"}
-     * )
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#date'])]
 ```
 You also need to add a use statement for ApiProperty above the class statement:
 ```php
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
 ```
 
 Now refresh [https://localhost/docs.jsonld](https://localhost/docs.jsonld).
 At the same position you should now find
 "range": "http://www.w3.org/2001/XMLSchema#date".
 
-To change the corresponding range of property $arrival add the following to its method doc:
+To change the corresponding range of property $arrival add the following to its attributes:
 ```php
-     * @ApiProperty(
-     *     jsonldContext={"@type"="http://www.w3.org/2001/XMLSchema#time"}
-     * )
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#time'])]
 ```
 
 Now refresh [https://localhost/docs.jsonld](https://localhost/docs.jsonld).
@@ -80,7 +76,7 @@ For more clarity here is the json of the two properties:
 Translation of error messages<a name="ErrorMessages"></a>
 -----------------------------
 
-All error messages of api platform are in English, but the messages 
+All error messages of api platform are in English, but the messages
 from validators can be translated by the translation service of Symfony.
 The validation error messages are already available in many languages,
 so you will probably not have to create any translation files yourself.
@@ -102,9 +98,9 @@ framework:
 
 ```
 This activates and configures the translation service. It sets
-the default locale to 'en'. 
+the default locale to 'en'.
 
-In order to get the translator to translate to the language of the client 
+In order to get the translator to translate to the language of the client
 the locale of the client must be set into the http request before it is processed.
 This can be done by adding an Event Subscriber. First create a new folder
 'EventSubscriber' in folder api/src. Then add a file LocaleSubscriber.php
@@ -157,7 +153,7 @@ curl -X POST "https://localhost/employees" -H  "accept-language: nl-NL" -H  "acc
 ```
 
 If you still get validation errors in English, make a to change a config file of Symfony
-or run 
+or run
 ```shell
 docker-compose exec php ./bin/console cache:clear
 ```
@@ -166,7 +162,7 @@ Then try again the curl command.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
 git diff origin/chapter4-api 
@@ -174,6 +170,6 @@ git diff origin/chapter4-api
 will compare your own version with code one of chapter4-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter3-react or chapter3-next,
-restart docker-compose and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react) 
-and follow the instructions. Or if you only follow the api branches chapter4-api.
+After committing your changes you may check out branch [chapter3-react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-react) or [chapter3-next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-next),
+click its link link to point your browser to the same branch on github and follow the instructions.
+Or if you only follow the api branches [chapter4-api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-api).
