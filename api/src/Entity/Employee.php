@@ -10,19 +10,18 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Filter\SimpleSearchFilter;
 
 /**
  * Class defining entities with data about an Employees
- * @ApiFilter(OrderFilter::class)
- * @ApiFilter(SimpleSearchFilter::class, properties={"lastName", "firstName", "job", "address", "zipcode", "city"}, arguments={"searchParameterName"="search"})
+ *
  */
 #[ORM\Entity]
 #[ApiResource(operations: [
@@ -35,6 +34,10 @@ use App\Filter\SimpleSearchFilter;
     ],
     order: ['lastName', 'firstName'])
 ]
+#[ApiFilter(filterClass: OrderFilter::class)]
+#[ApiFilter(filterClass: SimpleSearchFilter::class,
+    properties: ['lastName', 'firstName', 'job', 'address', 'zipcode', 'city'],
+    arguments: ['searchParameterName' => 'search'])]
 class Employee
 {
     public function __construct()

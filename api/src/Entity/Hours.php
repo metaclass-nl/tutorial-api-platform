@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
@@ -16,11 +17,9 @@ use ApiPlatform\Metadata\ApiFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * Registration of time worked by an Employee
- * @ApiFilter(OrderFilter::class, properties={"start", "description", "nHours", "employee.firstName", "employee.lastName"})
  */
 #[ORM\Entity]
 #[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
@@ -37,6 +36,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['description' => 'ipartial', 'employee' => 'exact', 'employee.job' => 'ipartial'])]
 #[ApiFilter(filterClass: DateFilter::class, properties: ['start'])]
 #[ApiFilter(filterClass: RangeFilter::class, properties: ['nHours'])]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['start', 'description', 'nHours', 'employee.firstName', 'employee.lastName'])]
 class Hours
 {
     /**
