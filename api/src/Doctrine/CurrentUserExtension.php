@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
 
 class CurrentUserExtension implements QueryCollectionExtensionInterface
+//   , QueryItemExtensionInterface
 {
     private $security;
 
@@ -23,6 +24,11 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
     {
         $this->addWhere($queryBuilder, $resourceClass, $queryNameGenerator);
     }
+
+//    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
+//    {
+//        $this->addWhere($queryBuilder, $resourceClass, $queryNameGenerator);
+//    }
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass, QueryNameGeneratorInterface $queryNameGenerator): void
     {

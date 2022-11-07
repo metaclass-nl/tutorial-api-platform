@@ -18,4 +18,3 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
-    metadata_backward_compatibility_layer: false

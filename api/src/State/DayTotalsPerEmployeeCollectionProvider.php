@@ -21,7 +21,7 @@ class DayTotalsPerEmployeeCollectionProvider implements ProviderInterface
         $this->dataProvider = $dataProvider;
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $resourceClass = $operation->getClass();
         if (!isset($context["filters"]["start"]["after"]) && !isset($context["filters"]["start"]["strictly_after"])) {
