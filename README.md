@@ -4,9 +4,9 @@ Chapter 8: Authorization - Api
 The environment is te same as in the chapter7-api branch, except:
 - instructions from README.md of chapter7-api where applied,
 
-This chapter adds Authorization: 
-- Ordinary users should only be allowed to see and modify their own data*. 
-- Administrators should be allowed to see and modify all data*. 
+This chapter adds Authorization:
+- Ordinary users should only be allowed to see and modify their own data*.
+- Administrators should be allowed to see and modify all data*.
 - Ordinary users are allowed to create and delete their Hours but not their Employee.
 - Hours.start should be within last week unless the user is an Administrator.
 
@@ -23,17 +23,17 @@ below the last property:
 ```php
     /**
      * @var User associated with this employee
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @Groups({"employee_get"})
      */
+    #[ORM\ManyToOne(targetEntity:"App\Entity\User")]
+    #[Groups(["employee_get"])]
     private $user;
 ```
 And at the bottom of the class the getter and setter:
 ```php
-   /**
+    /**
      * @return null|User
      */
-    public function getUser(): ?User
+    public function getUser() : ?User
     {
         return $this->user;
     }
@@ -42,18 +42,18 @@ And at the bottom of the class the getter and setter:
      * @param null|User $user
      * @return Employee
      */
-    public function setUser(User $user=null): Employee
+    public function setUser(User $user = null) : Employee
     {
         $this->user = $user;
         return $this;
     }
 ```
 Maybe it seems odd that the user property may be null. However, it is likely
-that the Employee data and his Hours registration need to be kept for several years 
+that the Employee data and his Hours registration need to be kept for several years
 after the employee has left the company. In that situation the User entity is no
 longer needed and may be removed without removing the Employee entity.
 
-After adding the User relationship to the Employee class, the 
+After adding the User relationship to the Employee class, the
 database needs to be adapted. Generate a new migration with:
 ```shell
 docker-compose exec php ./bin/console doctrine:migrations:diff
@@ -83,59 +83,56 @@ and choose yes to delete all data before the fixtures are loaded.
 
 User resource<a name="User"></a>
 -------------
-Administrators will have more access then ordinary users. 
+Administrators will have more access then ordinary users.
 In order to adapt the client needs to be able to find out wheater the
 current user is an administrator or not. Furthermore, the admin client
-will need to fetch the label of the user that is related to an 
-Employee. 
+will need to fetch the label of the user that is related to an
+Employee.
 
 First add some use statements to api/src/Entity/User.php:
 ```php
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 ```
 
-And an @ApiResource tag :
-```php class comment
- * @ApiResource(
- *     attributes={"order"={"email"}},
- *     itemOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"user_get"}},
- *              "security"="is_granted('ROLE_ADMIN') or object == user"
- *          }
- *     },
- *     collectionOperations={
- *         "get"={
- *              "normalization_context"={"groups"={"user_list"}},
- *          }
- *     }
- * )
+And an ApiResource attribute :
+```php
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['user_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object == user'),
+        new GetCollection(normalizationContext: ['groups' => ['user_list']])
+    ],
+    order: ['email'])
+]
 ```
-The "security" configuration will be explained in the next paragraph. 
+The "security" configuration will be explained in the next paragraph.
 
-Add the following to the comments of the $email property:
-```php class comment
-     * @Groups({"user_get", "user_list"})
+Add the following attribute above the $email property:
+```php
+    #[Groups(["user_get", "user_list"])]
 ```
 
 Add a getLabel and an isAdmin method:
 ```php
-   /** Represent the entity to the user in a single string
-     * @ApiProperty(iri="http://schema.org/name")
-     * @Groups({"user_get", "user_list", "employee_get"})
+   /**
+     * Represent the entity to the user in a single string
+     *
      * @return string
      */
+    #[Groups (["user_get", "user_list", "employee_get"])]
+    #[ApiProperty(iris: ['http://schema.org/name'])]
     public function getLabel()
     {
         return $this->email;
     }
 
     /**
-     * @Groups({"user_get", "user_list"})
      * @return bool
      */
+    #[Groups(["user_get", "user_list"])]
     public function isAdmin()
     {
         return in_array('ROLE_ADMIN', $this->getRoles());
@@ -148,120 +145,105 @@ not only for security reasons, but also to decouple the clients from
 the inner workings of the server.
 
 
-You can now test through https://localhost/docs 
+You can now test through https://localhost/docs
 that users can be retrieved, that their passwords are
-not in the results and that the user @id and label are 
+not in the results and that the user @id and label are
 in the result of getting an individual Employee.
 
 Securing Operations<a name="Operations"></a>
 -------------------
-Please read [the Security page](https://api-platform.com/docs/core/security/) 
+Please read [the Security page](https://api-platform.com/docs/core/security/)
 of the API Platform documentation (you may skip the chapters about Voters and Error Message).
 
-The @ApiResource annotation of User already contains a security configuration:
-```php class comment
- *              "security"="is_granted('ROLE_ADMIN') or object == user"
+The ApiResource attribute of User already contains a security configuration:
+```php
+           security: 'is_granted(\'ROLE_ADMIN\') or object == user'),
 ```
 It is a Symfony expression that returns true if the user is granted
-ROLE_ADMIN or if the object retrieved equals the user that 
-is currently logged in. If this expression returns false API Platform will return a 
+ROLE_ADMIN or if the object retrieved equals the user that
+is currently logged in. If this expression returns false API Platform will return a
 403 Forbidden error with "hydra:description": "Access Denied."
 
-To secure access to Employee replace its @ApiResource annotation by the following:
-```php class comment
- * @ApiResource(
- *     attributes={"order"={"lastName", "firstName"}},
- *     itemOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"employee_get"}},
- *               "security"="is_granted('ROLE_ADMIN') or object.getUser() == user"
- *          },
- *          "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or
-               (object.getUser() == user and previous_object.getUser() == user)"},
- *          "patch"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or
-               (object.getUser() == user and previous_object.getUser() == user)"},
- *          "delete"={"security"="is_granted('ROLE_ADMIN')" }
- *     },
- *     collectionOperations={
- *         "get"={
- *              "normalization_context"={"groups"={"employee_list"}}
- *          },
- *          "post"={"security"="is_granted('ROLE_ADMIN')" }
- *     }
- * )
+To secure access to Employee replace its ApiResource attribute by the following:
+```php
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['employee_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object.getUser() == user'),
+        new Put(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getUser() == user and previous_object.getUser() == user)'),
+        new Patch(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getUser() == user and previous_object.getUser() == user)'),
+        new Delete(security: 'is_granted(\'ROLE_ADMIN\')'),
+        new GetCollection(normalizationContext: ['groups' => ['employee_list']]),
+        new Post(security: 'is_granted(\'ROLE_ADMIN\')')
+    ], 
+    order: ['lastName', 'firstName'])
+]
 ```
-As you can see item operation "get" has a new configuration "security"
-similar to the one of User "get".
+As you can see item operation "Get" has a new configuration "security"
+similar to the one of User "Get".
 
-The item operations "put" and "patch" both have the a configuration 
-"security_post_denormalize". This is because the operation may change
+The item operations "Put" and "Patch" both have the a configuration
+"securityPostDenormalize". This is because the operation may change
 the user property of the Employee and that can only be checked after denormalization.
-But its value before denormalization also needs to be checked, therefore 
+But its value before denormalization also needs to be checked, therefore
 previous_object.getUser() is also compared to the user that is currently logged in.
 
-The configurations for item operation "delete" and collection operation "post" are 
+The configurations for operations "Delete" and "Post" are
 simpeler, they only require the user to be granted ROLE_ADMIN, so ordinary users
 can not perform these operations.
 
-Collection operation "get" does not have any security configurations, i guess because
+Collection operation "Get" does not have any security configurations, i guess because
 enforcing them would require checking each entity retrieved and that could
 be thousands. Instead a Filter will be added in the next paragraph.
 
-To secure access to Hours replace its @ApiResource annotation by the following:
-```php class comment
- * @ApiResource(attributes={
- *     "pagination_items_per_page"=10,
- *     "order"={"start": "DESC", "description": "ASC"},
- *     },
- *     itemOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"hours_get"}},
- *              "security"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"
- *          },
- *          "put"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or
-               (object.getEmployee().getUser() == user and previous_object.getEmployee().getUser() == user)"},
- *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user" }
- *     },
- *     collectionOperations={
- *         "get"={
- *              "normalization_context"={"groups"={"hours_list"}}
- *          },
- *          "post"={"security_post_denormalize"="is_granted('ROLE_ADMIN') or object.getEmployee().getUser() == user"}
- *     }
- * )
+To secure access to Hours replace its ApiResource attribute by the following:
+```php
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['hours_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user',
+            requirements: ['id' => '\d+']),
+        new Put(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getEmployee().getUser() == user and previous_object.getEmployee().getUser() == user)'),
+        new Delete(security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
+        new GetCollection(normalizationContext: ['groups' => ['hours_list']]),
+        new Post(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
+    ],
+    paginationItemsPerPage: 10,
+    order: ['start' => 'DESC', 'description' => 'ASC'])
+]
 ```
 This is similar to the configurations of Employee, except that "delete" and "post now allow
 ordinary users to post or delete Hours.
 
 You can now test through https://localhost/docs that the above
 operations return 403 Forbidden errors if the security requirements are not met.
- 
+
 Filtering<a name="Filtering"></a>
 ---------
 
 Limiting the access to collection get operations is done by
-implementing an Extension service specific to the data provider. 
-If you use a custom data provider, you need to implement a custom interface that 
-suits the needs of your own data provider, see [the Data Providers page](https://api-platform.com/docs/core/data-providers/) 
+implementing an Extension service specific to the state provider.
+If you use a custom state provider, you need to implement a custom interface that
+suits the needs of your own state provider, see [the State Providers page](https://api-platform.com/docs/core/state-providers/)
 of the API Platform documentation.
 
-As this tutorial uses the Doctrine ORM adapter, implementing an Extension service means implementing the 
-ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface. 
+As this tutorial uses the Doctrine ORM adapter, implementing an Extension service means implementing the
+ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface.
 Create a folder api/src/Doctrine and add a file api/src/Doctrine/CurrentUserExtension.php
 to it with the following content:
 ```php
 <?php
 namespace App\Doctrine;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\Employee;
 use App\Entity\Hours;
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryBuilderHelper;
 
 class CurrentUserExtension implements QueryCollectionExtensionInterface
 //   , QueryItemExtensionInterface
@@ -273,12 +255,12 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
         $this->security = $security;
     }
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
         $this->addWhere($queryBuilder, $resourceClass, $queryNameGenerator);
     }
 
-//    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
+//    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
 //    {
 //        $this->addWhere($queryBuilder, $resourceClass, $queryNameGenerator);
 //    }
@@ -302,7 +284,8 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
                 $queryBuilder->andWhere(sprintf('%s.user = :current_user_id', $rootAlias));
                 break;
             case Hours::class:
-                $alias = QueryBuilderHelper::addJoinOnce($queryBuilder, $queryNameGenerator, $rootAlias, 'employee', null);
+                $alias = $queryNameGenerator->generateJoinAlias('employee');
+                $queryBuilder->innerJoin("$rootAlias.employee", $alias);
                 $queryBuilder->andWhere(sprintf('%s.user = :current_user_id', $alias));
                 break;
             default:
@@ -313,12 +296,12 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
 }
 ```
 To apply the extension the data provider calls ::applyToCollection. This in turn calls
-::addWhere where the real work is done. If anything needs to be done: In this 
+::addWhere where the real work is done. If anything needs to be done: In this
 tutorial Administrators have access to all data so if the user is granted ROLE_ADMIN
-the function returns without changing the query. 
+the function returns without changing the query.
 
 If the user is not an Administrator the filtering depends on what type of
-Entity is retrieved. This is decided by the case switch. For 
+Entity is retrieved. This is decided by the case switch. For
 User and Employee only a criterion is added to the WHERE clause. But for
 Hours a JOIN is added too for the employee relationship. This results
 in an alias that then is used for the criterion added to the WHERE clause.
@@ -332,36 +315,36 @@ the Extensions page](https://api-platform.com/docs/core/extensions/#example)
 of the API Platform documentation. If you "uncomment" the function and the
 line below the extension will also be applied on queries for single items.
 This will make part of the security configurations made in the @ApiResource annotations
-in the previous paragraph superfluous (DRY!) because the filtering for ::applyToItem 
-will lead to a 404 Error: Not Found when a user tries to access an entity 
+in the previous paragraph superfluous (DRY!) because the filtering for ::applyToItem
+will lead to a 404 Error: Not Found when a user tries to access an entity
 wherefore he/she is not authorized, including for PUT and PATCH. Of course
-the configurations for PUT and PATCH and POST would still be necessary 
+the configurations for PUT and PATCH and POST would still be necessary
 with respect to the values that where just unserialized, otherwise any
 user could add/move Hours to other users' Employees.
 
 Whether having the ::applyToItem function active is a good idea depends
 on the audience of the api. Returning 403 Forbidden errors is
 more informative to the user, and therefore more user friendly, but
-it does give away the (non) existence of the @ids. Furthermore, 
+it does give away the (non) existence of the @ids. Furthermore,
 returning 404 Error: Not Found is consistent with the filtering of
-the collection operations. For this tutorial the choice was made 
-not to use the ::applyToItem function so that you learn 
-more about the security configurations made in the @ApiResource annotations.
+the collection operations. For this tutorial the choice was made
+not to use the ::applyToItem function so that you learn
+more about the security configurations made in the ApiResource attribute.
 
 
 Validation<a name="Validation"></a>
 ----------
 Usually Hours registrations are processed in some way by the administration
-and then they can no longer be added or modified by ordinary users. 
+and then they can no longer be added or modified by ordinary users.
 Because that fact itself is not included in the current application,
 ordinary users are only allowed to add or modify Hours that
-start within last week. 
+start within last week.
 
-[The Dynamic Validation Groups section](https://api-platform.com/docs/core/validation/#dynamic-validation-groups) 
-in the API Platform documentation contains an example of a service that 
+[The Dynamic Validation Groups section](https://api-platform.com/docs/core/validation/#dynamic-validation-groups)
+in the API Platform documentation contains an example of a service that
 selects the validation groups to apply based on the role of the current user.
 That could work in combination with a [Date Range constraint](https://symfony.com/doc/current/reference/constraints/Range.html#date-ranges), but what if it was changed to somethink like
-"within the current month and two working days thereafter"? 
+"within the current month and two working days thereafter"?
 
 In order to anticipate such changes a Custom Constraint is
 used. Create a folder api/src/Validator and within there
@@ -378,12 +361,13 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
+#[\Attribute]
 class CommonUserHoursStartConstraint extends Constraint
 {
     public $message = 'app.datetime.must_be_in_last_week'; // 'The Hours must start within last week';
 }
 ```
-This makes the annotation @CommonUserHoursStartConstraint available.
+This makes the attribute CommonUserHoursStartConstraint available.
 In order to validate it add a file CommonUserHoursStartConstraintValidator.php
 to the same folder with:
 ```php
@@ -398,6 +382,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Annotation
  */
+#[\Attribute]
 class CommonUserHoursStartConstraintValidator extends ConstraintValidator
 {
     private $authorizationChecker;
@@ -422,7 +407,7 @@ class CommonUserHoursStartConstraintValidator extends ConstraintValidator
 }
 ```
 
-The error app.datetime.must_be_in_last_week of course is not the 
+The error app.datetime.must_be_in_last_week of course is not the
 actual message but its translation key. Add a file
 api/translations/validators.en.yaml withe the following:
 ```yaml
@@ -438,9 +423,9 @@ Now to apply the Constraint to Hours add to the Entity class:
 ```php
 use App\Validator\Constraints\CommonUserHoursStartConstraint;
 ```
-And to the property comment of $start:
-```php comment
-* @CommonUserHoursStartConstraint
+And above the property $start:
+```php
+    #[CommonUserHoursStartConstraint]
 ```
 
 You can now test through https://localhost/docs that
@@ -450,7 +435,7 @@ but not if you are logged in as an administrator.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
 git diff origin/chapter9-api 
@@ -459,5 +444,5 @@ will compare your own version with code one of chapter9-api. You may also add th
 to a folder of file to make the diff more specific.
 
 After committing your changes you may check out branch chapter8-react,
-restart docker-compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react) 
+restart docker-compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
 and follow the instructions. Or if you only follow the api branches chapter9-api.
