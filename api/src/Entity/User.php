@@ -6,11 +6,23 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 
 /**
  */
 #[ORM\Entity (repositoryClass:UserRepository::class)]
 #[ORM\Table (name:"`user`")]
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['user_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object == user'),
+        new GetCollection(normalizationContext: ['groups' => ['user_list']])
+    ],
+    order: ['email'])
+]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -25,6 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string
      */
     #[ORM\Column(type:"string", length:180, unique:true)]
+    #[Groups(["user_get", "user_list"])]
     private $email;
 
 
@@ -118,5 +131,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier() : string
     {
         return $this->getEmail();
+    }
+
+    /**
+     * Represent the entity to the user in a single string
+     *
+     * @return string
+     */
+    #[Groups (["user_get", "user_list", "employee_get"])]
+    #[ApiProperty(iris: ['http://schema.org/name'])]
+    public function getLabel()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return bool
+     */
+    #[Groups(["user_get", "user_list"])]
+    public function isAdmin()
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
     }
 }
