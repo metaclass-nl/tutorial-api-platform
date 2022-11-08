@@ -15,17 +15,20 @@ final class SwaggerDecorator implements NormalizerInterface
 
     public function normalize($object, string $format = null, array $context = [])
     {
-        $summary = 'totals per day per Employee';
         $docs = $this->decorated->normalize($object, $format, $context);
-        $docs['paths']['/hours/dayreport']['get']['summary'] = "Reports $summary";
-        $docs['paths']['/hours/dayreport']['get']['description'] = 'Days start at time of start[after] filter';
+
+        // Set by operation openapiContext:
+        // $docs['paths']['/hours/dayreport']['get']['summary'] = 'Totals per day per Employee';
+        // $docs['paths']['/hours/dayreport']['get']['description'] = 'Days start at time of start[after] filter';
+
+        $summary = $docs['paths']['/hours/dayreport']['get']['summary'];
         $docs['paths']['/hours/dayreport']['get']['responses']['200']['description'] = 'DayTotalsPerEmployee collection response';
 
         $responseContent = $docs['paths']['/hours/dayreport']['get']['responses']['200']['content'];
         $this->setByRef($docs, $responseContent['application/ld+json']['schema']['properties']['hydra:member']['items']['$ref'],
-            'description', ucfirst($summary));
+            'description', $summary);
         $this->setByRef($docs, $responseContent['application/json']['schema']['items']['$ref'],
-            'description', ucfirst($summary));
+            'description', $summary);
 
         return $docs;
     }
@@ -45,3 +48,4 @@ final class SwaggerDecorator implements NormalizerInterface
         $sub[$key] = $value;
     }
 }
+

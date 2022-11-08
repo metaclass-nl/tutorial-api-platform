@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Annotation
  */
+#[\Attribute]
 class CommonUserHoursStartConstraintValidator extends ConstraintValidator
 {
     private $authorizationChecker;
