@@ -27,19 +27,24 @@ use App\Model\DayTotalsPerEmployee;
 #[ORM\Entity]
 #[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
 #[ApiResource(operations: [
-    new Get(normalizationContext: ['groups' => ['hours_get']],
-        security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user',
-        requirements: ['id' => '\d+']),
-    new Put(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
-               (object.getEmployee().getUser() == user and previous_object.getEmployee().getUser() == user)'),
-    new Delete(security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
-    new GetCollection(normalizationContext: ['groups' => ['hours_list']]),
-    new Post(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
-    new GetCollection(uriTemplate: '/hours/dayreport',
-        output: DayTotalsPerEmployee::class,
-        normalizationContext: ['groups' => ['day_totals_per_employee']],
-        paginationEnabled: false,
-        provider: DayTotalsPerEmployeeCollectionProvider::class)
+        new Get(normalizationContext: ['groups' => ['hours_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user',
+            requirements: ['id' => '\d+']),
+        new Put(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getEmployee().getUser() == user and previous_object.getEmployee().getUser() == user)'),
+        new Delete(security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
+        new GetCollection(normalizationContext: ['groups' => ['hours_list']]),
+        new Post(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
+        new GetCollection(uriTemplate: '/hours/dayreport',
+            output: DayTotalsPerEmployee::class,
+            normalizationContext: ['groups' => ['day_totals_per_employee']],
+            paginationEnabled: false,
+            provider: DayTotalsPerEmployeeCollectionProvider::class,
+            openapiContext: [
+                'summary' => 'Totals per day per Employee',
+                'description' => 'Days start at time of start[after] filter',
+            ]
+        )
     ],
     paginationItemsPerPage: 10,
     order: ['start' => 'DESC', 'description' => 'ASC'])

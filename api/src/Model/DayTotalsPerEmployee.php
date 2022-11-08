@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\Get;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Entity\Employee;
 use App\Entity\Hours;
