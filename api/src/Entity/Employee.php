@@ -25,12 +25,15 @@ use App\Filter\SimpleSearchFilter;
  */
 #[ORM\Entity]
 #[ApiResource(operations: [
-        new Get(normalizationContext: ['groups' => ['employee_get']]),
-        new Put(),
-        new Patch(),
-        new Delete(),
+        new Get(normalizationContext: ['groups' => ['employee_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object.getUser() == user'),
+        new Put(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getUser() == user and previous_object.getUser() == user)'),
+        new Patch(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getUser() == user and previous_object.getUser() == user)'),
+        new Delete(security: 'is_granted(\'ROLE_ADMIN\')'),
         new GetCollection(normalizationContext: ['groups' => ['employee_list']]),
-        new Post()
+        new Post(security: 'is_granted(\'ROLE_ADMIN\')')
     ],
     order: ['lastName', 'firstName'])
 ]
@@ -130,12 +133,12 @@ class Employee
 
     /**
      * @var User associated with this employee
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @Groups({"employee_get"})
      */
+    #[ORM\ManyToOne(targetEntity:"App\Entity\User")]
+    #[Groups(["employee_get"])]
     private $user;
 
-    public function getId(): int
+    public function getId() : int
     {
         return $this->id;
     }
@@ -317,7 +320,7 @@ class Employee
     /**
      * @return null|User
      */
-    public function getUser(): ?User
+    public function getUser() : ?User
     {
         return $this->user;
     }
@@ -326,10 +329,9 @@ class Employee
      * @param null|User $user
      * @return Employee
      */
-    public function setUser(User $user=null): Employee
+    public function setUser(User $user = null) : Employee
     {
         $this->user = $user;
         return $this;
     }
-
 }

@@ -25,11 +25,14 @@ use App\Validator\Constraints\CommonUserHoursStartConstraint;
 #[ORM\Entity]
 #[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
 #[ApiResource(operations: [
-        new Get(normalizationContext: ['groups' => ['hours_get']]),
-        new Put(),
-        new Delete(),
+        new Get(normalizationContext: ['groups' => ['hours_get']],
+            security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user',
+            requirements: ['id' => '\d+']),
+        new Put(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or
+                   (object.getEmployee().getUser() == user and previous_object.getEmployee().getUser() == user)'),
+        new Delete(security: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
         new GetCollection(normalizationContext: ['groups' => ['hours_list']]),
-        new Post(),
+        new Post(securityPostDenormalize: 'is_granted(\'ROLE_ADMIN\') or object.getEmployee().getUser() == user'),
     ],
     paginationItemsPerPage: 10,
     order: ['start' => 'DESC', 'description' => 'ASC'])
@@ -59,11 +62,11 @@ class Hours
 
     /**
      * @var \DateTime
-     * @CommonUserHoursStartConstraint
      */
     #[ORM\Column(type:"datetime")]
     #[Assert\NotNull]
     #[Groups(["hours_get", "hours_list"])]
+    #[CommonUserHoursStartConstraint]
     private $start;
 
     /**
