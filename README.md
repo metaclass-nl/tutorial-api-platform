@@ -34,9 +34,8 @@ of the next chapter so that you can see the differences right away.
 In addition to this tutorial an [extended client generator for react and next.js](https://github.com/metaclass-nl/client-generator)
 is available that puts what you have learnt into use for scaffolding your own application.
 
-As of api-platform version 2.6 the standard distribution contains a nextJS client
+As of api-platform version 2.6 the standard distribution contains a next.js client
 instead of the react client. This tutorial has next.js branches and an extended client generator for the first 4 chapters only.
-The angular.io branches are still under development and currently only contain code and no instructions. 
 
 Required knowledge
 ------------------
@@ -111,22 +110,24 @@ to apply the migrations. Then apply the DataFixtures by:
 ```shell
 docker-compose exec php bin/console doctrine:fixtures:load
 ```                     
-For a react or next branch you may also need to update yarn:
-```shell
-docker-compose exec client yarn install
-```                     
-For next replace client by pwa:
+For a next branch you may also need to update yarn:
 ```shell
 docker-compose exec pwa yarn install
-```  
-Wait for yarn to complete, then (for next replace client by pwa):
-```shell
-docker-compose exec client yarn update
 ```                     
-With chapter 4 react and higher if you still get an error on missing react-intl (for next replace client by pwa):
+Wait for yarn or npm to complete, then (for next replace client by pwa):
 ```shell
-docker-compose exec client yarn add react-intl
+docker-compose exec pwa yarn update
+```         
+For a react branch you may also need to update npm:
+```shell
+docker-compose exec pwa npm install
 ```
+Wait for yarn or npm to complete, then:
+```shell
+docker-compose exec client npm update
+```  
+With chapter 4 react/next and higher if you still get an error on missing react-intl, 
+you may need to add react-intl
 
 
 About the admin interface
@@ -183,8 +184,8 @@ Credits
 
 The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021. [MetaClass](https://www.metaclass.nl/) offers software development and support in the Netherlands for Symfony, API Platform, React.js and Next.js
 
-The tutorial is based on version 2.6 of the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
-created by [Kévin Dunglas](https://dunglas.fr). 
+The tutorial is based the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
+and Api Platform core version 3.0, created by [Kévin Dunglas](https://dunglas.fr). 
 
 
 Contribution
