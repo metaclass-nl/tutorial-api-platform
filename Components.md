@@ -1,4 +1,5 @@
 Generic and example Components
+------------------------------
 - <b>AuthController</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-react/README.md#Controller)
   <br>Redirects to /login if no JWT token is present
