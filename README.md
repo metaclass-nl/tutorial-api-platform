@@ -3,7 +3,8 @@
 [API Platform](https://api-platform.com) is quite well documented, but the documentation
 is stuctured according to the components and features of api-platform, not to the tasks 
 of building an actual application. This tutorial takes you step by step through the process 
-of building a simple application with api platform and the react client generator.
+of building a simple application with api platform and the react or next.js client generator.
+[Simple generic and example Components](./Components.md) are factored out to keep the application DRY and clearly arranged.
 
 Chapters and branches
 ---------------------
