@@ -18,7 +18,7 @@ Generic and example Components
   <br>Displays links, each to show an entity
 - <b>(Redux)FormRow</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/client/src/components/common/ReduxFormRow.js)
-  [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-next/pwa/components/common/FormRow.tsx)
+  [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/pwa/components/common/FormRow.tsx)
   <br>Specfies a complete form row, including formatting and normalization
 - <b>SearchTool</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter5-react/README.md#SearchTool)
@@ -35,7 +35,7 @@ Generic and example Components
   <br>Shows messages from one component in another one. Follows the publish-subscribe pattern.
 - <b>Pagination</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/client/src/components/common/Pagination.js)
-  [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-next/pwa/components/common/Pagination.tsx)
+  [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/pwa/components/common/Pagination.tsx)
   <br>Displays buttons for navigating paginated lists. Replaces the navigation method that was generated for each List component.
 - <b>Select(Entity)</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-react/README.md#Select)
@@ -48,6 +48,6 @@ Generic and example Components
   [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter9-api/README.md#SwaggerDecorator)
   <br>Corrects the openapi docs for an operation that uses a Custom State Provider
 - <b>ThSort</b>
-  [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-react/README.md#SortHeaders)
+  [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter6-react/README.md#SortHeaders)
   <br>Sorts a table holding a search result by a single click on a table column header.
 
