@@ -1,11 +1,22 @@
 Generic and example Components
-------------------------------
+==============================
+Back End
+--------
+- <b>LocaleSubscriber</b>
+  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-api/README.md#ErrorMessages)
+  <br>Makes the api use the "accept-language" from the client.
+- <b>SimpleSearchFilter</b>
+  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter6-api/README.md#SimpleSearchFilter)
+  <br>Searches multiple mapped properties for any terms typed into a single Textfield
+- <b>SwaggerDecorator</b>
+  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter9-api/README.md#SwaggerDecorator)
+  <br>Corrects the openapi docs for an operation that uses a Custom State Provider
+
+Front End
+---------
 - <b>AuthController</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-react/README.md#Controller)
   <br>Redirects to /login if no JWT token is present
-- <b>CurrentUserExtension</b>
-  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter8-api/README.md#Filtering)
-  <br>Limits the access to collection get operations according to the current users authorizations
 - <b>Custom Intl Components and functions</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/README.md#CustomComponents)
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-next/README.md#CustomComponents)
@@ -23,9 +34,6 @@ Generic and example Components
 - <b>SearchTool</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter5-react/README.md#SearchTool)
   <br>Search Controller that also displays the search form. Customized for a specific search form and api operation.
-- <b>LocaleSubscriber</b>
-  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-api/README.md#ErrorMessages)
-  <br>Makes the api use the "accept-language" from the client.
 - <b>Login</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-react/README.md#Login)
   <br>Redux connected Login Form
@@ -41,12 +49,6 @@ Generic and example Components
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-react/README.md#Select)
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/README.md#Select)
   <br>Select component that retrieves a list of entities from the api, shows their labels and selects the @id.
-- <b>SimpleSearchFilter</b>
-  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter6-api/README.md#SimpleSearchFilter)
-  <br>Searches multiple mapped properties for any terms typed into a single Textfield
-- <b>SwaggerDecorator</b>
-  [api](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter9-api/README.md#SwaggerDecorator)
-  <br>Corrects the openapi docs for an operation that uses a Custom State Provider
 - <b>ThSort</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter6-react/README.md#SortHeaders)
   <br>Sorts a table holding a search result by a single click on a table column header.
