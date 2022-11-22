@@ -20,6 +20,7 @@ Front End
 - <b>Custom Intl Components and functions</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/README.md#CustomComponents)
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-next/README.md#CustomComponents)
+  [angular](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-angular/angular/src/app/shared/localization.pipes.ts)
   <br>Simplify the handling of missing values, localize and process form values, add localization for some types
 - <b>DeleteButton</b>
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/README.md#DeleteButton)
@@ -31,6 +32,12 @@ Front End
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/client/src/components/common/ReduxFormRow.js)
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/pwa/components/common/FormRow.tsx)
   <br>Specfies a complete form row, including formatting and normalization
+- <b>ItemFormController</b>
+  [angular](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-angular/angular/src/app/shared/item-form.controller.ts)
+  <br>Populates item forms and implements submit
+- <b>ItemService</b>
+  [angular](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-angular/angular/src/app/shared/item.service.ts)
+  <br>Facilitates communication with the api
 - <b>SearchTool</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter5-react/README.md#SearchTool)
   <br>Search Controller that also displays the search form. Customized for a specific search form and api operation.

@@ -35,8 +35,8 @@ of the next chapter so that you can see the differences right away.
 In addition to this tutorial an [extended client generator for react and next.js](https://github.com/metaclass-nl/client-generator)
 is available that puts what you have learnt into use for scaffolding your own application.
 
-As of api-platform version 2.6 the standard distribution contains a next.js client
-instead of the react client. This tutorial has next.js branches and an extended client generator for the first 4 chapters only.
+This tutorial has next.js branches and an extended client generator for the first 4 chapters only.
+It also contains examples of an angular client for [chapter1](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-angular) and [chapter 3](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter3-angular) but no instructions.
 
 Required knowledge
 ------------------
@@ -58,7 +58,7 @@ Angular example branches:
 - ES6
 - Angular.io
 
-You don't need to be an expert in these domains, basic working experience should be enough. 
+You don't need to be an expert in these domains, having folowed the tutorials of the suppliers should be enough. 
 
 Requirements
 ------------
@@ -167,7 +167,7 @@ This is a work in progess and needs more testing.
 
 This tutorial currently only supports the api core, the (scaffolded) React client 
 user interface and some chapters about the (scaffolded) Next.js client user interface. 
-The angular.io branches are still under development and currently only contain code and no instructions.
+The angular.io branches only contain code and no instructions for its development.
 
 This distribuition is only for educational purposes and will not be updated frequently. 
 If you want to run a client container for react or angular within the standard distribution of 
