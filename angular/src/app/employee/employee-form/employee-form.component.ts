@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import {Employee} from "../employee";
-import {ConstraintViolation, HydraConstraintViolationResponse} from "../../shared/hydra";
+import {ConstraintViolation, HydraConstraintViolationResponse} from "../../shared/hydra.types";
 import {EmployeeService} from "../employee.service";
 import {MessageService} from "../../shared/message/message.service";
 
@@ -10,7 +10,7 @@ import {MessageService} from "../../shared/message/message.service";
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.css']
 })
-export class EmployeeFormComponent implements OnInit {
+export class EmployeeFormComponent {
 
   controls = {
     firstName: new FormControl(''),
@@ -52,11 +52,12 @@ export class EmployeeFormComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-  }
-
   onSubmit() {
-    const subscriber = (result: Object) => {
+    const subscriber = (result: Employee|HydraConstraintViolationResponse|undefined) => {
+      if (result===undefined) {
+        // Error message already passed to messageService
+        return;
+      }
       const employee = result as Employee;
       if (employee["@id"]) {
         this.itemSubmit.emit(employee);

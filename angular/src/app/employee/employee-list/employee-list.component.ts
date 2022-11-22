@@ -10,7 +10,7 @@ import {MessageService} from "../../shared/message/message.service";
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.css']
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent implements OnInit, OnDestroy {
   icons = { faSearch, faPencil };
   selectedItem?: Employee;
 
@@ -32,7 +32,9 @@ export class EmployeeListComponent implements OnInit {
   getEmployees(): void {
     this.itemService.getList()
       .subscribe(response => {
-        this.items = response["hydra:member"] as Employee[];
+        this.items = response
+          ? response["hydra:member"] as Employee[]
+          : [];
       });
   }
 

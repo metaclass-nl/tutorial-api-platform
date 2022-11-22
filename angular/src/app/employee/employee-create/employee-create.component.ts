@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Employee} from "../employee";
 import { EmployeeService } from '../employee.service';
 import {Router} from "@angular/router";
@@ -9,7 +9,7 @@ import {MessageService} from "../../shared/message/message.service";
   templateUrl: './employee-create.component.html',
   styleUrls: ['./employee-create.component.css']
 })
-export class EmployeeCreateComponent implements OnInit {
+export class EmployeeCreateComponent implements OnInit, OnDestroy {
 
   item = new Employee();
   private clearMessagesOnDistroy = true;

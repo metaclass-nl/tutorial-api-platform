@@ -10,7 +10,7 @@ import {MessageService} from "../../shared/message/message.service";
   templateUrl: './employee-show.component.html',
   styleUrls: ['./employee-show.component.css']
 })
-export class EmployeeShowComponent implements OnInit {
+export class EmployeeShowComponent implements OnInit, OnDestroy {
 
   item?: Employee;
   private clearMessagesOnDistroy = true;
