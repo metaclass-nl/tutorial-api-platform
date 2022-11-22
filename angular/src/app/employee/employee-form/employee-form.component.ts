@@ -1,16 +1,38 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {Employee} from "../employee";
-import {ConstraintViolation, HydraConstraintViolationResponse} from "../../shared/hydra";
+import {Item} from "../../shared/item";
 import {EmployeeService} from "../employee.service";
 import {MessageService} from "../../shared/message/message.service";
+import * as inputLoc from '../../shared/input-localization.functions';
+import {ItemFormController} from "../../shared/item-form.controller";
+
+const controllerFactory = (itemService: EmployeeService, messageService: MessageService) =>
+  new ItemFormController(
+    {
+      birthDate: inputLoc.formatDate,
+      arrival: inputLoc.formatTime,
+    },
+    {
+      arrival: inputLoc.normalizeTime,
+      birthDate: inputLoc.normalizeDate,
+    },
+    itemService,
+    messageService,
+  );
 
 @Component({
   selector: 'app-employee-form',
   templateUrl: './employee-form.component.html',
-  styleUrls: ['./employee-form.component.css']
+  styleUrls: ['./employee-form.component.css'],
+  providers: [{
+      provide: ItemFormController,
+      useFactory: controllerFactory,
+      deps: [EmployeeService, MessageService]
+    },
+  ]
 })
-export class EmployeeFormComponent implements OnInit {
+export class EmployeeFormComponent {
 
   controls = {
     firstName: new FormControl(''),
@@ -23,86 +45,28 @@ export class EmployeeFormComponent implements OnInit {
     birthDate: new FormControl('', Validators.required),
     arrival: new FormControl(''),
   }
-  employeeForm = new FormGroup(this.controls);
-  private _item = new Employee();
+  itemForm = new FormGroup(this.controls);
+  private _item: Item = new Employee();
 
   @Input()
   get item() {
     return this._item;
   }
-  set item(item: Employee) {
+  set item(item: Item) {
     this._item = item;
-      if (this._item) {
-        this.controls.firstName.setValue(this._item.firstName ?? '');
-        this.controls.lastName.setValue(this._item.lastName ?? '');
-        this.controls.job.setValue(this._item.job ?? '');
-        this.controls.address.setValue(this._item.address ?? '');
-        this.controls.zipcode.setValue(this._item.zipcode ?? '');
-        this.controls.city.setValue(this._item.city ?? '');
-        this.controls.birthDate.setValue(this._item.birthDate ?? '');
-        this.controls.arrival.setValue(this._item.arrival ?? '');
-      }
+
+    if (this._item) {
+      this.controller.setControlsValues(this.controls, this._item);
+    }
   }
 
   @Output() itemSubmit = new EventEmitter<Employee>();
 
-  constructor(
-    private employeeService: EmployeeService,
-    private messageService: MessageService,
-  ) {
-  }
-
-  ngOnInit(): void {
+  constructor(private controller: ItemFormController) {
   }
 
   onSubmit() {
-    const subscriber = (result: Object) => {
-      const employee = result as Employee;
-      if (employee["@id"]) {
-        this.itemSubmit.emit(employee);
-      } else {
-        const violationResponse = result as HydraConstraintViolationResponse;
-        if (violationResponse["@type"] && violationResponse["@type"] == "ConstraintViolationList") {
-          const violations = violationResponse.violations ?? [];
-          this.setViolationsOnForm(violations);
-        } else {
-          throw new Error('Unexpected response: ' + JSON.stringify(result))
-        }
-      }
-    }
-
-    this.messageService.clear();
-    const employee = this.employeeForm.value as Employee;
-    if (!employee.arrival) {
-      employee.arrival = undefined;
-    }
-    if (!employee.birthDate) {
-      employee.birthDate = undefined;
-    }
-    if (this._item["@id"]) {
-      employee["@id"] = this._item["@id"];
-      this.employeeService.updateItem(employee).subscribe(
-        subscriber
-      )
-    } else {
-      this.employeeService.addItem(employee).subscribe(
-        subscriber
-      )
-    }
-  }
-
-  setViolationsOnForm(violations: Array<ConstraintViolation>) {
-    violations.forEach(violation => {
-      let control = this.employeeForm.get(violation.propertyPath);
-      if (control) {
-        control.setErrors(
-          {['fromServer']: violation.message}
-        );
-      } else {
-        // use message service
-        this.messageService.danger(violation.propertyPath + " invalid: " + violation.message);
-      }
-    });
+    return this.controller.onSubmit(this.itemForm, this._item, this.itemSubmit);
   }
 
   shouldShowErrors(control: FormControl) {

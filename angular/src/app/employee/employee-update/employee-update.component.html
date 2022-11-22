@@ -1,10 +1,10 @@
 <div *ngIf="item">
-  <h1>Edit Employee {{item["@id"]}} </h1>
+  <h1 i18n="@@employee.update">Edit {{item["@id"]}} </h1>
   <app-employee-form [item]="item" (itemSubmit)="itemUpdated($event)"></app-employee-form>
-  <button (click)="delete(item)" class="btn btn-danger">
+  <button (click)="delete(item)" class="btn btn-danger" i18n="@@delete">
     Delete
   </button>
 </div>
-<a routerLink="/employees" class="btn btn-primary">
+<a routerLink="/employees" class="btn btn-primary" i18n="@@backToList">
   Back to list
 </a>

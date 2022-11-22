@@ -2,8 +2,250 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" target-language="nl" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="employee.new" datatype="html">
+        <source>New Employee</source>
+        <target>Nieuwe Medewerker</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-create/employee-create.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="backToList" datatype="html">
+        <source> Back to list
+</source>
+        <target>Lijst</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-create/employee-create.component.html</context>
+          <context context-type="linenumber">3,5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">57,59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-update/employee-update.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.firstName" datatype="html">
+        <source>First Name</source>
+        <target>Voornaam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.lastName" datatype="html">
+        <source>Last Name</source>
+        <target>Achternaam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.value.required" datatype="html">
+        <source> This value is required </source>
+        <target>Deze waarde is verplicht</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">29,31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">41,43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">72,74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.job" datatype="html">
+        <source>Job</source>
+        <target>Functie</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.address" datatype="html">
+        <source>Address</source>
+        <target>Adres</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.zipcode" datatype="html">
+        <source>Zipcode</source>
+        <target>Postcode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.city" datatype="html">
+        <source>City</source>
+        <target>Plaats</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.birthDate" datatype="html">
+        <source>Date of birth</source>
+        <target>Geboortedatum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.arrival" datatype="html">
+        <source>Arrival</source>
+        <target>Aankomsttijd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.arrival.placeholder" datatype="html">
+        <source>Time the employee usually arrives at work</source>
+        <target>Tijd dat de medewerker gewoonlijk op het werk verschijnt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="submit" datatype="html">
+        <source>Submit</source>
+        <target>Opslaan</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-form/employee-form.component.html</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.list" datatype="html">
+        <source>Employee List</source>
+        <target>Lijst van medewerkers</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.create" datatype="html">
+        <source>
+Create
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.label" datatype="html">
+        <source>Label</source>
+        <target>Naam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="show" datatype="html">
+        <source>Show <x id="INTERPOLATION" equiv-text="{{item[&quot;@id&quot;]}}"/></source>
+        <target>Toon <x id="INTERPOLATION" equiv-text="label"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="edit" datatype="html">
+        <source>Edit</source>
+        <target>Bewerk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="employee.show" datatype="html">
-        <source>Show <x id="INTERPOLATION" equiv-text="label"/></source>
+        <source>Show <x id="INTERPOLATION" equiv-text="{{item[&quot;@id&quot;]}}"/></source>
         <target>Toon <x id="INTERPOLATION" equiv-text="label"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
@@ -26,102 +268,6 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="employee.firstName" datatype="html">
-        <source>firstName</source>
-        <target>Voornaam</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.lastName" datatype="html">
-        <source>lastName</source>
-        <target>Achternaam</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.job" datatype="html">
-        <source>job</source>
-        <target>Functie</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.address" datatype="html">
-        <source>address</source>
-        <target>Adres</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.zipcode" datatype="html">
-        <source>zipcode</source>
-        <target>Postcode</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.city" datatype="html">
-        <source>city</source>
-        <target>Plaats</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.birthDate" datatype="html">
-        <source>birthDate</source>
-        <target>Geboortedatum</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.arrival" datatype="html">
-        <source>arrival</source>
-        <target>Aankomsttijd</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="employee.label" datatype="html">
-        <source>label</source>
-        <target>Naam</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="show" datatype="html">
-        <source>Show <x id="INTERPOLATION" equiv-text="label"/></source>
-        <target>Toon <x id="INTERPOLATION" equiv-text="label"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-list/employee-list.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="create" datatype="html">
-        <source> Create </source>
-        <target>Maak nieuwe</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-list/employee-lsit.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="edit" datatype="html">
-        <source>Edit</source>
-        <target>Bewerk</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="delete" datatype="html">
         <source> Delete </source>
         <target>Verwijder</target>
@@ -129,13 +275,620 @@
           <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
           <context context-type="linenumber">53,55</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="backToList" datatype="html">
-        <source> Back to list</source>
-        <target>Lijst</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.html</context>
-          <context context-type="linenumber">57,59</context>
+          <context context-type="sourcefile">src/app/employee/employee-update/employee-update.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.delete.confirm" datatype="html">
+        <source>Are you sure you want to delete this Employee?</source>
+        <target>"Weet u zeker dat u deze medewerker wilt verwijderen?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-show/employee-show.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-update/employee-update.component.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.update" datatype="html">
+        <source>Edit <x id="INTERPOLATION" equiv-text="{{item[&quot;@id&quot;]}}"/> </source>
+        <target>Bewerk <x id="INTERPOLATION" equiv-text="{{item[&quot;@id&quot;]}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee-update/employee-update.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="employee.item" datatype="html">
+        <source>Employee</source>
+        <target>Medewerker</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/employee/employee.service.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="violationMessage" datatype="html">
+        <source><x id="PH" equiv-text="violation.propertyPath"/> invalid: <x id="PH_1" equiv-text="violation.message"/></source>
+        <target><x id="PH" equiv-text="violation.propertyPath"/> ongeldig: <x id="PH_1" equiv-text="violation.message"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item-form.controller.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.updated" datatype="html">
+        <source><x id="PH" equiv-text="this.typeName"/> <x id="PH_1" equiv-text="label"/> updated</source>
+        <target><x id="PH" equiv-text="this.typeName"/> <x id="PH_1" equiv-text="label"/> is gewijzigd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.added" datatype="html">
+        <source>Added <x id="PH" equiv-text="this.typeName"/> <x id="PH_1" equiv-text="label"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.deleted" datatype="html">
+        <source><x id="PH" equiv-text="this.typeName"/> <x id="PH_1" equiv-text="label"/> deleted</source>
+        <target><x id="PH" equiv-text="this.typeName"/> <x id="PH_1" equiv-text="label"/> is verwijderd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.service.error" datatype="html">
+        <source><x id="PH" equiv-text="label"/> <x id="PH_1" equiv-text="quotedId"/> failed: <x id="PH_2" equiv-text="statusText"/></source>
+        <target><x id="PH" equiv-text="label"/> <x id="PH_1" equiv-text="quotedId"/> mislukt: <x id="PH_2" equiv-text="statusText"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.service.operation.getList" datatype="html">
+        <source>Getting <x id="PH" equiv-text="this.typeName"/> list</source>
+        <target>Laden <x id="PH" equiv-text="this.typeName"/> lijst</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.service.operation.getItem" datatype="html">
+        <source>Getting <x id="PH" equiv-text="this.typeName"/></source>
+        <target>Laden <x id="PH" equiv-text="this.typeName"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.service.operation.updateItem" datatype="html">
+        <source>Updating <x id="PH" equiv-text="this.typeName"/></source>
+        <target>Wijzigen <x id="PH" equiv-text="this.typeName"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.service.operation.addItem" datatype="html">
+        <source>Adding <x id="PH" equiv-text="this.typeName"/></source>
+        <target>Toevoegen <x id="PH" equiv-text="this.typeName"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="item.service.operation.deleteItem" datatype="html">
+        <source>Deleting <x id="PH" equiv-text="this.typeName"/></source>
+        <target>Verwijderen <x id="PH" equiv-text="this.typeName"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.400" datatype="html">
+        <source>Bad Request</source>
+        <target>Kan opdracht niet interpreteren</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.401" datatype="html">
+        <source>Unauthorized</source>
+        <target>Niet toegestaan</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.402" datatype="html">
+        <source>Payment Required</source>
+        <target>Betaling vereist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.403" datatype="html">
+        <source>Forbidden</source>
+        <target>Verboden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.404" datatype="html">
+        <source>Not Found</source>
+        <target>Niet gevonden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.405" datatype="html">
+        <source>Method Not Allowed</source>
+        <target>Methode niet toegestaan</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.500" datatype="html">
+        <source>Internal Server Error</source>
+        <target>Interne serverfout</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.501" datatype="html">
+        <source>Not Implemented</source>
+        <target>Niet geïmplementeerd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.502" datatype="html">
+        <source>Bad Gateway</source>
+        <target>Slechte toegangspoort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.503" datatype="html">
+        <source>Service Unavailable</source>
+        <target>Dienst niet beschikbaar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.504" datatype="html">
+        <source>Gateway Timeout</source>
+        <target>Toegangspoort: verwerking duurde te lang</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.505" datatype="html">
+        <source>HTTP Version Not Supported</source>
+        <target>HTTP versie niet ondersteund</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.100" datatype="html">
+        <source>Continue</source>
+        <target>Ga door</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.101" datatype="html">
+        <source>Switching Protocols</source>
+        <target>Protocollen omschakelen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.102" datatype="html">
+        <source>Processing</source>
+        <target>Bezig met verwerken</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.103" datatype="html">
+        <source>Early Hints</source>
+        <target>Vroege hints</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.200" datatype="html">
+        <source>OK</source>
+        <target>OK</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.201" datatype="html">
+        <source>Created</source>
+        <target>Aangemaakt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.202" datatype="html">
+        <source>Accepted</source>
+        <target>Geaccepteerd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.203" datatype="html">
+        <source>Non-Authoritative Information</source>
+        <target>Non-Authoritative Information</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.204" datatype="html">
+        <source>No Content</source>
+        <target>Geen inhoud</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.205" datatype="html">
+        <source>Reset Content</source>
+        <target>Teruggezette inhoud</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.206" datatype="html">
+        <source>Partial Content</source>
+        <target>Gedeeltelijke inhoud</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.207" datatype="html">
+        <source>Multi-Status</source>
+        <target>Meerdere statussen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.208" datatype="html">
+        <source>Already Reported</source>
+        <target>Al gemeld</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.209" datatype="html">
+        <source>IM Used</source>
+        <target>In gebruik</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.300" datatype="html">
+        <source>Multiple Choices</source>
+        <target>Meerdere keuzes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.301" datatype="html">
+        <source>Moved Permanently</source>
+        <target>Permanent verplaatst</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.302" datatype="html">
+        <source>Found</source>
+        <target>Gevonden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.303" datatype="html">
+        <source>See Other</source>
+        <target>Zie andere</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.304" datatype="html">
+        <source>Not Modified</source>
+        <target>Niet gewijzigd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.305" datatype="html">
+        <source>Use Proxy</source>
+        <target>Gebruik proxy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.307" datatype="html">
+        <source>Temporary Redirect</source>
+        <target>Tijdelijke verwijzing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.308" datatype="html">
+        <source>Permanent Redirect</source>
+        <target>Permanente verwijzing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.406" datatype="html">
+        <source>Not Acceptable</source>
+        <target>Niet acceptabel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.407" datatype="html">
+        <source>Proxy Authentication Required</source>
+        <target>Proxy identificatie vereist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.408" datatype="html">
+        <source>Request Timeout</source>
+        <target>Verwerking duurt te lang</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.409" datatype="html">
+        <source>Conflict</source>
+        <target>Conflict</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.410" datatype="html">
+        <source>Gone</source>
+        <target>Weg</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.411" datatype="html">
+        <source>Length Required</source>
+        <target>Lengte vereist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.412" datatype="html">
+        <source>Precondition Failed</source>
+        <target>Niet voldaan aan voorwaarde</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.413" datatype="html">
+        <source>Content Too Large</source>
+        <target>Inhoud te lang</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.414" datatype="html">
+        <source>URI Too Long</source>
+        <target>URI te lang</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.415" datatype="html">
+        <source>Unsupported Media Type</source>
+        <target>Mediatype niet ondersteund</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.416" datatype="html">
+        <source>Range Not Satisfiable</source>
+        <target>Kan niet voldoen aan range</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.417" datatype="html">
+        <source>Expectation Failed</source>
+        <target>Verwachting klopt niet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.418" datatype="html">
+        <source>I&apos;m a teapot</source>
+        <target>Ik ben een theepot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.421" datatype="html">
+        <source>Misdirected Request</source>
+        <target>Verzoek is verkeerd gericht</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.422" datatype="html">
+        <source>Unprocessable Content</source>
+        <target>Onverwerkbare inhoud</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.423" datatype="html">
+        <source>Locked</source>
+        <target>Op slot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.424" datatype="html">
+        <source>Failed Dependency</source>
+        <target>Onvervulde afhankelijkheid</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.425" datatype="html">
+        <source>Too Early</source>
+        <target>Te vroeg</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.426" datatype="html">
+        <source>Upgrade Required</source>
+        <target>Opwaardering vereist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.428" datatype="html">
+        <source>Precondition Required</source>
+        <target>Voorwaarde vereist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.429" datatype="html">
+        <source>Too Many Requests</source>
+        <target>Te veel opdrachten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.431" datatype="html">
+        <source>Request Header Fields Too Large</source>
+        <target>Opdrachtkop velden te groot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.451" datatype="html">
+        <source>Unavailable For Legal Reasons</source>
+        <target>Om juridische redenen niet beschikbaar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.506" datatype="html">
+        <source>Variant Also Negotiates</source>
+        <target>Variant onderhandelt ook</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.507" datatype="html">
+        <source>Insufficient Storage</source>
+        <target>Onvoldoende opslagcapaciteit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.508" datatype="html">
+        <source>Loop Detected</source>
+        <target>Lus gedetecteerd</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.510" datatype="html">
+        <source>Not Extended</source>
+        <target>Niet uitgebreid</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.511" datatype="html">
+        <source>Network Authentication Required</source>
+        <target>Netwerk identificatie vereist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="http.status.unknown" datatype="html">
+        <source>Unknown http status code: <x id="PH" equiv-text="statusCode"/></source>
+        <target>Onbekende statuscode: <x id="PH" equiv-text="statusCode"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/item.service.ts</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
     </body>

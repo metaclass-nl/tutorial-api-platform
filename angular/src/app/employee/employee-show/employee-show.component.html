@@ -9,39 +9,39 @@
     </thead>
     <tbody>
       <tr>
-        <th scope="row" i18n="@@employee.firstName">firstName</th>
+        <th scope="row" i18n="@@employee.firstName">First Name</th>
         <td>{{item["firstName"]}}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.lastName">lastName</th>
+        <th scope="row" i18n="@@employee.lastName">Last Name</th>
         <td>{{item["lastName"]}}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.job">job</th>
+        <th scope="row" i18n="@@employee.job">Job</th>
         <td>{{item["job"]}}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.address">address</th>
+        <th scope="row" i18n="@@employee.address">Address</th>
         <td>{{item["address"]}}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.zipcode">zipcode</th>
+        <th scope="row" i18n="@@employee.zipcode">Zipcode</th>
         <td>{{item["zipcode"]}}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.city">city</th>
+        <th scope="row" i18n="@@employee.city">City</th>
         <td>{{item["city"]}}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.birthDate">birthDate</th>
-        <td>{{item["birthDate"] | date }}</td>
+        <th scope="row" i18n="@@employee.birthDate">Date of birth</th>
+        <td>{{item["birthDate"] | localDate }}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.arrival">arrival</th>
-        <td>{{item["arrival"] | date: 'shortTime' }}</td>
+        <th scope="row" i18n="@@employee.arrival">Arrival</th>
+        <td>{{item["arrival"] | localTime }}</td>
       </tr>
       <tr>
-        <th scope="row" i18n="@@employee.label">label</th>
+        <th scope="row" i18n="@@employee.label">Label</th>
         <td>{{item["label"]}}</td>
       </tr>
     </tbody>

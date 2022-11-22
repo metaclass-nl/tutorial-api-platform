@@ -20,7 +20,7 @@ import { EmployeeModule} from "./employee/employee.module";
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    EmployeeModule,
+    EmployeeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

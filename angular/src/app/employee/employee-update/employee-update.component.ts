@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../employee.service';
 import { Employee } from "../employee";
@@ -9,7 +9,7 @@ import {MessageService} from "../../shared/message/message.service";
   templateUrl: './employee-update.component.html',
   styleUrls: ['./employee-update.component.css']
 })
-export class EmployeeUpdateComponent implements OnInit {
+export class EmployeeUpdateComponent implements OnInit, OnDestroy {
 
   item?: Employee;
   private clearMessagesOnDistroy = true;
@@ -39,7 +39,7 @@ export class EmployeeUpdateComponent implements OnInit {
   }
 
   delete(item: Employee): void {
-    if (!window.confirm("Are you sure you want to delete this item?"))
+    if (!window.confirm($localize `:@@employee.delete.confirm:Are you sure you want to delete this Employee?`))
       return;
 
     this.messageService.clear();

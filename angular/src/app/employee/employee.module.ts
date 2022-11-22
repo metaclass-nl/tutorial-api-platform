@@ -8,6 +8,8 @@ import { EmployeeListComponent } from "./employee-list/employee-list.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from '../app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LocalDate, LocalTime } from '../shared/localization.pipes';
+import {EmployeeService} from "./employee.service";
 
 @NgModule({
   declarations: [
@@ -16,12 +18,17 @@ import { ReactiveFormsModule } from '@angular/forms';
     EmployeeCreateComponent,
     EmployeeUpdateComponent,
     EmployeeFormComponent,
+    LocalDate,
+    LocalTime,
   ],
   imports: [
     CommonModule,
     FontAwesomeModule,
     AppRoutingModule,
     ReactiveFormsModule,
+  ],
+  providers: [
+    EmployeeService
   ]
 })
 export class EmployeeModule { }

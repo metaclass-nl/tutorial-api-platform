@@ -27,19 +27,14 @@ Finally apply the DataFixtures by:
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
 
-Under Construction
-------------------
+Example only
+------------
 
-This branch will contain a localized and internationalized version of the chapter1 app for angular.io.
-Currently only the employee-show and -list components are translated and localized.
-Development uses locale nl.
+This branch contains a localized and internationalized version of the chapter1 client 
+for angular.io as an example. Development uses locale nl.
 Angulars production apps become available after build and then restart of docker-compose
 under https://localhost/angular/
 
-To do: -update, -create and form. The form inputs need localized data in a specific format
-(yet to investigate).
+Components have been generalized for communication with the api and form handling.
 
-Code from chapter2-angular is may be added and localized and internationalized later.
-
-Later the code itself may be replaced by step by step instructions in this readme 
-for developing or generating the client. 
+There are no step by step instructions in this readme for developing or generating the client.

@@ -1,5 +1,6 @@
-export class Employee {
-  public "@id"?: string;
+import {Item} from "../shared/item";
+
+export class Employee extends Item {
 
   constructor(
     _id?: string,
@@ -11,8 +12,8 @@ export class Employee {
     public city?: string,
     public birthDate?: string,
     public arrival?: string,
-    public label?: string
+    label?: string
   ) {
-    this["@id"] = _id;
+    super(_id, label);
   }
 }

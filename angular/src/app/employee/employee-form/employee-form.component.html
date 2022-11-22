@@ -1,18 +1,19 @@
-<p>Form Status: {{ employeeForm.status }}</p>
-<form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="edit">
+<!-- Form Status: {{ itemForm.status }} -->
+<form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="edit">
   <div class="form-group">
-    <label for="first-name" class="form-control-label">First Name</label>
+    <label for="first-name" class="form-control-label" i18n="@@employee.firstName">First Name</label>
     <input id="first-name" type="text" formControlName="firstName" class="form-control">
     <div *ngIf="controls.firstName.errors?.['fromServer']" class="text-danger">
       {{controls.firstName.errors?.['fromServer']}}
     </div>
   </div>
   <div class="form-group">
-    <label for="last-name" class="form-control-label">Last Name *</label>
+    <label for="last-name" class="form-control-label" i18n="@@employee.lastName">Last Name</label>
+
     <input id="last-name" type="text" formControlName="lastName" class="form-control" required>
     <div *ngIf="shouldShowErrors(controls.lastName)"
          class="text-danger">
-      <div *ngIf="controls.lastName.errors?.['required']">
+      <div *ngIf="controls.lastName.errors?.['required']" i18n="@@form.value.required">
         This value is required
       </div>
      </div>
@@ -22,10 +23,10 @@
   </div>
 
   <div class="form-group">
-    <label for="job" class="form-control-label">Job *</label>
+    <label for="job" class="form-control-label" i18n="@@employee.job">Job</label>
     <input id="job" type="text" formControlName="job" class="form-control">
     <div *ngIf="shouldShowErrors(controls.job)" class="text-danger">
-      <div *ngIf="controls.job.errors?.['required']">
+      <div *ngIf="controls.job.errors?.['required']" i18n="@@form.value.required">
         This value is required
       </div>
       <div *ngIf="controls.job.errors?.['fromServer']">
@@ -34,10 +35,10 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="address" class="form-control-label">Address *</label>
+    <label for="address" class="form-control-label" i18n="@@employee.address">Address</label>
     <input id="address" type="text" formControlName="address" class="form-control">
     <div *ngIf="shouldShowErrors(controls.address)" class="text-danger">
-      <div *ngIf="controls.address.errors?.['required']">
+      <div *ngIf="controls.address.errors?.['required']" i18n="@@form.value.required">
         This value is required
       </div>
       <div *ngIf="controls.address.errors?.['fromServer']">
@@ -46,17 +47,17 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="zipcode" class="form-control-label">Zipcode</label>
+    <label for="zipcode" class="form-control-label" i18n="@@employee.zipcode">Zipcode</label>
     <input id="zipcode" type="text" formControlName="zipcode" class="form-control">
     <div *ngIf="controls.zipcode.errors?.['fromServer']" class="text-danger">
       {{controls.zipcode.errors?.['fromServer']}}
     </div>
   </div>
   <div class="form-group">
-    <label for="city" class="form-control-label">City *</label>
+    <label for="city" class="form-control-label" i18n="@@employee.city">City</label>
     <input id="city" type="text" formControlName="city" class="form-control">
     <div *ngIf="shouldShowErrors(controls.city)" class="text-danger">
-      <div *ngIf="controls.city.errors?.['required']">
+      <div *ngIf="controls.city.errors?.['required']" i18n="@@form.value.required">
         This value is required
       </div>
       <div *ngIf="controls.city.errors?.['fromServer']">
@@ -65,10 +66,10 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="birthDate" class="form-control-label">Date of birth *</label>
-    <input id="birthDate" type="text" formControlName="birthDate" class="form-control">
+    <label for="birthDate" class="form-control-label" i18n="@@employee.birthDate">Date of birth</label>
+    <input id="birthDate" type="date" formControlName="birthDate" class="form-control">
     <div *ngIf="shouldShowErrors(controls.birthDate)" class="text-danger">
-      <div *ngIf="controls.birthDate.errors?.['required']">
+      <div *ngIf="controls.birthDate.errors?.['required']" i18n="@@form.value.required">
         This value is required
       </div>
       <div *ngIf="controls.birthDate.errors?.['fromServer']">
@@ -77,12 +78,12 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="arrival" class="form-control-label">Arrival</label>
-    <input id="arrival" type="text" formControlName="arrival" class="form-control" placeholder="Time the employee usually arrives at work">
+    <label for="arrival" class="form-control-label" i18n="@@employee.arrival">Arrival</label>
+    <input id="arrival" type="time" formControlName="arrival" class="form-control" i18n-placeholder="@@employee.arrival.placeholder" placeholder="Time the employee usually arrives at work">
     <div *ngIf="controls.arrival.errors?.['fromServer']" class="text-danger">
       {{controls.arrival.errors?.['fromServer']}}
     </div>
   </div>
 
-  <button type="submit" [disabled]="!employeeForm.valid" class="btn btn-success">Submit</button>
+  <button type="submit" [disabled]="!itemForm.valid" class="btn btn-success" i18n="@@submit">Submit</button>
 </form>
