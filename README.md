@@ -33,10 +33,9 @@ Finally apply the DataFixtures by:
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
 
-Under Construction
-------------------
+Example only
+------------
 
-This branch contains is a complete working version of the chapter1 app for angular.io. 
+This branch contains the chapter1 client for angular.io as an example, there are no step by step instructions in this readme
+for developing or generating the client.
 
-Later the code itself will be replaced by step by step instructions in this readme 
-for developing or generating the client. 
