@@ -84,7 +84,7 @@ so that you can see the differences right away. For example:
 git diff origin/chapter2-next ./pwa
 ```
 will compare your own version with code one of chapter2-next. You may also extend the path
-to a folder of file to make the diff more specific. There may be some differences because the 
+to a folder of file to make the diff more specific. There may also be differences because the 
 client generator is under development and you may have used a newer version then the 
 one used when the tutorial was made.
 
