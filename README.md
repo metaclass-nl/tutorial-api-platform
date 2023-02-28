@@ -40,7 +40,7 @@ It also contains examples of an angular client for [chapter1](https://github.com
 
 Required knowledge
 ------------------
-- maybe docker and docker-compose
+- maybe docker and docker compose
 APi branches:
 - PHP 7 or 8
 - Symfony 5
@@ -64,7 +64,7 @@ Requirements
 ------------
 The master branch that was checked out when cloning the repository contains
 an allmost unmodified (1) Api Platform Distribution. You need [Docker](https://docs.docker.com/install/) 
-(recent version with docker-compose) to run it. On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/)
+(recent version with docker compose) to run it. On Mac, only [Docker for Mac](https://docs.docker.com/docker-for-mac/)
  is supported. Similarly, on Windows, only [Docker for Windows](https://docs.docker.com/docker-for-windows/) is supported. 
  Docker Machine is not supported out of the box.
  
@@ -86,8 +86,8 @@ You may test the installation following the [instructions on the api platform we
 Just skip the part about downloading and extracting the .tar.gz file and go straight to:
 ```shell
 cd tutorial-api-platform
-docker-compose pull # Download the latest versions of the pre-built images
-docker-compose up -d # Running in detached mode
+docker compose pull # Download the latest versions of the pre-built images
+docker compose up 
 ```
 
 As we did not install using Symfony Flex and Composer you can skip that section 
@@ -106,26 +106,26 @@ select it in your browser as well, etc. Then follows chapter2-api, chapter2-reac
 If you only want to do the api branches you can skip the client ones.  
 
 But you can start with any branch by checking it out and following its instructions.
-However, if you skip a chapter you need to restart docker-compose
+However, if you skip a chapter you need to restart docker compose
 to apply the migrations. Then apply the DataFixtures by:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```                     
-For a next branch you may also need to update yarn:
+For a next branch you may also need to update pnpm:
 ```shell
-docker-compose exec pwa yarn install
+docker compose exec pwa pnpm install
 ```                     
-Wait for yarn or npm to complete, then (for next replace client by pwa):
+Wait for yarn or pnpm to complete, then (for next replace client by pwa):
 ```shell
-docker-compose exec pwa yarn update
+docker compose exec pwa pnpm update
 ```         
 For a react branch you may also need to update npm:
 ```shell
-docker-compose exec pwa npm install
+docker compose exec pwa npm install
 ```
 Wait for yarn or npm to complete, then:
 ```shell
-docker-compose exec client npm update
+docker compose exec client npm update
 ```  
 With chapter 4 react/next and higher if you still get an error on missing react-intl, 
 you may need to add react-intl
