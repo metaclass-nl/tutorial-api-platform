@@ -9,10 +9,10 @@ This chapter adds an entity class Hours that has an n to 1 relation with Employe
 Entity<a name="Entity"></a>
 ------
 Before you add the Entity class 'Hours', make sure the database schema is in sync.
-When you do docker-compose up migrations are executed automatically, but
+When you do docker compose up migrations are executed automatically, but
 you can explicitly execute those that are not yet executed:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
+docker compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
 Then add the Entity class 'Hours' by copying the
@@ -250,12 +250,12 @@ And of course the corresponding methods:
 
 Now you have the new entity class you can generate a database migration:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:diff
+docker compose exec php ./bin/console doctrine:migrations:diff
 ```
 
 And execute it by:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
+docker compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
 To test the new Hours class point your browser at https://localhost/docs.
@@ -490,7 +490,7 @@ class HoursFixtures extends Fixture implements DependentFixtureInterface
 
 To clear the database and execute the fixtures enter the following command:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```
 Say yes to "Careful, database "api" will be purged. Do you want to continue?"
 (You will loose all data in the database of your api-platform install).
