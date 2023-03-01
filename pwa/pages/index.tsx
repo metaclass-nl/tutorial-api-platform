@@ -6,7 +6,6 @@ const Welcome = () => {
   const router = useRouter();
 
   const adminClicked = () => {
-    alert('The Admin only works if the API has at least one Entity');
     router.push("/admin");
   }
 
