@@ -14,7 +14,7 @@ This chapter adds the user interface for an entity class Employee.
 
 More information on installing and running the tutorial see [the main branch]( https://github.com/metaclass-nl/tutorial-api-platform).
 
-In order to activate the new angular container you need to check out this branch and restart docker-compose.
+In order to activate the new angular container you need to check out this branch and restart docker compose.
 To test it point your browser to https://localhost/. Once you made the 
 security exception for the self signed https certificate you should see the
 welcome screen with title "Tutorial API Platform". Click on "Angular Web App"
@@ -25,12 +25,12 @@ yourself, you do need to go back to branch chapter1-api and apply
 the instuction to add  the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
 You can install it from the command line:
 ```shell
-docker-compose exec php composer req --dev orm-fixtures
+docker compose exec php composer req --dev orm-fixtures
 ```
-After switching back to this branch restart docker-compose to apply the migrations.
+After switching back to this branch restart docker compose to apply the migrations.
 Finally apply the DataFixtures by:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```
 
 Example only
