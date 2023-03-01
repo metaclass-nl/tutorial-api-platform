@@ -10,7 +10,7 @@ The environment is the same as in the chapter1-api branche, except:
   of the client container. Probably only works in development mode;
 - instructions from README.md of chapter1-api where applied.
 
-In order to activate the new client container you need to restart docker-compose. 
+In order to activate the new client container you need to restart docker compose. 
 To test it point your browser to https://localhost/. You should see the 
 welcome screen with title "Tutorial API Platform".
 
@@ -19,12 +19,12 @@ yourself, you do need to go back to branch chapter1-api and apply
 the instruction to add  the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
 You can install it from the command line:
 ```shell
-docker-compose exec php composer req --dev orm-fixtures
+docker compose exec php composer req --dev orm-fixtures
 ```
-After switching back to this branch restart docker-compose to apply the migrations.
+After switching back to this branch restart docker compose to apply the migrations.
 Finally apply the DataFixtures by:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```
 
 
@@ -34,7 +34,7 @@ To scaffold (generate code) files for the client for the new Employee class, you
 type at the command prompt: 
 
 ```shell
-docker-compose exec client generate-api-platform-client --generator react
+docker compose exec client generate-api-platform-client --generator react
 ```
 
 Please take a look at at least one of the action files and one of the reducer files
