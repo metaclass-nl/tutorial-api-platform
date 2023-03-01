@@ -4,7 +4,7 @@ Chapter 1: Employee base
 The environment is te same as in the main branche, except:
 - Entity Greetings was removed
 - A migration was added to adjust the database
-- Switched off mercure to avoid it's viral agpl license
+- Switched off mercure to avoid it's viral agpl license, switched off next telemetry
 - New welcome page (pwa/pages/index.tsx)
 
 This chapter adds an entity class Employee.
@@ -13,10 +13,10 @@ Entity<a name="Entity"></a>
 ------
 Your first task is to add the Entity class 'Employee', but before you do so,
 make sure the database schema is in sync.
-When you do docker-compose up migrations are executed automatically, but
+When you do docker compose up migrations are executed automatically, but
 you can explicitly execute those that are not yet executed:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
+docker compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
 Then add the Entity class 'Employee' by copying the
@@ -281,12 +281,12 @@ a default ordering for Employee by lastName, undersorting by firstName.
 
 Now you have the new entity class you can generate a database migration:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:diff
+docker compose exec php ./bin/console doctrine:migrations:diff
 ```
 
 And execute it by:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
+docker compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
 To test the new Entity class point your browser at https://localhost/docs.
@@ -320,7 +320,7 @@ Fixtures<a name="Fixtures"></a>
 To add data we will use the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
 You can install it from the command line:
 ```shell
-docker-compose exec php composer req --dev orm-fixtures
+docker compose exec php composer req --dev orm-fixtures
 ```
 
 Create a new file api/src/DataFixtures/EmployeeFixtures.php.
@@ -404,7 +404,7 @@ class EmployeeFixtures extends Fixture
 
 To clear the database and execute the fixtures enter the following command:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```
 Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
 (You will loose all data in the database of your api-platform install).
@@ -423,6 +423,6 @@ git diff origin/chapter2-api ./api/src/Entity/Employee.php
 will compare your own version of ./api/src/Entity/Employee.php with
 the one of chapter2-api.
 
-After committing your changes check out branch chapter1-react or chapter1-next and restart docker-compose.
+After committing your changes check out branch chapter1-react or chapter1-next and restart docker compose.
 Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter1-react)
 and follow the instructions. Or if you only follow the api branches chapter2-api.
