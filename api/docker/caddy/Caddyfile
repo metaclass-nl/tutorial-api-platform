@@ -1,12 +1,6 @@
 {
     # Debug
-    {$DEBUG}
-    # HTTP/3 support
-    servers {
-        protocol {
-            experimental_http3
-        }
-    }
+    {$CADDY_DEBUG}
 }
 
 {$SERVER_NAME}
@@ -16,17 +10,16 @@ log
 # Matches requests for HTML documents, for static files and for Next.js files,
 # except for known API paths and paths with extensions handled by API Platform
 @pwa expression `(
-        {header.Accept}.matches("\\btext/html\\b")
-        && !{path}.matches("(?i)(?:^/docs|^/graphql|^/bundles/|^/_profiler|^/_wdt|\\.(?:json|html$|csv$|ya?ml$|xml$))")
+        header({'Accept': '*text/html*'})
+        && !path(
+            '/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
+            '*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
+        )
     )
-    || {path} == "/favicon.ico"
-    || {path} == "/manifest.json"
-    || {path} == "/robots.txt"
-    || {path}.startsWith("/_next")
-    || {path}.startsWith("/sitemap")`
+    || path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
 
 route {
-    root * /srv/api/public
+    root * /srv/app/public
     mercure {
         # Transport to use (default to Bolt)
         transport_url {$MERCURE_TRANSPORT_URL:bolt:///data/mercure.db}
@@ -42,12 +35,11 @@ route {
         {$MERCURE_EXTRA_DIRECTIVES}
     }
     vulcain
-    push
 
     # Add links to the API docs and to the Mercure Hub if not set explicitly (e.g. the PWA)
     header ?Link `</docs.jsonld>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation", </.well-known/mercure>; rel="mercure"`
-    # Disable Google FLOC tracking if not enabled explicitly: https://plausible.io/blog/google-floc
-    header ?Permissions-Policy "interest-cohort=()"
+    # Disable Topics tracking if not enabled explicitly: https://github.com/jkarlin/topics
+    header ?Permissions-Policy "browsing-topics=()"
 
     # Comment the following line if you don't want Next.js to catch requests for HTML documents.
     # In this case, they will be handled by the PHP app.
