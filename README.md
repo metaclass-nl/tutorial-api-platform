@@ -14,7 +14,7 @@ To scaffold (generate code) files for the client for the new Employee class, you
 type at the command prompt:
 
 ```shell
-docker compose exec pwa generate-api-platform-client --generator next
+docker compose exec pwa pnpm create @api-platform/client -g next
 ```
 
 You will see the files that are generated are similar to those that where in chapter 1,
