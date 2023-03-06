@@ -37,7 +37,7 @@ const Welcome = () => {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter1-next/README.md"
+              href="https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter2-next/README.md"
               className="main__button"
             >
               Get started<Arrow/>
