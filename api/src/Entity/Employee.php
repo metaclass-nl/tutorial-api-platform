@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\ApiProperty;
 
 /**
  * Class defining entities with data about an Employees
@@ -84,12 +85,14 @@ class Employee
      */
     #[ORM\Column (type:"date")]
     #[Assert\NotNull]
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#date'])]
     private $birthDate;
 
     /**
      * @var \DateTime Time the employee usually arrives at work
      */
     #[ORM\Column (type:"time", nullable:true)]
+    #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#time'])]
     private $arrival;
 
     /**
