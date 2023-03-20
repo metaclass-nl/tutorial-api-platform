@@ -228,5 +228,5 @@ will compare your own version with code one of chapter5-api. You may also add th
 to a folder of file to make the diff more specific.
 
 After committing your changes you may check out branch [chapter4-react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react) or [chapter4-next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-next),
-restart docker-compose and click the link to point your browser to the same branch on github and follow the instructions.
+restart docker compose and click the link to point your browser to the same branch on github and follow the instructions.
 Or if you only follow the api branches [chapter5-api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-api).
