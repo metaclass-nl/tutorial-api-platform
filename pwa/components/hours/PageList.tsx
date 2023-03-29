@@ -6,28 +6,27 @@ import { useQuery } from "react-query";
 import Pagination from "../common/Pagination";
 import { List } from "./List";
 import { PagedCollection } from "../../types/collection";
-import { Employee } from "../../types/Employee";
+import { Hours } from "../../types/Hours";
 import { fetch, FetchResponse, parsePage } from "../../utils/dataAccess";
 import { useMercure } from "../../utils/mercure";
 
 import Navigation from "../Navigation";
 
-export const getEmployeesPath = (page?: string | string[] | undefined) =>
-  `/employees${typeof page === "string" ? `?page=${page}` : ""}`;
-export const getEmployees =
-  (page?: string | string[] | undefined) => async () =>
-    await fetch<PagedCollection<Employee>>(getEmployeesPath(page));
+export const getHourssPath = (page?: string | string[] | undefined) =>
+  `/hours${typeof page === "string" ? `?page=${page}` : ""}`;
+export const getHourss = (page?: string | string[] | undefined) => async () =>
+  await fetch<PagedCollection<Hours>>(getHourssPath(page));
 const getPagePath = (path: string) =>
-  `/employees/page/${parsePage("employees", path)}`;
+  `/hourss/page/${parsePage("hours", path)}`;
 
 export const PageList: NextComponentType<NextPageContext> = () => {
   const {
     query: { page },
   } = useRouter();
-  const { data: { data: employees, hubURL } = { hubURL: null } } = useQuery<
-    FetchResponse<PagedCollection<Employee>> | undefined
-  >(getEmployeesPath(page), getEmployees(page));
-  const collection = useMercure(employees, hubURL);
+  const { data: { data: hourss, hubURL } = { hubURL: null } } = useQuery<
+    FetchResponse<PagedCollection<Hours>> | undefined
+  >(getHourssPath(page), getHourss(page));
+  const collection = useMercure(hourss, hubURL);
 
   if (!collection || !collection["hydra:member"]) return null;
 
@@ -36,10 +35,10 @@ export const PageList: NextComponentType<NextPageContext> = () => {
       <Navigation/>
       <div>
         <Head>
-          <title>Employee List</title>
+          <title>Hours List</title>
         </Head>
       </div>
-      <List employees={collection["hydra:member"]} />
+      <List hourss={collection["hydra:member"]} />
       <Pagination collection={collection} getPagePath={getPagePath} />
     </div>
   );
