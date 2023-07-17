@@ -6,6 +6,9 @@ import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
 import { Hours } from "../../types/Hours";
+import * as inputLoc from "../../utils/inputLocalization";
+import { FormattedMessage, useIntl } from "react-intl";
+import FormRow from "../common/FormRow";
 
 interface Props {
   hours?: Hours;
@@ -29,7 +32,8 @@ const deleteHours = async (id: string) =>
   await fetch<Hours>(id, { method: "DELETE" });
 
 export const Form: FunctionComponent<Props> = ({ hours }) => {
-  const [, setError] = useState<string | null>(null);
+  const intl = useIntl();
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const saveMutation = useMutation<
@@ -47,14 +51,30 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
       router.push("/hourss");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(
+        intl.formatMessage(
+          {
+            id: "hours.delete.error",
+            defaultMessage: "Error when deleting the Hours: {error}.",
+          },
+          { error: error.message }
+        )
+      );
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!hours || !hours["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (
+      !window.confirm(
+        intl.formatMessage({
+          id: "hours.delete.confirm",
+          defaultMessage: "Are you sure you want to delete this item?",
+        })
+      )
+    )
+      return;
     deleteMutation.mutate({ id: hours["@id"] });
   };
 
@@ -64,10 +84,19 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
         href="/hourss"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {"< "}
+        <FormattedMessage id="backToList" defaultMessage="Back to list" />
       </Link>
       <h1 className="text-3xl my-2">
-        {hours ? `Edit Hours ${hours["@id"]}` : `Create Hours`}
+        {hours
+          ? intl.formatMessage(
+              { id: "hours.update", defaultMessage: "Edit {label}" },
+              { label: hours["@id"] }
+            )
+          : intl.formatMessage({
+              id: "hours.new",
+              defaultMessage: "Create Hours",
+            })}
       </h1>
       <Formik
         initialValues={
@@ -90,7 +119,21 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: isCreation
+                    ? intl.formatMessage(
+                        {
+                          id: "hours.created",
+                          defaultMessage: "Element created",
+                        },
+                        { label: "Hours" }
+                      )
+                    : intl.formatMessage(
+                        {
+                          id: "hours.updated",
+                          defaultMessage: "Element updated",
+                        },
+                        { label: values["@id"] }
+                      ),
                 });
                 router.push("/hourss");
               },
@@ -121,207 +164,86 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
           isSubmitting,
         }) => (
           <form className="shadow-md p-4" onSubmit={handleSubmit}>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_nHours"
-              >
-                nHours
-              </label>
-              <input
-                name="nHours"
-                id="hours_nHours"
-                value={values.nHours ?? ""}
-                type="number"
-                step="0.1"
-                placeholder="number of hours"
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.nHours && touched.nHours ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.nHours && touched.nHours ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="nHours"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_start"
-              >
-                start
-              </label>
-              <input
-                name="start"
-                id="hours_start"
-                value={values.start?.toLocaleString() ?? ""}
-                type="dateTime"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.start && touched.start ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.start && touched.start ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="start"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_onInvoice"
-              >
-                onInvoice
-              </label>
-              <input
-                name="onInvoice"
-                id="hours_onInvoice"
-                checked={values.onInvoice}
-                type="checkbox"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.onInvoice && touched.onInvoice ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.onInvoice && touched.onInvoice ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="onInvoice"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_description"
-              >
-                description
-              </label>
-              <input
-                name="description"
-                id="hours_description"
-                value={values.description ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.description && touched.description
-                    ? "border-red-500"
-                    : ""
-                }`}
-                aria-invalid={
-                  errors.description && touched.description ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="description"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_employee"
-              >
-                employee
-              </label>
-              <input
-                name="employee"
-                id="hours_employee"
-                value={values.employee ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.employee && touched.employee ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.employee && touched.employee ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="employee"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_label"
-              >
-                label
-              </label>
-              <input
-                name="label"
-                id="hours_label"
-                value={values.label ?? ""}
-                type="text"
-                placeholder="Represent the entity to the user in a single string"
-                className={`mt-1 block w-full ${
-                  errors.label && touched.label ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.label && touched.label ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="label"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="hours_day"
-              >
-                day
-              </label>
-              <input
-                name="day"
-                id="hours_day"
-                value={values.day ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.day && touched.day ? "border-red-500" : ""
-                }`}
-                aria-invalid={errors.day && touched.day ? "true" : undefined}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="day"
-              />
-            </div>
+            <FormRow
+              name="nHours"
+              label={
+                <FormattedMessage id="hours.nHours" defaultMessage="nHours" />
+              }
+              type="number"
+              placeholder={intl.formatMessage({
+                id: "hours.nHours.placeholder",
+                defaultMessage: "number of hours",
+              })}
+              required={true}
+              render={(field) => <input step="0.1" {...field} />}
+              format={inputLoc.formatNumber}
+              normalize={inputLoc.normalizeNumber}
+            />
+            <FormRow
+              name="start"
+              label={
+                <FormattedMessage id="hours.start" defaultMessage="start" />
+              }
+              type="datetime-local"
+              placeholder=""
+              required={true}
+              format={inputLoc.formatDateTime}
+              normalize={inputLoc.normalizeDateTime}
+            />
+            <FormRow
+              name="onInvoice"
+              label={
+                <FormattedMessage
+                  id="hours.onInvoice"
+                  defaultMessage="onInvoice"
+                />
+              }
+              type="checkbox"
+              placeholder=""
+              render={(field) => <input {...field} checked={field.value} />}
+            />
+            <FormRow
+              name="description"
+              label={
+                <FormattedMessage
+                  id="hours.description"
+                  defaultMessage="description"
+                />
+              }
+              type="text"
+              placeholder=""
+              required={true}
+            />
+            <FormRow
+              name="employee"
+              label={
+                <FormattedMessage
+                  id="hours.employee"
+                  defaultMessage="employee"
+                />
+              }
+              type="text"
+              placeholder=""
+              required={true}
+            />
+            <FormRow
+              name="label"
+              label={
+                <FormattedMessage id="hours.label" defaultMessage="label" />
+              }
+              type="text"
+              placeholder={intl.formatMessage({
+                id: "hours.label.placeholder",
+                defaultMessage:
+                  "Represent the entity to the user in a single string",
+              })}
+            />
+            <FormRow
+              name="day"
+              label={<FormattedMessage id="hours.day" defaultMessage="day" />}
+              type="text"
+              placeholder=""
+            />
             {status && status.msg && (
               <div
                 className={`border px-4 py-3 my-4 rounded ${
@@ -334,12 +256,22 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
                 {status.msg}
               </div>
             )}
+
+            {error && (
+              <div
+                className="border px-4 py-3 my-4 rounded text-red-700 border-red-400 bg-red-100"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              <FormattedMessage id="submit" defaultMessage="Submit" />
             </button>
           </form>
         )}
@@ -350,7 +282,7 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            <FormattedMessage id="delete" defaultMessage="Delete" />
           </button>
         )}
       </div>

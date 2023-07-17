@@ -1,12 +1,12 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 import Link from "next/link";
 import { withRouter, NextRouter } from 'next/router';
+import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 
-interface WithRouterProps {
-  router: NextRouter
-}
+interface NavigationProps extends WrappedComponentProps {
+  router: NextRouter,
+};
 
-interface NavigationProps extends WithRouterProps {}
 
 interface NavLinkProps {
   href: string,
@@ -58,7 +58,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
       <nav className="flex flex-wrap p-4">
         <div className="block lg:hidden">
           <button className="flex px-3 py-2 border rounded border-teal-400 hover:border-black" type="button"
-                title="Toggle navigation"
+                title={ this.props.intl.formatMessage({id:"navigation.toggle", defaultMessage:"Toggle navigation"}) }
                 onClick={this.toggleCollapsed.bind(this)}>
           <svg className="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/>
@@ -66,13 +66,14 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         </button>
         </div>
         <div className={className}>
-            <NavLink href="/" content="Home" basePath={basePath} />
-            <NavLink href="/employees" content="Employees" basePath={basePath} />
-            <NavLink href="/hourss" content="Hours" basePath={basePath} />
+          <NavLink href="/" content={ this.props.intl.formatMessage({id:"navigation.home", defaultMessage:"Home"}) } basePath={basePath} />
+          <NavLink href="/employees/" content={ this.props.intl.formatMessage({id:"navigation.employees", defaultMessage:"Employees"}) } basePath={basePath} />
+          <NavLink href="/hourss/" content={ this.props.intl.formatMessage({id:"navigation.hours", defaultMessage:"Hours"}) } basePath={basePath} />
         </div>
       </nav>
     );
   }
 }
 
-export default withRouter(Navigation);
+const navWithRouter: any = withRouter(Navigation);
+export default injectIntl(navWithRouter);

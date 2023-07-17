@@ -4,7 +4,6 @@ import {
   NextComponentType,
   NextPageContext,
 } from "next";
-import DefaultErrorPage from "next/error";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { dehydrate, QueryClient, useQuery } from "react-query";
@@ -15,12 +14,18 @@ import { Hours } from "../../../types/Hours";
 import { fetch, FetchResponse, getItemPaths } from "../../../utils/dataAccess";
 import { useMercure } from "../../../utils/mercure";
 
+import { RawIntlProvider } from "react-intl";
+import createIntl from "../../../utils/intlProvider";
+import messages from "../../../messages/hours_all";
+import { LocalizedDefaultErrorPage } from "../../../components/common/intlDefined";
+
 const getHours = async (id: string | string[] | undefined) =>
   id ? await fetch<Hours>(`/hours/${id}`) : Promise.resolve(undefined);
 
 const Page: NextComponentType<NextPageContext> = () => {
   const router = useRouter();
   const { id } = router.query;
+  const intl = createIntl(router.locale, messages);
 
   const { data: { data: hours, hubURL, text } = { hubURL: null, text: "" } } =
     useQuery<FetchResponse<Hours> | undefined>(["hours", id], () =>
@@ -29,18 +34,25 @@ const Page: NextComponentType<NextPageContext> = () => {
   const hoursData = useMercure(hours, hubURL);
 
   if (!hoursData) {
-    return <DefaultErrorPage statusCode={404} />;
+    return (
+      <RawIntlProvider value={intl}>
+        <LocalizedDefaultErrorPage statusCode={404} />
+      </RawIntlProvider>
+    );
   }
 
+  // MetaClass: title is overwritten by title from Show - no need to translate this one (?)
   return (
-    <div>
+    <RawIntlProvider value={intl}>
       <div>
-        <Head>
-          <title>{`Show Hours ${hoursData["@id"]}`}</title>
-        </Head>
+        <div>
+          <Head>
+            <title>{`Show Hours ${hoursData["@id"]}`}</title>
+          </Head>
+        </div>
+        <Show hours={hoursData} text={text} />
       </div>
-      <Show hours={hoursData} text={text} />
-    </div>
+    </RawIntlProvider>
   );
 };
 

@@ -1,9 +1,24 @@
+import React, { FunctionComponent } from 'react';
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import Navigation from "../components/Navigation";
+import createIntl from '../utils/intlProvider';
+import {RawIntlProvider} from 'react-intl';
 
-const Welcome = () => {
+import common_en from '../messages/common-en';
+import common_nl from '../messages/common-nl';
+const messages = {
+  en: {...common_en,},
+  nl: {...common_nl,}
+}
+interface WelcomeProps {
+  locale: string
+}
+
+const Welcome: FunctionComponent<WelcomeProps> = ({locale, }) => {
+  const intl = createIntl(locale, messages);
   const router = useRouter();
 
   const adminClicked = () => {
@@ -11,6 +26,7 @@ const Welcome = () => {
   }
 
   return (
+    <RawIntlProvider value={intl}>
     <div className="welcome">
       <Head>
         <title>Tutorial API Platform</title>
@@ -411,8 +427,15 @@ a.other__button {
 }
             `}</style>
     </div>
+    </RawIntlProvider>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {locale,}
+  };
+};
 
 const HelpButton = ({
                       children,

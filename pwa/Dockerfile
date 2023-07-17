@@ -14,7 +14,7 @@ RUN corepack enable && \
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during dev and build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+#ENV NEXT_TELEMETRY_DISABLED 1
 
 
 # Deps stage, preserve dependencies in cache as long as the lockfile isn't changed
@@ -35,7 +35,6 @@ ENV PORT 3000
 
 CMD ["sh", "-c", "pnpm install -r --offline; pnpm dev"]
 
-
 FROM builder_base AS builder
 COPY --link . .
 COPY --from=deps --link /srv/app/node_modules ./node_modules
@@ -49,7 +48,7 @@ WORKDIR /srv/app
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

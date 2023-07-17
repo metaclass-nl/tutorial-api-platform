@@ -4,7 +4,6 @@ import {
   NextComponentType,
   NextPageContext,
 } from "next";
-import DefaultErrorPage from "next/error";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { dehydrate, QueryClient, useQuery } from "react-query";
@@ -14,37 +13,57 @@ import { PagedCollection } from "../../../types/collection";
 import { Employee } from "../../../types/Employee";
 import { fetch, FetchResponse, getItemPaths } from "../../../utils/dataAccess";
 
+import { RawIntlProvider } from "react-intl";
+import createIntl from "../../../utils/intlProvider";
+import messages from "../../../messages/employee_all";
+import { LocalizedDefaultErrorPage } from "../../../components/common/intlDefined";
+
 const getEmployee = async (id: string | string[] | undefined) =>
   id ? await fetch<Employee>(`/employees/${id}`) : Promise.resolve(undefined);
 
 const Page: NextComponentType<NextPageContext> = () => {
   const router = useRouter();
   const { id } = router.query;
+  const intl = createIntl(router.locale, messages);
 
   const { data: { data: employee } = {} } = useQuery<
     FetchResponse<Employee> | undefined
   >(["employee", id], () => getEmployee(id));
 
   if (!employee) {
-    return <DefaultErrorPage statusCode={404} />;
+    return (
+      <RawIntlProvider value={intl}>
+        <LocalizedDefaultErrorPage statusCode={404} />
+      </RawIntlProvider>
+    );
   }
 
   return (
-    <div>
+    <RawIntlProvider value={intl}>
       <div>
-        <Head>
-          <title>{employee && `Edit Employee ${employee["@id"]}`}</title>
-        </Head>
+        <div>
+          <Head>
+            <title>
+              {intl.formatMessage(
+                {
+                  id: "employee.update",
+                  defaultMessage: "Edit {label}",
+                },
+                { label: employee && employee["@id"] }
+              )}
+            </title>
+          </Head>
+        </div>
+        <Form employee={employee} />
       </div>
-      <Form employee={employee} />
-    </div>
+    </RawIntlProvider>
   );
 };
 
 export const getStaticProps: GetStaticProps = async ({
   params: { id } = {},
 }) => {
-  if (!id) throw new Error("id not in query param");
+  if (!id) throw new Error("id not in query param"); // MetaClass: Error message not meaningfull for the user so no need to translate
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["employee", id], () => getEmployee(id));
 

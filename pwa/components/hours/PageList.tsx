@@ -11,6 +11,9 @@ import { fetch, FetchResponse, parsePage } from "../../utils/dataAccess";
 import { useMercure } from "../../utils/mercure";
 
 import Navigation from "../Navigation";
+import { RawIntlProvider } from "react-intl";
+import createIntl from "../../utils/intlProvider";
+import messages from "../../messages/hours_all";
 
 export const getHourssPath = (page?: string | string[] | undefined) =>
   `/hours${typeof page === "string" ? `?page=${page}` : ""}`;
@@ -20,26 +23,35 @@ const getPagePath = (path: string) =>
   `/hourss/page/${parsePage("hours", path)}`;
 
 export const PageList: NextComponentType<NextPageContext> = () => {
+  const router = useRouter();
   const {
     query: { page },
-  } = useRouter();
+  } = router;
   const { data: { data: hourss, hubURL } = { hubURL: null } } = useQuery<
     FetchResponse<PagedCollection<Hours>> | undefined
   >(getHourssPath(page), getHourss(page));
   const collection = useMercure(hourss, hubURL);
+  const intl = createIntl(router.locale, messages);
 
   if (!collection || !collection["hydra:member"]) return null;
 
   return (
-    <div>
-      <Navigation/>
+    <RawIntlProvider value={intl}>
       <div>
-        <Head>
-          <title>Hours List</title>
-        </Head>
+        <Navigation/>
+        <div>
+          <Head>
+            <title>
+              {intl.formatMessage({
+                id: "hours.list",
+                defaultMessage: "Hours List",
+              })}
+            </title>
+          </Head>
+        </div>
+        <List hourss={collection["hydra:member"]} />
+        <Pagination collection={collection} getPagePath={getPagePath} />
       </div>
-      <List hourss={collection["hydra:member"]} />
-      <Pagination collection={collection} getPagePath={getPagePath} />
-    </div>
+    </RawIntlProvider>
   );
 };

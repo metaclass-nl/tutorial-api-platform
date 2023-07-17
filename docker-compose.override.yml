@@ -24,6 +24,7 @@ services:
       target: dev 
     volumes:
       - ./pwa:/srv/app
+#      - ../client-generator:/srv/app/client-generator:rw
     environment:
       API_PLATFORM_CREATE_CLIENT_ENTRYPOINT: http://caddy
       API_PLATFORM_CREATE_CLIENT_OUTPUT: .

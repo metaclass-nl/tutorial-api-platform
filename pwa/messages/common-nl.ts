@@ -9,8 +9,23 @@ export default {
     "edit": "Bewerk",
     "show": "Toon",
     "delete": "Verwijder",
+    "add": "Toevoegen",
+    "error.400": "Kan opdracht niet interpreteren",
+    "error.404": "Niet gevonden",
+    "error.405": "Methode niet toegestaan",
+    "error.500": "Interne serverfout",
+    "error.unexpected": "Er is een onverwachte fout opgetreden",
     "pagination.first": "Eerste",
     "pagination.previous": "Vorige",
     "pagination.next": "Volgende",
     "pagination.last": "Laatste",
+    "pagination.first_label": "Eerste Pagina",
+    "pagination.previous_label": "Vorige Pagina",
+    "pagination.next_label": "Volgende Pagina",
+    "pagination.last_label": "Laatste Pagina",
+
+    "navigation.toggle": "Toon/verberg navigatie",
+    "navigation.home": "Start",
+    "navigation.employees": "Medewerkers",
+    "navigation.hours": "Uren"
 }

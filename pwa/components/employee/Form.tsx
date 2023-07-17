@@ -1,11 +1,14 @@
 import { FunctionComponent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ErrorMessage, Formik } from "formik";
+import { ErrorMessage, Field, FieldArray, Formik } from "formik";
 import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
 import { Employee } from "../../types/Employee";
+import * as inputLoc from "../../utils/inputLocalization";
+import { FormattedMessage, useIntl } from "react-intl";
+import FormRow from "../common/FormRow";
 
 interface Props {
   employee?: Employee;
@@ -29,7 +32,8 @@ const deleteEmployee = async (id: string) =>
   await fetch<Employee>(id, { method: "DELETE" });
 
 export const Form: FunctionComponent<Props> = ({ employee }) => {
-  const [, setError] = useState<string | null>(null);
+  const intl = useIntl();
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const saveMutation = useMutation<
@@ -47,14 +51,30 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
       router.push("/employees");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(
+        intl.formatMessage(
+          {
+            id: "employee.delete.error",
+            defaultMessage: "Error when deleting the Employee: {error}.",
+          },
+          { error: error.message }
+        )
+      );
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!employee || !employee["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (
+      !window.confirm(
+        intl.formatMessage({
+          id: "employee.delete.confirm",
+          defaultMessage: "Are you sure you want to delete this item?",
+        })
+      )
+    )
+      return;
     deleteMutation.mutate({ id: employee["@id"] });
   };
 
@@ -64,10 +84,19 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
         href="/employees"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {"< "}
+        <FormattedMessage id="backToList" defaultMessage="Back to list" />
       </Link>
       <h1 className="text-3xl my-2">
-        {employee ? `Edit Employee ${employee["@id"]}` : `Create Employee`}
+        {employee
+          ? intl.formatMessage(
+              { id: "employee.update", defaultMessage: "Edit {label}" },
+              { label: employee["@id"] }
+            )
+          : intl.formatMessage({
+              id: "employee.new",
+              defaultMessage: "Create Employee",
+            })}
       </h1>
       <Formik
         initialValues={
@@ -90,7 +119,21 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: isCreation
+                    ? intl.formatMessage(
+                        {
+                          id: "employee.created",
+                          defaultMessage: "Element created",
+                        },
+                        { label: "Employee" }
+                      )
+                    : intl.formatMessage(
+                        {
+                          id: "employee.updated",
+                          defaultMessage: "Element updated",
+                        },
+                        { label: values["@id"] }
+                      ),
                 });
                 router.push("/employees");
               },
@@ -121,259 +164,151 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
           isSubmitting,
         }) => (
           <form className="shadow-md p-4" onSubmit={handleSubmit}>
+            <FormRow
+              name="firstName"
+              label={
+                <FormattedMessage
+                  id="employee.firstName"
+                  defaultMessage="firstName"
+                />
+              }
+              type="text"
+              placeholder=""
+            />
+            <FormRow
+              name="lastName"
+              label={
+                <FormattedMessage
+                  id="employee.lastName"
+                  defaultMessage="lastName"
+                />
+              }
+              type="text"
+              placeholder=""
+              required={true}
+            />
+            <FormRow
+              name="job"
+              label={
+                <FormattedMessage id="employee.job" defaultMessage="job" />
+              }
+              type="text"
+              placeholder=""
+              required={true}
+            />
+            <FormRow
+              name="address"
+              label={
+                <FormattedMessage
+                  id="employee.address"
+                  defaultMessage="address"
+                />
+              }
+              type="text"
+              placeholder=""
+              required={true}
+            />
+            <FormRow
+              name="zipcode"
+              label={
+                <FormattedMessage
+                  id="employee.zipcode"
+                  defaultMessage="zipcode"
+                />
+              }
+              type="text"
+              placeholder=""
+            />
+            <FormRow
+              name="city"
+              label={
+                <FormattedMessage id="employee.city" defaultMessage="city" />
+              }
+              type="text"
+              placeholder=""
+              required={true}
+            />
+            <FormRow
+              name="birthDate"
+              label={
+                <FormattedMessage
+                  id="employee.birthDate"
+                  defaultMessage="birthDate"
+                />
+              }
+              type="date"
+              placeholder={intl.formatMessage({
+                id: "employee.birthDate.placeholder",
+                defaultMessage: "Date of birth",
+              })}
+              required={true}
+              format={inputLoc.formatDate}
+              normalize={inputLoc.normalizeDate}
+            />
+            <FormRow
+              name="arrival"
+              label={
+                <FormattedMessage
+                  id="employee.arrival"
+                  defaultMessage="arrival"
+                />
+              }
+              type="time"
+              placeholder={intl.formatMessage({
+                id: "employee.arrival.placeholder",
+                defaultMessage: "Time the employee usually arrives at work",
+              })}
+              format={inputLoc.formatTime}
+              normalize={inputLoc.normalizeTime}
+            />
             <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_firstName"
-              >
-                firstName
-              </label>
-              <input
-                name="firstName"
-                id="employee_firstName"
-                value={values.firstName ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.firstName && touched.firstName ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.firstName && touched.firstName ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="firstName"
+              <div className="text-gray-700 block text-sm font-bold">hours</div>
+              <FieldArray
+                name="hours"
+                render={(arrayHelpers) => (
+                  <div className="mb-2" id="employee_hours">
+                    {values.hours && values.hours.length > 0 ? (
+                      values.hours.map((item: any, index: number) => (
+                        <div key={index}>
+                          <Field name={`hours.${index}`} />
+                          <button
+                            type="button"
+                            onClick={() => arrayHelpers.remove(index)}
+                          >
+                            -
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => arrayHelpers.insert(index, "")}
+                          >
+                            +
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.push("")}
+                      >
+                        <FormattedMessage id="add" defaultMessage="Add" />
+                      </button>
+                    )}
+                  </div>
+                )}
               />
             </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_lastName"
-              >
-                lastName
-              </label>
-              <input
-                name="lastName"
-                id="employee_lastName"
-                value={values.lastName ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.lastName && touched.lastName ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.lastName && touched.lastName ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="lastName"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_job"
-              >
-                job
-              </label>
-              <input
-                name="job"
-                id="employee_job"
-                value={values.job ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.job && touched.job ? "border-red-500" : ""
-                }`}
-                aria-invalid={errors.job && touched.job ? "true" : undefined}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="job"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_address"
-              >
-                address
-              </label>
-              <input
-                name="address"
-                id="employee_address"
-                value={values.address ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.address && touched.address ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.address && touched.address ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="address"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_zipcode"
-              >
-                zipcode
-              </label>
-              <input
-                name="zipcode"
-                id="employee_zipcode"
-                value={values.zipcode ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.zipcode && touched.zipcode ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.zipcode && touched.zipcode ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="zipcode"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_city"
-              >
-                city
-              </label>
-              <input
-                name="city"
-                id="employee_city"
-                value={values.city ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.city && touched.city ? "border-red-500" : ""
-                }`}
-                aria-invalid={errors.city && touched.city ? "true" : undefined}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="city"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_birthDate"
-              >
-                birthDate
-              </label>
-              <input
-                name="birthDate"
-                id="employee_birthDate"
-                value={values.birthDate?.toLocaleString() ?? ""}
-                type="dateTime"
-                placeholder="Date of birth"
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.birthDate && touched.birthDate ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.birthDate && touched.birthDate ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="birthDate"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_arrival"
-              >
-                arrival
-              </label>
-              <input
-                name="arrival"
-                id="employee_arrival"
-                value={values.arrival?.toLocaleString() ?? ""}
-                type="dateTime"
-                placeholder="Time the employee usually arrives at work"
-                className={`mt-1 block w-full ${
-                  errors.arrival && touched.arrival ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.arrival && touched.arrival ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="arrival"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_label"
-              >
-                label
-              </label>
-              <input
-                name="label"
-                id="employee_label"
-                value={values.label ?? ""}
-                type="text"
-                placeholder="Represent the entity to the user in a single string"
-                className={`mt-1 block w-full ${
-                  errors.label && touched.label ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.label && touched.label ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="label"
-              />
-            </div>
+            <FormRow
+              name="label"
+              label={
+                <FormattedMessage id="employee.label" defaultMessage="label" />
+              }
+              type="text"
+              placeholder={intl.formatMessage({
+                id: "employee.label.placeholder",
+                defaultMessage:
+                  "Represent the entity to the user in a single string",
+              })}
+            />
             {status && status.msg && (
               <div
                 className={`border px-4 py-3 my-4 rounded ${
@@ -386,12 +321,22 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
                 {status.msg}
               </div>
             )}
+
+            {error && (
+              <div
+                className="border px-4 py-3 my-4 rounded text-red-700 border-red-400 bg-red-100"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              <FormattedMessage id="submit" defaultMessage="Submit" />
             </button>
           </form>
         )}
@@ -402,7 +347,7 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            <FormattedMessage id="delete" defaultMessage="Delete" />
           </button>
         )}
       </div>

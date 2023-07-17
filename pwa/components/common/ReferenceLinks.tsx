@@ -5,8 +5,8 @@ interface Props {
   items:
     | string
     | string[]
-    | { href: string; name: string }
-    | { href: string; name: string }[];
+    | { href: string; name: string|undefined }
+    | { href: string; name: string|undefined }[];
 }
 
 const ReferenceLinks: FunctionComponent<Props> = ({ items }) => {

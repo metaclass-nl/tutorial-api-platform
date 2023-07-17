@@ -1,7 +1,7 @@
 export default {
   "employee.firstName": "Voornaam",
   "employee.lastName": "Achternaam",
-  "employee.function": "Functie",
+  "employee.job": "Functie",
   "employee.address": "Adres",
   "employee.zipcode": "Postcode",
   "employee.city": "Woonplaats",
@@ -22,5 +22,6 @@ export default {
   "employee.created": "{label} is aangemaakt.",
   "employee.updated": "{label} is gewijzigd.",
   "employee.deleted": "{label} is verwijderd.",
+  "employee.delete.error": "Fout bij het verwijderen van de medewerker.",
   "employee.mercure_deleted": "{label} is verwijderd door een andere gebruiker."
 }

@@ -6,7 +6,7 @@ export class Hours implements Item {
   constructor(
     _id?: string,
     public nHours?: number,
-    public start?: Date,
+    public start?: string,
     public onInvoice?: boolean,
     public description?: string,
     public employee?: string,

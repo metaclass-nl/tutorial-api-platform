@@ -63,7 +63,7 @@ export const fetch = async <TData>(
 
   const errorMessage = json["hydra:title"];
   const status = json["hydra:description"] || resp.statusText;
-  if (!json.violations) throw Error(errorMessage);
+  if (!json.violations) throw Error(status || errorMessage);
   const fields: { [key: string]: string } = {};
   json.violations.map(
     (violation: Violation) =>

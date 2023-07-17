@@ -14,37 +14,57 @@ import { PagedCollection } from "../../../types/collection";
 import { Hours } from "../../../types/Hours";
 import { fetch, FetchResponse, getItemPaths } from "../../../utils/dataAccess";
 
+import { RawIntlProvider } from "react-intl";
+import createIntl from "../../../utils/intlProvider";
+import messages from "../../../messages/hours_all";
+import { LocalizedDefaultErrorPage } from "../../../components/common/intlDefined";
+
 const getHours = async (id: string | string[] | undefined) =>
   id ? await fetch<Hours>(`/hours/${id}`) : Promise.resolve(undefined);
 
 const Page: NextComponentType<NextPageContext> = () => {
   const router = useRouter();
   const { id } = router.query;
+  const intl = createIntl(router.locale, messages);
 
   const { data: { data: hours } = {} } = useQuery<
     FetchResponse<Hours> | undefined
   >(["hours", id], () => getHours(id));
 
   if (!hours) {
-    return <DefaultErrorPage statusCode={404} />;
+    return (
+      <RawIntlProvider value={intl}>
+        <LocalizedDefaultErrorPage statusCode={404} />
+      </RawIntlProvider>
+    );
   }
 
   return (
-    <div>
+    <RawIntlProvider value={intl}>
       <div>
-        <Head>
-          <title>{hours && `Edit Hours ${hours["@id"]}`}</title>
-        </Head>
+        <div>
+          <Head>
+            <title>
+              {intl.formatMessage(
+                {
+                  id: "hours.update",
+                  defaultMessage: "Edit {label}",
+                },
+                { label: hours && hours["@id"] }
+              )}
+            </title>
+          </Head>
+        </div>
+        <Form hours={hours} />
       </div>
-      <Form hours={hours} />
-    </div>
+    </RawIntlProvider>
   );
 };
 
 export const getStaticProps: GetStaticProps = async ({
   params: { id } = {},
 }) => {
-  if (!id) throw new Error("id not in query param");
+  if (!id) throw new Error("id not in query param"); // MetaClass: Error message not meaningfull for the user so no need to translate
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["hours", id], () => getHours(id));
 
