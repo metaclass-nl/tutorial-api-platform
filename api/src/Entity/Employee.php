@@ -2,22 +2,33 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Metadata\ApiProperty;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class defining entities with data about an Employees
- *
- * @ORM\Entity
  */
 #[ORM\Entity]
-#[ApiResource(
-    order: ["lastName", "firstName"]
-)
+#[ApiResource(operations: [
+        new Get(normalizationContext: ['groups' => ['employee_get']]),
+        new Put(),
+        new Patch(),
+        new Delete(),
+        new GetCollection(normalizationContext: ['groups' => ['employee_list']]),
+        new Post()
+    ],
+    order: ['lastName', 'firstName'])
 ]
 class Employee
 {
@@ -39,6 +50,7 @@ class Employee
      */
     #[ORM\Column(nullable:true)]
     #[Assert\Length(max:20)]
+    #[Groups(["employee_get"])]
     private $firstName;
 
     /**
@@ -47,6 +59,7 @@ class Employee
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:80)]
+    #[Groups(["employee_get"])]
     private $lastName;
 
     /**
@@ -55,6 +68,7 @@ class Employee
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:40)]
+    #[Groups(["employee_get", "employee_list"])]
     private $job;
 
     /**
@@ -63,6 +77,7 @@ class Employee
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:80)]
+    #[Groups(["employee_get"])]
     private $address;
 
     /**
@@ -70,6 +85,7 @@ class Employee
      */
     #[ORM\Column(nullable:true)]
     #[Assert\Length(max:10)]
+    #[Groups(["employee_get"])]
     private $zipcode;
 
     /**
@@ -78,6 +94,7 @@ class Employee
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Length(max:40)]
+    #[Groups(["employee_get"])]
     private $city;
 
     /**
@@ -85,6 +102,7 @@ class Employee
      */
     #[ORM\Column (type:"date")]
     #[Assert\NotNull]
+    #[Groups (["employee_get", "employee_list"])]
     #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#date'])]
     private $birthDate;
 
@@ -92,6 +110,7 @@ class Employee
      * @var \DateTime Time the employee usually arrives at work
      */
     #[ORM\Column (type:"time", nullable:true)]
+    #[Groups (["employee_get", "employee_list"])]
     #[ApiProperty(jsonldContext: ['@type' => 'http://www.w3.org/2001/XMLSchema#time'])]
     private $arrival;
 
@@ -253,7 +272,7 @@ class Employee
     /**
      * @return Collection
      */
-    public function getHours(): Collection
+    public function getHours() : Collection
     {
         return $this->hours;
     }
@@ -273,8 +292,11 @@ class Employee
      *
      * @return string
      */
-    function getLabel() {
-        return $this->getLastName(). ', '. $this->getFirstName();
+    #[Groups(["employee_get", "employee_list", "hours_get", "hours_list"])]
+    #[ApiProperty(iris: ['http://schema.org/name'])]
+    function getLabel()
+    {
+        return $this->getLastName() . ', ' . $this->getFirstName();
     }
 
 }
