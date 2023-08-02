@@ -11,12 +11,15 @@ export default {
 
   "hours.list": "Urenlijst",
   "hours.new": "Nieuwe uren",
-  "hours.show": "Toon {label}",
+  "hours.show": "Toon {start} {description}",
   "hours.create": "Nieuwe",
-  "hours.update": "Bewerk {label}",
+  "hours.update": "Bewerk {start} {description}",
   "hours.delete.confirm": "Weet u zeker dat u deze uren wilt verwijderen?",
   "hours.created": "{label} is aangemaakt.",
   "hours.updated": "{label} is gewijzigd.",
+  "hours.deleting": "Bezig met verwijderen van uren",
   "hours.deleted": "{label} is verwijderd.",
-  "hours.mercure_deleted": "{label} is verwijderd door een andere gebruiker."
+  "hours.mercure_deleted": "{label} is verwijderd door een andere gebruiker.",
+  "hours.show.head": "Toon Uren",
+  "hours.update.head": "Bewerk Uren",
 }

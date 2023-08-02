@@ -8,6 +8,8 @@ import { fetch, getItemPath } from "../../utils/dataAccess";
 import { Hours } from "../../types/Hours";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as defined from "../common/intlDefined";
+import MessageDisplay from "../common/MessageDisplay";
+import DeleteButton from "../common/DeleteButton";
 
 interface Props {
   hours: Hours;
@@ -50,10 +52,9 @@ export const Show: FunctionComponent<Props> = ({ hours, text }) => {
 
   const title = intl.formatMessage(
     {
-      id: "hours.show",
-      defaultMessage: "Show {label}",
-    },
-    { label: hours && hours["@id"] }
+      id: "hours.show.head",
+      defaultMessage: "Show Hours",
+    }
   );
 
   return (
@@ -72,7 +73,13 @@ export const Show: FunctionComponent<Props> = ({ hours, text }) => {
         {"< "}
         <FormattedMessage id="backToList" defaultMessage="Back to list" />
       </Link>
-      <h1 className="text-3xl mb-2">{title}</h1>
+      <h1 className="text-3xl mb-2">
+        <FormattedMessage
+          id="hours.show"
+          defaultMessage="Show {start} {description}"
+          values={ {start: <defined.FormattedDateTime value={hours && hours["start"]} />, description: hours && hours["description"]} }
+        />
+      </h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
@@ -129,12 +136,14 @@ export const Show: FunctionComponent<Props> = ({ hours, text }) => {
               <FormattedMessage id="hours.employee" defaultMessage="employee" />
             </th>
             <td>
-              <ReferenceLinks
-                items={{
-                  href: getItemPath(hours["employee"], "/employees/[id]"),
-                  name: hours["employee"],
-                }}
-              />
+              {hours["employee"] &&
+                <ReferenceLinks
+                  items={{
+                    href: getItemPath(hours["employee"]["@id"], "/employees/[id]"),
+                    name: hours["employee"]["label"],
+                  }}
+                />
+              }
             </td>
           </tr>
           <tr>
@@ -151,14 +160,7 @@ export const Show: FunctionComponent<Props> = ({ hours, text }) => {
           </tr>
         </tbody>
       </table>
-      {error && (
-        <div
-          className="border px-4 py-3 my-4 rounded text-red-700 border-red-400 bg-red-100"
-          role="alert"
-        >
-          {error}
-        </div>
-      )}
+      <MessageDisplay topic="hours_show" />
       <div className="flex space-x-2 mt-4 items-center justify-end">
         <Link
           href={getItemPath(hours["@id"], "/hourss/[id]/edit")}
@@ -166,12 +168,12 @@ export const Show: FunctionComponent<Props> = ({ hours, text }) => {
         >
           <FormattedMessage id="edit" defaultMessage="Edit" />
         </Link>
-        <button
-          className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
-          onClick={handleDelete}
-        >
-          <FormattedMessage id="delete" defaultMessage="Delete" />
-        </button>
+        <DeleteButton type="hours" item={hours} redirect="/hourss" parentTopic="hours_show" deletedMessage={
+          intl.formatMessage(
+            { id: "hours.deleted", defaultMessage: "Item deleted" },
+            { start: <defined.FormattedDateTime value={hours["start"]} />, description: hours["description"] }
+          )
+        }/>
       </div>
     </div>
   );

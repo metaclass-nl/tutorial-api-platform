@@ -6,13 +6,17 @@ import { getItemPath } from "../../utils/dataAccess";
 import { Employee } from "../../types/Employee";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as defined from "../common/intlDefined";
+import MessageDisplay from "../common/MessageDisplay";
+import { useMessageService } from "../../services/MessageService";
 
 interface Props {
   employees: Employee[];
 }
 
 export const List: FunctionComponent<Props> = ({ employees }) => {
+  const messageService = useMessageService();
   const intl = useIntl();
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
@@ -26,42 +30,16 @@ export const List: FunctionComponent<Props> = ({ employees }) => {
           <FormattedMessage id="employee.create" defaultMessage="Create" />
         </Link>
       </div>
+      <MessageDisplay topic="employee"/>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
       >
         <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
           <tr>
-            <th>id</th>
-            <th>
-              <FormattedMessage
-                id="employee.firstName"
-                defaultMessage="firstName"
-              />
-            </th>
-            <th>
-              <FormattedMessage
-                id="employee.lastName"
-                defaultMessage="lastName"
-              />
-            </th>
+            <th><FormattedMessage id="employee.item" defaultMessage="Employee"/></th>
             <th>
               <FormattedMessage id="employee.job" defaultMessage="job" />
-            </th>
-            <th>
-              <FormattedMessage
-                id="employee.address"
-                defaultMessage="address"
-              />
-            </th>
-            <th>
-              <FormattedMessage
-                id="employee.zipcode"
-                defaultMessage="zipcode"
-              />
-            </th>
-            <th>
-              <FormattedMessage id="employee.city" defaultMessage="city" />
             </th>
             <th>
               <FormattedMessage
@@ -75,13 +53,7 @@ export const List: FunctionComponent<Props> = ({ employees }) => {
                 defaultMessage="arrival"
               />
             </th>
-            <th>
-              <FormattedMessage id="employee.hours" defaultMessage="hours" />
-            </th>
-            <th>
-              <FormattedMessage id="employee.label" defaultMessage="label" />
-            </th>
-            <th colSpan={2} />
+           <th colSpan={2} />
           </tr>
         </thead>
         <tbody className="text-sm divide-y divide-gray-200">
@@ -99,12 +71,7 @@ export const List: FunctionComponent<Props> = ({ employees }) => {
                         }}
                       />
                     </th>
-                    <td>{employee["firstName"]}</td>
-                    <td>{employee["lastName"]}</td>
                     <td>{employee["job"]}</td>
-                    <td>{employee["address"]}</td>
-                    <td>{employee["zipcode"]}</td>
-                    <td>{employee["city"]}</td>
                     <td>
                       <defined.FormattedLocalDate
                         value={employee["birthDate"]}
@@ -113,17 +80,6 @@ export const List: FunctionComponent<Props> = ({ employees }) => {
                     <td>
                       <defined.FormattedLocalTime value={employee["arrival"]} />
                     </td>
-                    <td>
-                      {employee["hours"] && (
-                        <ReferenceLinks
-                          items={employee["hours"].map((ref: any) => ({
-                            href: getItemPath(ref, "/hourss/[id]"),
-                            name: ref,
-                          }))}
-                        />
-                      )}
-                    </td>
-                    <td>{employee["label"]}</td>
                     <td className="w-8">
                       <Link
                         href={getItemPath(employee["@id"], "/employees/[id]")}

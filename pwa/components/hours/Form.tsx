@@ -1,7 +1,7 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState,  } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ErrorMessage, Formik } from "formik";
+import { ErrorMessage, Formik, FormikValues } from "formik";
 import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
@@ -9,13 +9,18 @@ import { Hours } from "../../types/Hours";
 import * as inputLoc from "../../utils/inputLocalization";
 import { FormattedMessage, useIntl } from "react-intl";
 import FormRow from "../common/FormRow";
+import * as defined from '../common/intlDefined';
+import SelectItem from '../common/SelectItem';
+import { useMessageService } from "../../services/MessageService";
+import MessageDisplay from "../common/MessageDisplay";
+import DeleteButton from "../common/DeleteButton";
 
 interface Props {
   hours?: Hours;
 }
 
 interface SaveParams {
-  values: Hours;
+  values: FormikValues;  // Hours.employee is incompatible
 }
 
 interface DeleteParams {
@@ -32,6 +37,7 @@ const deleteHours = async (id: string) =>
   await fetch<Hours>(id, { method: "DELETE" });
 
 export const Form: FunctionComponent<Props> = ({ hours }) => {
+  const messageService = useMessageService();
   const intl = useIntl();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -90,8 +96,8 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
       <h1 className="text-3xl my-2">
         {hours
           ? intl.formatMessage(
-              { id: "hours.update", defaultMessage: "Edit {label}" },
-              { label: hours["@id"] }
+              { id: "hours.update", defaultMessage: "Edit {start} {description}" },
+              {start: <defined.FormattedDateTime value={hours && hours["start"]} />, description: hours && hours["description"]}
             )
           : intl.formatMessage({
               id: "hours.new",
@@ -103,6 +109,7 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
           hours
             ? {
                 ...hours,
+                employee: hours.employee ? hours.employee["@id"] : "",
               }
             : new Hours()
         }
@@ -117,24 +124,16 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
             { values },
             {
               onSuccess: () => {
-                setStatus({
-                  isValid: true,
-                  msg: isCreation
+                messageService.success("hours", (isCreation
                     ? intl.formatMessage(
-                        {
-                          id: "hours.created",
-                          defaultMessage: "Element created",
-                        },
-                        { label: "Hours" }
-                      )
+                      { id: "hours.created", defaultMessage: "Element created" },
+                      { label: "Hours" }
+                    )
                     : intl.formatMessage(
-                        {
-                          id: "hours.updated",
-                          defaultMessage: "Element updated",
-                        },
-                        { label: values["@id"] }
-                      ),
-                });
+                      { id: "hours.updated", defaultMessage: "Element updated" },
+                      { start: <defined.FormattedDateTime value={hours && hours["start"]} />, description: hours && hours["description"] }
+                    ))
+                );
                 router.push("/hourss");
               },
               onError: (error) => {
@@ -225,24 +224,14 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
               type="text"
               placeholder=""
               required={true}
-            />
-            <FormRow
-              name="label"
-              label={
-                <FormattedMessage id="hours.label" defaultMessage="label" />
-              }
-              type="text"
-              placeholder={intl.formatMessage({
-                id: "hours.label.placeholder",
-                defaultMessage:
-                  "Represent the entity to the user in a single string",
-              })}
-            />
-            <FormRow
-              name="day"
-              label={<FormattedMessage id="hours.day" defaultMessage="day" />}
-              type="text"
-              placeholder=""
+              render={(renderProps) => (
+                <SelectItem
+                  labelProp="label"
+                  fetchUrl="/employees?pagination=false"
+                  input={renderProps}
+                />
+              )}
+              normalize={(v) => (v ? v : null)}
             />
             {status && status.msg && (
               <div
@@ -257,14 +246,7 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
               </div>
             )}
 
-            {error && (
-              <div
-                className="border px-4 py-3 my-4 rounded text-red-700 border-red-400 bg-red-100"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
+            <MessageDisplay topic="hours_form" />
 
             <button
               type="submit"
@@ -278,12 +260,12 @@ export const Form: FunctionComponent<Props> = ({ hours }) => {
       </Formik>
       <div className="flex space-x-2 mt-4 justify-end">
         {hours && (
-          <button
-            className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
-            onClick={handleDelete}
-          >
-            <FormattedMessage id="delete" defaultMessage="Delete" />
-          </button>
+          <DeleteButton type="hours" item={hours} redirect="/hourss" parentTopic="hours_form" deletedMessage={
+            intl.formatMessage(
+              { id: "hours.deleted", defaultMessage: "Item deleted" },
+              { start: <defined.FormattedDateTime value={hours["start"]} />, description: hours["description"] }
+            )
+          }/>
         )}
       </div>
     </div>

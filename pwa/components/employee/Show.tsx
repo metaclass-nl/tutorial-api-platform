@@ -1,13 +1,15 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
 import ReferenceLinks from "../common/ReferenceLinks";
-import { fetch, getItemPath } from "../../utils/dataAccess";
+import { getItemPath } from "../../utils/dataAccess";
 import { Employee } from "../../types/Employee";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as defined from "../common/intlDefined";
+import MessageDisplay from "../common/MessageDisplay";
+import DeleteButton from "../common/DeleteButton";
 
 interface Props {
   employee: Employee;
@@ -15,45 +17,15 @@ interface Props {
 }
 
 export const Show: FunctionComponent<Props> = ({ employee, text }) => {
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const intl = useIntl();
-
-  const handleDelete = async () => {
-    if (!employee["@id"]) return;
-    if (
-      !window.confirm(
-        intl.formatMessage({
-          id: "employee.delete.confirm",
-          defaultMessage: "Are you sure you want to delete this item?",
-        })
-      )
-    )
-      return;
-
-    try {
-      await fetch(employee["@id"], { method: "DELETE" });
-      router.push("/employees");
-    } catch (error) {
-      setError(
-        intl.formatMessage(
-          {
-            id: "employee.delete.error",
-            defaultMessage: "Error when deleting the Employee.",
-          },
-          { error: (error as Error).message }
-        )
-      );
-      console.error(error);
-    }
-  };
 
   const title = intl.formatMessage(
     {
       id: "employee.show",
       defaultMessage: "Show {label}",
     },
-    { label: employee && employee["@id"] }
+    { label: employee && employee["label"] }
   );
 
   return (
@@ -160,35 +132,13 @@ export const Show: FunctionComponent<Props> = ({ employee, text }) => {
           </tr>
           <tr>
             <th scope="row">
-              <FormattedMessage id="employee.hours" defaultMessage="hours" />
-            </th>
-            <td>
-              {employee["hours"] && (
-                <ReferenceLinks
-                  items={employee["hours"].map((ref: any) => ({
-                    href: getItemPath(ref, "/hourss/[id]"),
-                    name: ref,
-                  }))}
-                />
-              )}
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">
               <FormattedMessage id="employee.label" defaultMessage="label" />
             </th>
             <td>{employee["label"]}</td>
           </tr>
         </tbody>
       </table>
-      {error && (
-        <div
-          className="border px-4 py-3 my-4 rounded text-red-700 border-red-400 bg-red-100"
-          role="alert"
-        >
-          {error}
-        </div>
-      )}
+      <MessageDisplay topic="employee_show" />
       <div className="flex space-x-2 mt-4 items-center justify-end">
         <Link
           href={getItemPath(employee["@id"], "/employees/[id]/edit")}
@@ -196,12 +146,11 @@ export const Show: FunctionComponent<Props> = ({ employee, text }) => {
         >
           <FormattedMessage id="edit" defaultMessage="Edit" />
         </Link>
-        <button
-          className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
-          onClick={handleDelete}
-        >
-          <FormattedMessage id="delete" defaultMessage="Delete" />
-        </button>
+        <DeleteButton
+          type="employee"
+          item={employee}
+          redirect="/employees"
+          parentTopic="employee_show" />
       </div>
     </div>
   );

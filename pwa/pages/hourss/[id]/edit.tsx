@@ -47,10 +47,9 @@ const Page: NextComponentType<NextPageContext> = () => {
             <title>
               {intl.formatMessage(
                 {
-                  id: "hours.update",
-                  defaultMessage: "Edit {label}",
-                },
-                { label: hours && hours["@id"] }
+                  id: "hours.update.head",
+                  defaultMessage: "Edit Hours",
+                }
               )}
             </title>
           </Head>

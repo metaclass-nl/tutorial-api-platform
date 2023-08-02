@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ErrorMessage, Field, FieldArray, Formik } from "formik";
@@ -9,6 +9,9 @@ import { Employee } from "../../types/Employee";
 import * as inputLoc from "../../utils/inputLocalization";
 import { FormattedMessage, useIntl } from "react-intl";
 import FormRow from "../common/FormRow";
+import MessageDisplay from "../common/MessageDisplay";
+import { useMessageService } from "../../services/MessageService";
+import DeleteButton from "../common/DeleteButton";
 
 interface Props {
   employee?: Employee;
@@ -18,22 +21,15 @@ interface SaveParams {
   values: Employee;
 }
 
-interface DeleteParams {
-  id: string;
-}
-
 const saveEmployee = async ({ values }: SaveParams) =>
   await fetch<Employee>(!values["@id"] ? "/employees" : values["@id"], {
     method: !values["@id"] ? "POST" : "PUT",
     body: JSON.stringify(values),
   });
 
-const deleteEmployee = async (id: string) =>
-  await fetch<Employee>(id, { method: "DELETE" });
-
 export const Form: FunctionComponent<Props> = ({ employee }) => {
+  const messageService = useMessageService();
   const intl = useIntl();
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const saveMutation = useMutation<
@@ -41,42 +37,6 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
     Error | FetchError,
     SaveParams
   >((saveParams) => saveEmployee(saveParams));
-
-  const deleteMutation = useMutation<
-    FetchResponse<Employee> | undefined,
-    Error | FetchError,
-    DeleteParams
-  >(({ id }) => deleteEmployee(id), {
-    onSuccess: () => {
-      router.push("/employees");
-    },
-    onError: (error) => {
-      setError(
-        intl.formatMessage(
-          {
-            id: "employee.delete.error",
-            defaultMessage: "Error when deleting the Employee: {error}.",
-          },
-          { error: error.message }
-        )
-      );
-      console.error(error);
-    },
-  });
-
-  const handleDelete = () => {
-    if (!employee || !employee["@id"]) return;
-    if (
-      !window.confirm(
-        intl.formatMessage({
-          id: "employee.delete.confirm",
-          defaultMessage: "Are you sure you want to delete this item?",
-        })
-      )
-    )
-      return;
-    deleteMutation.mutate({ id: employee["@id"] });
-  };
 
   return (
     <div className="container mx-auto px-4 max-w-2xl mt-4">
@@ -91,7 +51,7 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
         {employee
           ? intl.formatMessage(
               { id: "employee.update", defaultMessage: "Edit {label}" },
-              { label: employee["@id"] }
+              { label: employee["label"] }
             )
           : intl.formatMessage({
               id: "employee.new",
@@ -117,24 +77,23 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
             { values },
             {
               onSuccess: () => {
-                setStatus({
-                  isValid: true,
-                  msg: isCreation
+                messageService.success("employee",
+                  isCreation
                     ? intl.formatMessage(
-                        {
-                          id: "employee.created",
-                          defaultMessage: "Element created",
-                        },
-                        { label: "Employee" }
-                      )
+                      {
+                        id: "employee.created",
+                        defaultMessage: "Element created",
+                      },
+                      { label: "Employee" }
+                    )
                     : intl.formatMessage(
-                        {
-                          id: "employee.updated",
-                          defaultMessage: "Element updated",
-                        },
-                        { label: values["@id"] }
-                      ),
-                });
+                      {
+                        id: "employee.updated",
+                        defaultMessage: "Element updated",
+                      },
+                      { label: values["label"] }
+                    )
+                  );
                 router.push("/employees");
               },
               onError: (error) => {
@@ -261,54 +220,6 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
               format={inputLoc.formatTime}
               normalize={inputLoc.normalizeTime}
             />
-            <div className="mb-2">
-              <div className="text-gray-700 block text-sm font-bold">hours</div>
-              <FieldArray
-                name="hours"
-                render={(arrayHelpers) => (
-                  <div className="mb-2" id="employee_hours">
-                    {values.hours && values.hours.length > 0 ? (
-                      values.hours.map((item: any, index: number) => (
-                        <div key={index}>
-                          <Field name={`hours.${index}`} />
-                          <button
-                            type="button"
-                            onClick={() => arrayHelpers.remove(index)}
-                          >
-                            -
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => arrayHelpers.insert(index, "")}
-                          >
-                            +
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => arrayHelpers.push("")}
-                      >
-                        <FormattedMessage id="add" defaultMessage="Add" />
-                      </button>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-            <FormRow
-              name="label"
-              label={
-                <FormattedMessage id="employee.label" defaultMessage="label" />
-              }
-              type="text"
-              placeholder={intl.formatMessage({
-                id: "employee.label.placeholder",
-                defaultMessage:
-                  "Represent the entity to the user in a single string",
-              })}
-            />
             {status && status.msg && (
               <div
                 className={`border px-4 py-3 my-4 rounded ${
@@ -322,14 +233,7 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
               </div>
             )}
 
-            {error && (
-              <div
-                className="border px-4 py-3 my-4 rounded text-red-700 border-red-400 bg-red-100"
-                role="alert"
-              >
-                {error}
-              </div>
-            )}
+            <MessageDisplay topic="employee_form" />
 
             <button
               type="submit"
@@ -343,12 +247,11 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
       </Formik>
       <div className="flex space-x-2 mt-4 justify-end">
         {employee && (
-          <button
-            className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
-            onClick={handleDelete}
-          >
-            <FormattedMessage id="delete" defaultMessage="Delete" />
-          </button>
+          <DeleteButton
+            type="employee"
+            item={employee}
+            redirect="/employees"
+            parentTopic="employee_form" />
         )}
       </div>
     </div>

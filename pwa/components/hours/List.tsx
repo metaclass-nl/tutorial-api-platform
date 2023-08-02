@@ -6,6 +6,7 @@ import { getItemPath } from "../../utils/dataAccess";
 import { Hours } from "../../types/Hours";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as defined from "../common/intlDefined";
+import MessageDisplay from "../common/MessageDisplay";
 
 interface Props {
   hourss: Hours[];
@@ -26,24 +27,18 @@ export const List: FunctionComponent<Props> = ({ hourss }) => {
           <FormattedMessage id="hours.create" defaultMessage="Create" />
         </Link>
       </div>
+      <MessageDisplay topic="hours" />
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
       >
         <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
           <tr>
-            <th>id</th>
-            <th>
-              <FormattedMessage id="hours.nHours" defaultMessage="nHours" />
-            </th>
             <th>
               <FormattedMessage id="hours.start" defaultMessage="start" />
             </th>
             <th>
-              <FormattedMessage
-                id="hours.onInvoice"
-                defaultMessage="onInvoice"
-              />
+              <FormattedMessage id="hours.day" defaultMessage="day" />
             </th>
             <th>
               <FormattedMessage
@@ -52,13 +47,10 @@ export const List: FunctionComponent<Props> = ({ hourss }) => {
               />
             </th>
             <th>
+              <FormattedMessage id="hours.nHours" defaultMessage="nHours" />
+            </th>
+            <th>
               <FormattedMessage id="hours.employee" defaultMessage="employee" />
-            </th>
-            <th>
-              <FormattedMessage id="hours.label" defaultMessage="label" />
-            </th>
-            <th>
-              <FormattedMessage id="hours.day" defaultMessage="day" />
             </th>
             <th colSpan={2} />
           </tr>
@@ -71,36 +63,28 @@ export const List: FunctionComponent<Props> = ({ hourss }) => {
                 hours["@id"] && (
                   <tr className="py-2" key={hours["@id"]}>
                     <th scope="row">
-                      <ReferenceLinks
-                        items={{
-                          href: getItemPath(hours["@id"], "/hourss/[id]"),
-                          name: hours["@id"],
-                        }}
-                      />
+                      <Link href={getItemPath(hours["@id"], "/hourss/[id]")}>
+                        <defined.FormattedDateTime value={hours['start']} />
+                      </Link>
                     </th>
+                    <td><defined.FormattedLocalDate value={hours['start']} weekday="short"/></td>
+                    <td>{hours["description"]}</td>
                     <td>
                       <defined.FormattedNumber value={hours["nHours"]} />
                     </td>
                     <td>
-                      <defined.FormattedDateTime value={hours["start"]} />
+                      { hours["employee"] &&
+                        <ReferenceLinks
+                          items={{
+                            href: getItemPath(
+                              hours["employee"]["@id"],
+                              "/employees/[id]"
+                            ),
+                            name: hours["employee"]["label"],
+                          }}
+                        />
+                      }
                     </td>
-                    <td>
-                      <defined.LocalizedBool value={hours["onInvoice"]} />
-                    </td>
-                    <td>{hours["description"]}</td>
-                    <td>
-                      <ReferenceLinks
-                        items={{
-                          href: getItemPath(
-                            hours["employee"],
-                            "/employees/[id]"
-                          ),
-                          name: hours["employee"],
-                        }}
-                      />
-                    </td>
-                    <td>{hours["label"]}</td>
-                    <td><defined.FormattedLocalDate value={hours['start']} weekday="short"/></td>
                     <td className="w-8">
                       <Link
                         href={getItemPath(hours["@id"], "/hourss/[id]")}

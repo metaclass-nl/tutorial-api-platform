@@ -49,7 +49,7 @@ const Page: NextComponentType<NextPageContext> = () => {
                   id: "employee.update",
                   defaultMessage: "Edit {label}",
                 },
-                { label: employee && employee["@id"] }
+                { label: employee && employee["label"] }
               )}
             </title>
           </Head>

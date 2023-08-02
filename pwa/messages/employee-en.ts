@@ -22,7 +22,9 @@ export default {
   "employee.delete.confirm": "Are you sure you want to delete this Employee?",
   "employee.created": "{label} created.",
   "employee.updated": "{label} updated.",
+  "employee.deleting": "Deleting {label}",
   "employee.deleted": "{label} deleted.",
   "employee.delete.error": "Error when deleting the Employee: {error}",
   "employee.mercure_deleted": "{label} has been deleted by another user.",
+  "employee.item": "Employee",
 };

@@ -9,7 +9,7 @@ export class Hours implements Item {
     public start?: string,
     public onInvoice?: boolean,
     public description?: string,
-    public employee?: string,
+    public employee?: Item,
     public label?: string,
     public day?: string
   ) {
