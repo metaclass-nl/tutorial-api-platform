@@ -8,6 +8,8 @@ import {
 } from "react-intl";
 import DefaultErrorPage, { ErrorProps } from "next/error";
 
+export type intlFormatted = string | (string | JSX.Element)[] | JSX.Element;
+
 /**
  *  Some components that render null if value===undefined
  */
