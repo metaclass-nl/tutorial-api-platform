@@ -63,14 +63,21 @@ const Welcome = () => {
         <h2>Need help?</h2>
         <HelpButton
           url="https://stackoverflow.com/questions/tagged/api-platform.com"
-          Image={Sto}
           title="Ask your questions on Stack Overflow!"
-        />
-        <HelpButton
-          url="https://symfony.com/slack"
-          Image={Slack}
-          title="Chat with the community on Slack!"
-        />
+        ><Sto/></HelpButton>
+        <HelpButton url="https://api-platform.com/community" title="Community">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 01-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 01-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 01-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584zM12 18a.75.75 0 100-1.5.75.75 0 000 1.5z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </HelpButton>
       </div>
       <style jsx global>{`
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Slab:300,700');
@@ -393,16 +400,25 @@ a.other__button {
   );
 }
 
-const HelpButton = ({ Image, url, title }) => (
-  <a
+const HelpButton = ({
+                      children,
+                      url,
+                      title,
+                    }: {
+  url: string;
+  title: string;
+  children: React.ReactNode;
+}) => (
+  (<Link
+    href={url}
     target="_blank"
     rel="noopener noreferrer"
-    href={url}
-    className="help__circle"
-    title={title}
-  >
-    <Image />
-  </a>
+    className="w-12 h-12 p-2.5 rounded-full border-2 border-gray-100 justify-center transition-colors hover:border-cyan-200 hover:bg-cyan-200/50 m-2 inline-flex items-center | md:p-1 md:w-9 md:h-9 md:flex md:mx-auto md:m-0"
+    title={title}>
+
+    {children}
+
+  </Link>)
 );
 
 export default Welcome;
