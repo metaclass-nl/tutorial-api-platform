@@ -51,12 +51,9 @@ The [React Intl](https://formatjs.io/docs/react-intl/) library was chosen becaus
 - it uses polyfills and a pre standard component (ECMA-402)
 
 To install the library:
-```shell
-docker-compose exec client yarn add react-intl
-```
 or if you use npm directly:
 ```shell
-docker-compose exec client npm install react-intl --save
+docker compose exec client npm install react-intl --save
 ```
 
 All React Intl components need to know the locale and the FormattedMessage components need 
@@ -373,17 +370,17 @@ as well as the sub folders "employee" and "hours" of the reducers folder.
 The templates do require an extra template engine plug-in therefore the script generate.js was included. 
 To start the generation from the command prompt:
 ```shell
-docker-compose exec client templates/scaffold.js --generator react
+docker compose exec client templates/scaffold.js --generator react
 ```
 If you get "Error: Cannot find module" you need to install the required modules:
 ```shell
-docker-compose exec client yarn add handlebars handlebars-helpers @api-platform/client-generator
+docker compose exec client npm add handlebars handlebars-helpers @api-platform/client-generator
 ```
 Then start the generation again.
 
 The templates are also available together with the common components and utils/intlProvider.js and english messages templates in
-[branch tutorial-chapter3 of
-metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter3).
+[branch tutorial-chapter3-react of
+metaclass-nl/client-generator](https://github.com/metaclass-nl/client-generator/tree/tutorial-chapter3-react).
 
 Scaffolded components<a name="Scaffolded"></a>
 ---------------------
