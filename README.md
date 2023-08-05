@@ -212,8 +212,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 To migrate the database execute the following on the shell prompt:
 ```shell
-docker-compose exec php bin/console doctrine:migrations:diff
-docker-compose exec php bin/console doctrine:migrations:migrate
+docker compose exec php bin/console doctrine:migrations:diff
+docker compose exec php bin/console doctrine:migrations:migrate
 ```
 
 
@@ -292,7 +292,7 @@ class UserFixtures extends Fixture
 
 To clear the database and execute all fixtures enter the following command:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```
 Say yes to 'Careful, database "api" will be purged. Do you want to continue?'
 (You will loose all data in the database of your api-platform install).
@@ -321,7 +321,7 @@ Getting a token and testing it<a name="GetToken"></a>
 
 You can continue with the instructions on [Adding endpoint to SwaggerUI to retrieve a JWT token](https://api-platform.com/docs/core/jwt/#adding-endpoint-to-swaggerui-to-retrieve-a-jwt-token) or you can simply run the following shell command:
 ```shell
-curl -X POST -H "Content-Type: application/json" https://localhost/authentication_token -d '{"email":"d.peters@leiden.nl","password":"d.peters_password"}' -k
+curl -X POST -H "Content-Type: application/json" https://localhost/auth -d '{"email":"d.peters@leiden.nl","password":"d.peters_password"}' -k
 ```
 this should output something like:
 ```json
@@ -346,5 +346,5 @@ will compare your own version with code one of chapter8-api. You may also add th
 to a folder of file to make the diff more specific.
 
 After committing your changes you may check out branch chapter7-react,
-restart docker-compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
+restart docker compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter7-react)
 and follow the instructions. Or if you only follow the api branches chapter8-api.
