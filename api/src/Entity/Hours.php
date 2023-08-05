@@ -86,6 +86,9 @@ class Hours
     #[ORM\ManyToOne(targetEntity:"App\Entity\Employee", inversedBy:"hours")]
     #[Assert\NotNull]
     #[Groups(["hours_get", "hours_list"])]
+    #[ApiProperty(
+        readableLink: true,
+    )]
     private $employee;
 
     public function __construct()
