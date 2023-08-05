@@ -56,11 +56,11 @@ longer needed and may be removed without removing the Employee entity.
 After adding the User relationship to the Employee class, the
 database needs to be adapted. Generate a new migration with:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:diff
+docker compose exec php ./bin/console doctrine:migrations:diff
 ```
 Then execute the migration with:
 ```shell
-docker-compose exec php ./bin/console doctrine:migrations:migrate
+docker compose exec php ./bin/console doctrine:migrations:migrate
 ```
 
 The data itself also needs to be changed. In api/src/DataFixtures/EmployeeFixtures.php
@@ -76,7 +76,7 @@ Make similar additions to the other Employee entities in the Fixture.
 
 When you are done run:
 ```shell
-docker-compose exec php ./bin/console doctrine:fixtures:load
+docker compose exec php ./bin/console doctrine:fixtures:load
 ```
 and choose yes to delete all data before the fixtures are loaded.
 
@@ -444,5 +444,5 @@ will compare your own version with code one of chapter9-api. You may also add th
 to a folder of file to make the diff more specific.
 
 After committing your changes you may check out branch chapter8-react,
-restart docker-compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
+restart docker compose, point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-react)
 and follow the instructions. Or if you only follow the api branches chapter9-api.

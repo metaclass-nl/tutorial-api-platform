@@ -5,9 +5,8 @@ api_platform:
     # mercure: ~
     # Good cache defaults for REST APIs
     swagger:
-        versions: [3]
         api_keys:
-            apiKey:
+            JWT:
                 name: Authorization
                 type: header
     defaults:

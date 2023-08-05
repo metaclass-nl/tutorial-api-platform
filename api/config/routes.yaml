@@ -4,6 +4,6 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-authentication_token:
-    path: /authentication_token
+auth:
+    path: /auth
     methods: ['POST']
