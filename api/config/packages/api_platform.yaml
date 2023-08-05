@@ -1,19 +1,15 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
-    mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
-    patch_formats:
-        json: ['application/merge-patch+json']
+    # Mercure integration, remove if unwanted
+    # mercure: ~
+    # Good cache defaults for REST APIs
     swagger:
         versions: [3]
         api_keys:
             apiKey:
                 name: Authorization
                 type: header
-    # Mercure integration, remove if unwanted
-    # mercure: ~
-    # Good cache defaults for REST APIs
     defaults:
         stateless: true
         cache_headers:
