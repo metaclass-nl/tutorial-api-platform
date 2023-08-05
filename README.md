@@ -15,12 +15,12 @@ yourself, you do need to go back to branch chapter1-api and apply
 the instuction to add  the [DoctrineFixturesBundle](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html).
 You can install it from the command line:
 ```shell
-docker-compose exec php composer req --dev orm-fixtures
+docker compose exec php composer req --dev orm-fixtures
 ```
-After switching back to this branch restart docker-compose to apply the migrations.
+After switching back to this branch restart docker compose to apply the migrations.
 Finally apply the DataFixtures by:
 ```shell
-docker-compose exec php bin/console doctrine:fixtures:load
+docker compose exec php bin/console doctrine:fixtures:load
 ```
 
 Next.js client<a name="Client"></a>
@@ -29,7 +29,7 @@ To scaffold (generate code) files for the client for the new Employee class, you
 type at the command prompt:
 
 ```shell
-docker-compose exec pwa generate-api-platform-client --generator next
+docker compose exec pwa pnpm create @api-platform/client -g next
 ```
 
 If you refresh https://localhost/ you will see nothing has changed.
