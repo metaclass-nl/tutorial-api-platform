@@ -1,50 +1,50 @@
 import { FunctionComponent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ErrorMessage, Field, FieldArray, Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
-import { Employee } from "../../types/Employee";
+import { Hours } from "../../types/Hours";
 
 interface Props {
-  employee?: Employee;
+  hours?: Hours;
 }
 
 interface SaveParams {
-  values: Employee;
+  values: Hours;
 }
 
 interface DeleteParams {
   id: string;
 }
 
-const saveEmployee = async ({ values }: SaveParams) =>
-  await fetch<Employee>(!values["@id"] ? "/employees" : values["@id"], {
+const saveHours = async ({ values }: SaveParams) =>
+  await fetch<Hours>(!values["@id"] ? "/hours" : values["@id"], {
     method: !values["@id"] ? "POST" : "PUT",
     body: JSON.stringify(values),
   });
 
-const deleteEmployee = async (id: string) =>
-  await fetch<Employee>(id, { method: "DELETE" });
+const deleteHours = async (id: string) =>
+  await fetch<Hours>(id, { method: "DELETE" });
 
-export const Form: FunctionComponent<Props> = ({ employee }) => {
+export const Form: FunctionComponent<Props> = ({ hours }) => {
   const [, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const saveMutation = useMutation<
-    FetchResponse<Employee> | undefined,
+    FetchResponse<Hours> | undefined,
     Error | FetchError,
     SaveParams
-  >((saveParams) => saveEmployee(saveParams));
+  >((saveParams) => saveHours(saveParams));
 
   const deleteMutation = useMutation<
-    FetchResponse<Employee> | undefined,
+    FetchResponse<Hours> | undefined,
     Error | FetchError,
     DeleteParams
-  >(({ id }) => deleteEmployee(id), {
+  >(({ id }) => deleteHours(id), {
     onSuccess: () => {
-      router.push("/employees");
+      router.push("/hourss");
     },
     onError: (error) => {
       setError(`Error when deleting the resource: ${error}`);
@@ -53,29 +53,29 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
   });
 
   const handleDelete = () => {
-    if (!employee || !employee["@id"]) return;
+    if (!hours || !hours["@id"]) return;
     if (!window.confirm("Are you sure you want to delete this item?")) return;
-    deleteMutation.mutate({ id: employee["@id"] });
+    deleteMutation.mutate({ id: hours["@id"] });
   };
 
   return (
     <div className="container mx-auto px-4 max-w-2xl mt-4">
       <Link
-        href="/employees"
+        href="/hourss"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
         {`< Back to list`}
       </Link>
       <h1 className="text-3xl my-2">
-        {employee ? `Edit Employee ${employee["@id"]}` : `Create Employee`}
+        {hours ? `Edit Hours ${hours["@id"]}` : `Create Hours`}
       </h1>
       <Formik
         initialValues={
-          employee
+          hours
             ? {
-                ...employee,
+                ...hours,
               }
-            : new Employee()
+            : new Hours()
         }
         validate={() => {
           const errors = {};
@@ -92,7 +92,7 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
                   isValid: true,
                   msg: `Element ${isCreation ? "created" : "updated"}.`,
                 });
-                router.push("/employees");
+                router.push("/hourss");
               },
               onError: (error) => {
                 setStatus({
@@ -124,21 +124,23 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_firstName"
+                htmlFor="hours_nHours"
               >
-                firstName
+                nHours
               </label>
               <input
-                name="firstName"
-                id="employee_firstName"
-                value={values.firstName ?? ""}
-                type="text"
-                placeholder=""
+                name="nHours"
+                id="hours_nHours"
+                value={values.nHours ?? ""}
+                type="number"
+                step="0.1"
+                placeholder="number of hours"
+                required={true}
                 className={`mt-1 block w-full ${
-                  errors.firstName && touched.firstName ? "border-red-500" : ""
+                  errors.nHours && touched.nHours ? "border-red-500" : ""
                 }`}
                 aria-invalid={
-                  errors.firstName && touched.firstName ? "true" : undefined
+                  errors.nHours && touched.nHours ? "true" : undefined
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -146,28 +148,87 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="firstName"
+                name="nHours"
               />
             </div>
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_lastName"
+                htmlFor="hours_start"
               >
-                lastName
+                start
               </label>
               <input
-                name="lastName"
-                id="employee_lastName"
-                value={values.lastName ?? ""}
+                name="start"
+                id="hours_start"
+                value={values.start?.toLocaleString() ?? ""}
+                type="dateTime"
+                placeholder=""
+                required={true}
+                className={`mt-1 block w-full ${
+                  errors.start && touched.start ? "border-red-500" : ""
+                }`}
+                aria-invalid={
+                  errors.start && touched.start ? "true" : undefined
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="start"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="hours_onInvoice"
+              >
+                onInvoice
+              </label>
+              <input
+                name="onInvoice"
+                id="hours_onInvoice"
+                checked={values.onInvoice}
+                type="checkbox"
+                placeholder=""
+                className={`mt-1 block w-full ${
+                  errors.onInvoice && touched.onInvoice ? "border-red-500" : ""
+                }`}
+                aria-invalid={
+                  errors.onInvoice && touched.onInvoice ? "true" : undefined
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="onInvoice"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="hours_description"
+              >
+                description
+              </label>
+              <input
+                name="description"
+                id="hours_description"
+                value={values.description ?? ""}
                 type="text"
                 placeholder=""
                 required={true}
                 className={`mt-1 block w-full ${
-                  errors.lastName && touched.lastName ? "border-red-500" : ""
+                  errors.description && touched.description
+                    ? "border-red-500"
+                    : ""
                 }`}
                 aria-invalid={
-                  errors.lastName && touched.lastName ? "true" : undefined
+                  errors.description && touched.description ? "true" : undefined
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -175,55 +236,28 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="lastName"
+                name="description"
               />
             </div>
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_job"
+                htmlFor="hours_employee"
               >
-                job
+                employee
               </label>
               <input
-                name="job"
-                id="employee_job"
-                value={values.job ?? ""}
+                name="employee"
+                id="hours_employee"
+                value={values.employee ?? ""}
                 type="text"
                 placeholder=""
                 required={true}
                 className={`mt-1 block w-full ${
-                  errors.job && touched.job ? "border-red-500" : ""
-                }`}
-                aria-invalid={errors.job && touched.job ? "true" : undefined}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="job"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_address"
-              >
-                address
-              </label>
-              <input
-                name="address"
-                id="employee_address"
-                value={values.address ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.address && touched.address ? "border-red-500" : ""
+                  errors.employee && touched.employee ? "border-red-500" : ""
                 }`}
                 aria-invalid={
-                  errors.address && touched.address ? "true" : undefined
+                  errors.employee && touched.employee ? "true" : undefined
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -231,167 +265,19 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="address"
+                name="employee"
               />
             </div>
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_zipcode"
-              >
-                zipcode
-              </label>
-              <input
-                name="zipcode"
-                id="employee_zipcode"
-                value={values.zipcode ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.zipcode && touched.zipcode ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.zipcode && touched.zipcode ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="zipcode"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_city"
-              >
-                city
-              </label>
-              <input
-                name="city"
-                id="employee_city"
-                value={values.city ?? ""}
-                type="text"
-                placeholder=""
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.city && touched.city ? "border-red-500" : ""
-                }`}
-                aria-invalid={errors.city && touched.city ? "true" : undefined}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="city"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_birthDate"
-              >
-                birthDate
-              </label>
-              <input
-                name="birthDate"
-                id="employee_birthDate"
-                value={values.birthDate ?? ""}
-                type="date"
-                placeholder="Date of birth"
-                required={true}
-                className={`mt-1 block w-full ${
-                  errors.birthDate && touched.birthDate ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.birthDate && touched.birthDate ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="birthDate"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_arrival"
-              >
-                arrival
-              </label>
-              <input
-                name="arrival"
-                id="employee_arrival"
-                value={values.arrival ?? ""}
-                type="time"
-                placeholder="Time the employee usually arrives at work"
-                className={`mt-1 block w-full ${
-                  errors.arrival && touched.arrival ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.arrival && touched.arrival ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="arrival"
-              />
-            </div>
-            <div className="mb-2">
-              <div className="text-gray-700 block text-sm font-bold">hours</div>
-              <FieldArray
-                name="hours"
-                render={(arrayHelpers) => (
-                  <div className="mb-2" id="employee_hours">
-                    {values.hours && values.hours.length > 0 ? (
-                      values.hours.map((item: any, index: number) => (
-                        <div key={index}>
-                          <Field name={`hours.${index}`} />
-                          <button
-                            type="button"
-                            onClick={() => arrayHelpers.remove(index)}
-                          >
-                            -
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => arrayHelpers.insert(index, "")}
-                          >
-                            +
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => arrayHelpers.push("")}
-                      >
-                        Add
-                      </button>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="employee_label"
+                htmlFor="hours_label"
               >
                 label
               </label>
               <input
                 name="label"
-                id="employee_label"
+                id="hours_label"
                 value={values.label ?? ""}
                 type="text"
                 placeholder="Represent the entity to the user in a single string"
@@ -408,6 +294,32 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
                 className="text-xs text-red-500 pt-1"
                 component="div"
                 name="label"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="hours_day"
+              >
+                day
+              </label>
+              <input
+                name="day"
+                id="hours_day"
+                value={values.day ?? ""}
+                type="text"
+                placeholder=""
+                className={`mt-1 block w-full ${
+                  errors.day && touched.day ? "border-red-500" : ""
+                }`}
+                aria-invalid={errors.day && touched.day ? "true" : undefined}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="day"
               />
             </div>
             {status && status.msg && (
@@ -433,7 +345,7 @@ export const Form: FunctionComponent<Props> = ({ employee }) => {
         )}
       </Formik>
       <div className="flex space-x-2 mt-4 justify-end">
-        {employee && (
+        {hours && (
           <button
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}

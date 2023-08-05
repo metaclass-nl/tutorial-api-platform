@@ -5,24 +5,24 @@ import Head from "next/head";
 
 import ReferenceLinks from "../common/ReferenceLinks";
 import { fetch, getItemPath } from "../../utils/dataAccess";
-import { Employee } from "../../types/Employee";
+import { Hours } from "../../types/Hours";
 
 interface Props {
-  employee: Employee;
+  hours: Hours;
   text: string;
 }
 
-export const Show: FunctionComponent<Props> = ({ employee, text }) => {
+export const Show: FunctionComponent<Props> = ({ hours, text }) => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleDelete = async () => {
-    if (!employee["@id"]) return;
+    if (!hours["@id"]) return;
     if (!window.confirm("Are you sure you want to delete this item?")) return;
 
     try {
-      await fetch(employee["@id"], { method: "DELETE" });
-      router.push("/employees");
+      await fetch(hours["@id"], { method: "DELETE" });
+      router.push("/hourss");
     } catch (error) {
       setError("Error when deleting the resource.");
       console.error(error);
@@ -32,19 +32,19 @@ export const Show: FunctionComponent<Props> = ({ employee, text }) => {
   return (
     <div className="p-4">
       <Head>
-        <title>{`Show Employee ${employee["@id"]}`}</title>
+        <title>{`Show Hours ${hours["@id"]}`}</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: text }}
         />
       </Head>
       <Link
-        href="/employees"
+        href="/hourss"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
         {"< Back to list"}
       </Link>
-      <h1 className="text-3xl mb-2">{`Show Employee ${employee["@id"]}`}</h1>
+      <h1 className="text-3xl mb-2">{`Show Hours ${hours["@id"]}`}</h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
@@ -57,53 +57,39 @@ export const Show: FunctionComponent<Props> = ({ employee, text }) => {
         </thead>
         <tbody className="text-sm divide-y divide-gray-200">
           <tr>
-            <th scope="row">firstName</th>
-            <td>{employee["firstName"]}</td>
+            <th scope="row">nHours</th>
+            <td>{hours["nHours"]}</td>
           </tr>
           <tr>
-            <th scope="row">lastName</th>
-            <td>{employee["lastName"]}</td>
+            <th scope="row">start</th>
+            <td>{hours["start"]?.toLocaleString()}</td>
           </tr>
           <tr>
-            <th scope="row">job</th>
-            <td>{employee["job"]}</td>
+            <th scope="row">onInvoice</th>
+            <td>{hours["onInvoice"]}</td>
           </tr>
           <tr>
-            <th scope="row">address</th>
-            <td>{employee["address"]}</td>
+            <th scope="row">description</th>
+            <td>{hours["description"]}</td>
           </tr>
           <tr>
-            <th scope="row">zipcode</th>
-            <td>{employee["zipcode"]}</td>
-          </tr>
-          <tr>
-            <th scope="row">city</th>
-            <td>{employee["city"]}</td>
-          </tr>
-          <tr>
-            <th scope="row">birthDate</th>
-            <td>{employee["birthDate"]?.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <th scope="row">arrival</th>
-            <td>{employee["arrival"]?.toLocaleString()}</td>
-          </tr>
-          <tr>
-            <th scope="row">hours</th>
+            <th scope="row">employee</th>
             <td>
-              { employee["hours"] && (
-                <ReferenceLinks
-                  items={employee["hours"].map((ref: any) => ({
-                    href: getItemPath(ref, "/hourss/[id]"),
-                    name: ref,
-                  }))}
-                />
-              )}
+              <ReferenceLinks
+                items={{
+                  href: getItemPath(hours["employee"], "/employees/[id]"),
+                  name: hours["employee"] ?? "",
+                }}
+              />
             </td>
           </tr>
           <tr>
             <th scope="row">label</th>
-            <td>{employee["label"]}</td>
+            <td>{hours["label"]}</td>
+          </tr>
+          <tr>
+            <th scope="row">day</th>
+            <td>{hours["day"]}</td>
           </tr>
         </tbody>
       </table>
@@ -117,7 +103,7 @@ export const Show: FunctionComponent<Props> = ({ employee, text }) => {
       )}
       <div className="flex space-x-2 mt-4 items-center justify-end">
         <Link
-          href={getItemPath(employee["@id"], "/employees/[id]/edit")}
+          href={getItemPath(hours["@id"], "/hourss/[id]/edit")}
           className="inline-block mt-2 border-2 border-cyan-500 bg-cyan-500 hover:border-cyan-700 hover:bg-cyan-700 text-xs text-white font-bold py-2 px-4 rounded"
         >
           Edit

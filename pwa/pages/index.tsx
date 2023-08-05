@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from 'next/router';
+import Navigation from "../components/Navigation";
 
 const Welcome = () => {
   const router = useRouter();
@@ -21,9 +22,14 @@ const Welcome = () => {
           href="https://api-platform.com"
         >
         </a>
-        <br/> <br/> <br/> <br/> <br/>
+        <div>
+          <br/> <br/>
+          <Navigation/>
+        </div>
       </header>
+      <br/>
       <section className="welcome__main">
+
         <div className="main__content">
           <h1>
             <strong>Tutorial API Platform</strong>
@@ -96,6 +102,15 @@ body {
     font-size: 14px;
     overflow: auto;
     background-color: #FFF0DC;
+}
+
+.welcome button {
+    border-color: #EE9944;
+}
+
+.welcome nav {
+  padding-top: 2rem;
+  text-align: left;
 }
 
 .welcome a {

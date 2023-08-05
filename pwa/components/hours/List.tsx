@@ -3,18 +3,18 @@ import Link from "next/link";
 
 import ReferenceLinks from "../common/ReferenceLinks";
 import { getItemPath } from "../../utils/dataAccess";
-import { Employee } from "../../types/Employee";
+import { Hours } from "../../types/Hours";
 
 interface Props {
-  employees: Employee[];
+  hourss: Hours[];
 }
 
-export const List: FunctionComponent<Props> = ({ employees }) => (
+export const List: FunctionComponent<Props> = ({ hourss }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Employee List</h1>
+      <h1 className="text-3xl mb-2">Hours List</h1>
       <Link
-        href="/employees/create"
+        href="/hourss/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
         Create
@@ -27,56 +27,48 @@ export const List: FunctionComponent<Props> = ({ employees }) => (
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
           <th>id</th>
-          <th>firstName</th>
-          <th>lastName</th>
-          <th>job</th>
-          <th>address</th>
-          <th>zipcode</th>
-          <th>city</th>
-          <th>birthDate</th>
-          <th>arrival</th>
-          <th>hours</th>
+          <th>nHours</th>
+          <th>start</th>
+          <th>onInvoice</th>
+          <th>description</th>
+          <th>employee</th>
           <th>label</th>
+          <th>day</th>
           <th colSpan={2} />
         </tr>
       </thead>
       <tbody className="text-sm divide-y divide-gray-200">
-        {employees &&
-          employees.length !== 0 &&
-          employees.map(
-            (employee) =>
-              employee["@id"] && (
-                <tr className="py-2" key={employee["@id"]}>
+        {hourss &&
+          hourss.length !== 0 &&
+          hourss.map(
+            (hours) =>
+              hours["@id"] && (
+                <tr className="py-2" key={hours["@id"]}>
                   <th scope="row">
                     <ReferenceLinks
                       items={{
-                        href: getItemPath(employee["@id"], "/employees/[id]"),
-                        name: employee["@id"],
+                        href: getItemPath(hours["@id"], "/hourss/[id]"),
+                        name: hours["@id"],
                       }}
                     />
                   </th>
-                  <td>{employee["firstName"]}</td>
-                  <td>{employee["lastName"]}</td>
-                  <td>{employee["job"]}</td>
-                  <td>{employee["address"]}</td>
-                  <td>{employee["zipcode"]}</td>
-                  <td>{employee["city"]}</td>
-                  <td>{employee["birthDate"]?.toLocaleString()}</td>
-                  <td>{employee["arrival"]?.toLocaleString()}</td>
+                  <td>{hours["nHours"]}</td>
+                  <td>{hours["start"]?.toLocaleString()}</td>
+                  <td>{hours["onInvoice"]}</td>
+                  <td>{hours["description"]}</td>
                   <td>
-                    {employee["hours"] && (
-                      <ReferenceLinks
-                        items={employee["hours"].map((ref: any) => ({
-                          href: getItemPath(ref, "/hourss/[id]"),
-                          name: ref,
-                        }))}
-                      />
-                    )}
+                    <ReferenceLinks
+                      items={{
+                        href: getItemPath(hours["employee"], "/employees/[id]"),
+                        name: hours["employee"] ?? "",
+                      }}
+                    />
                   </td>
-                  <td>{employee["label"]}</td>
+                  <td>{hours["label"]}</td>
+                  <td>{hours["day"]}</td>
                   <td className="w-8">
                     <Link
-                      href={getItemPath(employee["@id"], "/employees/[id]")}
+                      href={getItemPath(hours["@id"], "/hourss/[id]")}
                       className="text-cyan-500"
                     >
                       Show
@@ -97,10 +89,7 @@ export const List: FunctionComponent<Props> = ({ employees }) => (
                   </td>
                   <td className="w-8">
                     <Link
-                      href={getItemPath(
-                        employee["@id"],
-                        "/employees/[id]/edit"
-                      )}
+                      href={getItemPath(hours["@id"], "/hourss/[id]/edit")}
                       className="text-cyan-500"
                     >
                       Edit
