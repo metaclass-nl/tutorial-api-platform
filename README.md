@@ -64,6 +64,6 @@ git diff origin/chapter6-api
 will compare your own version with code one of chapter6-api. You may also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes you may check out branch chapter5-react, restart docker-compose
+After committing your changes you may check out branch chapter5-react, restart docker compose
 and point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-react)
 and follow the instructions. Or if you only follow the api branches chapter6-api.
