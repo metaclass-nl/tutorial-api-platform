@@ -83,7 +83,7 @@ so you will probably not have to create any translation files yourself.
 
 To install the translation service:
 ```shell
-docker-compose exec php composer require symfony/translation
+docker compose exec php composer require symfony/translation
 ```
 
 The following file will be added, you need to add it to git:
@@ -155,7 +155,7 @@ curl -X POST "https://localhost/employees" -H  "accept-language: nl-NL" -H  "acc
 If you still get validation errors in English, make a to change a config file of Symfony
 or run
 ```shell
-docker-compose exec php ./bin/console cache:clear
+docker compose exec php ./bin/console cache:clear
 ```
 
 Then try again the curl command.
