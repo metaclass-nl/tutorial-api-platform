@@ -101,44 +101,44 @@ You can test your configuration at https://localhost/docs .
 When you try out Get /hours there should be response body like:
 ```json
 {
-  "@context": "/contexts/Hours",
-  "@id": "/hours",
-  "@type": "hydra:Collection",
-  "hydra:member": [
-    {
-      "@id": "/hours/115",
-      "@type": "Hours",
-      "nHours": 8,
-      "start": "2019-09-20T08:47:00+00:00",
-      "description": "architecture for coolkids",
-      "employee": {
-        "@id": "/employees/55",
-        "@type": "Employee",
-        "label": "Eden, Nicky"
-      },
-      "label": "2019-09-20 architecture for coolkids",
-      "day": "Fri"
-    },
-(..)
+    "@context": "/contexts/Hours",
+    "@id": "/hours",
+    "@type": "hydra:Collection",
+    "hydra:member": [
+        {
+            "@id": "/hours/115",
+            "@type": "Hours",
+            "nHours": 8,
+            "start": "2019-09-20T08:47:00+00:00",
+            "description": "architecture for coolkids",
+            "employee": {
+                "@id": "/employees/55",
+                "@type": "Employee",
+                "label": "Eden, Nicky"
+            },
+            "label": "2019-09-20 architecture for coolkids",
+            "day": "Fri"
+        },
+        (..)
 ```
 And when you fill out the number from @id from your own response at Get /hours/{id}
 there should be response body like:
 ```json
 {
-  "@context": "/contexts/Hours",
-  "@id": "/hours/115",
-  "@type": "Hours",
-  "nHours": 8,
-  "start": "2019-09-20T08:47:00+00:00",
-  "onInvoice": true,
-  "description": "architecture for coolkids",
-  "employee": {
-    "@id": "/employees/55",
-    "@type": "Employee",
-    "label": "Eden, Nicky"
-  },
-  "label": "2019-09-20 architecture for coolkids",
-  "day": "Fri"
+    "@context": "/contexts/Hours",
+    "@id": "/hours/115",
+    "@type": "Hours",
+    "nHours": 8,
+    "start": "2019-09-20T08:47:00+00:00",
+    "onInvoice": true,
+    "description": "architecture for coolkids",
+    "employee": {
+        "@id": "/employees/55",
+        "@type": "Employee",
+        "label": "Eden, Nicky"
+    },
+    "label": "2019-09-20 architecture for coolkids",
+    "day": "Fri"
 }
 ```
 
@@ -184,38 +184,48 @@ You can test your configuration at https://localhost/docs.
 When you try out Get //employees there should be response body like:
 ```json
 {
-  "@context": "/contexts/Employee",
-  "@id": "/employees",
-  "@type": "hydra:Collection",
-  "hydra:member": [
-    {
-      "@id": "/employees/55",
-      "@type": "Employee",
-      "job": "architect",
-      "birthDate": "1982-01-28T00:00:00+00:00",
-      "arrival": "1970-01-01T09:30:00+00:00",
-      "label": "Eden, Nicky"
-    },
-(..)
+    "@context": "/contexts/Employee",
+    "@id": "/employees",
+    "@type": "hydra:Collection",
+    "hydra:member": [
+        {
+            "@id": "/employees/55",
+            "@type": "Employee",
+            "job": "architect",
+            "birthDate": "1982-01-28T00:00:00+00:00",
+            "arrival": "1970-01-01T09:30:00+00:00",
+            "label": "Eden, Nicky"
+        },
+        (..)
 ```
 And when you fill out the number from @id from your own response at Get /employees/{id}
 there should be response body like:
 ```json
 {
-  "@context": "/contexts/Employee",
-  "@id": "/employees/55",
-  "@type": "Employee",
-  "firstName": "Nicky",
-  "lastName": "Eden",
-  "job": "architect",
-  "address": "Zuiderdiep 17",
-  "zipcode": "9722 AB",
-  "city": "Groningen",
-  "birthDate": "1982-01-28T00:00:00+00:00",
-  "arrival": "1970-01-01T09:30:00+00:00",
-  "label": "Eden, Nicky"
+    "@context": "/contexts/Employee",
+    "@id": "/employees/55",
+    "@type": "Employee",
+    "firstName": "Nicky",
+    "lastName": "Eden",
+    "job": "architect",
+    "address": "Zuiderdiep 17",
+    "zipcode": "9722 AB",
+    "city": "Groningen",
+    "birthDate": "1982-01-28T00:00:00+00:00",
+    "arrival": "1970-01-01T09:30:00+00:00",
+    "label": "Eden, Nicky"
 }
 ```
+JSON LD docs
+------------
+The api now produces the output we want, and the [openapi docs](https://localhost/docs.json) have been adapted automatically, but
+for the property Hours::employee the [json ld docs ](https://localhost/docs.jsonld) still show under hydra:supportedClass 1 hydra:supportedProperty 4 @type "hydra:Link". This makes the client generators expect a link. In the entity Hours above the propery employee add:
+```php
+ #[ApiProperty(
+        readableLink: true,
+    )]
+```
+Check the  [json ld docs ](https://localhost/docs.jsonld) to show under hydra:supportedClass 1 hydra:supportedProperty 4 @type "rdf:Property".
 
 Next
 ----
@@ -228,5 +238,5 @@ will compare your own version with code one of chapter5-api. You may also add th
 to a folder of file to make the diff more specific.
 
 After committing your changes you may check out branch [chapter4-react](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-react) or [chapter4-next](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter4-next),
-restart docker-compose and click the link to point your browser to the same branch on github and follow the instructions.
+restart docker compose and click the link to point your browser to the same branch on github and follow the instructions.
 Or if you only follow the api branches [chapter5-api](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter5-api).
