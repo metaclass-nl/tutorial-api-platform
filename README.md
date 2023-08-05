@@ -36,6 +36,14 @@ type at the command prompt:
 ```shell
 docker compose exec client generate-api-platform-client --generator react
 ```
+This will execute an outdated version of the client generator which is more compatible with
+this version of the tutorial. If you want to use the newest version change
+"@api-platform/client-generator": "^0.7.3", in package.json to "@api-platform/create-client": "^0.10.0",
+and type at the command prompt:
+```shell
+docker compose exec client npm upgrade
+docker compose exec client node_modules/.bin/create-client --generator react http://caddy ./src
+```
 
 Please take a look at at least one of the action files and one of the reducer files
 to get an idea of what it does.
@@ -112,7 +120,9 @@ so that you can see the differences right away. For example:
 git diff origin/chapter2-react ./client
 ```
 will compare your own version with code one of chapter2-react. You may also extend the path
-to a folder of file to make the diff more specific.
+to a folder of file to make the diff more specific. There may also be differences because the
+client generator is under development and you may have used a newer version then the
+one used when the tutorial was made.
 
 After committing your changes check out branch chapter2-api. 
 Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter2-api) 
