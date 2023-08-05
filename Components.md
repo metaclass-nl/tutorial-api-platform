@@ -44,14 +44,12 @@ Front End
 - <b>Login</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter7-react/README.md#Login)
   <br>Redux connected Login Form
-- <b>(Flash)Message</b>
+- <b>MessageService and Display</b>
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/README.md#Feedback)
   [angular](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter1-angular/angular/src/app/shared/message/messages.component.ts)
   <br>Shows messages from one component in another one. Follows the publish-subscribe pattern.
 - <b>Pagination</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter3-react/client/src/components/common/Pagination.js)
-  [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/pwa/components/common/Pagination.tsx)
-  <br>Displays buttons for navigating paginated lists. Replaces the navigation method that was generated for each List component.
 - <b>Select(Entity)</b>
   [react](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-react/README.md#Select)
   [next](https://github.com/metaclass-nl/tutorial-api-platform/blob/chapter4-next/README.md#Select)

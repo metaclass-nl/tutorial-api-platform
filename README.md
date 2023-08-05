@@ -169,6 +169,9 @@ This tutorial currently only supports the api core, the (scaffolded) React clien
 user interface and some chapters about the (scaffolded) Next.js client user interface. 
 The angular.io branches only contain code and no instructions for its development.
 
+The react client uses the older version (v0.7.3) of the client generator that does
+not generate typescript but plain ES6. The next.js client generator uses a newer version (v0.10.0).
+
 This distribuition is only for educational purposes and will not be updated frequently. 
 If you want to run a client container for react or angular within the standard distribution of 
 api platform you are advised to create your own fork and add a similar container there
