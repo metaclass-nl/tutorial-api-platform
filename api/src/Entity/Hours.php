@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Registration of time worked by an Employee
+ * Registration of time worked by an Employee on a day
  */
 #[ORM\Entity]
 #[ORM\Table(indexes:[ new ORM\Index(columns: ["start", "description"]) ])]
@@ -84,6 +84,9 @@ class Hours
     #[ORM\ManyToOne(targetEntity:"App\Entity\Employee", inversedBy:"hours")]
     #[Assert\NotNull]
     #[Groups(["hours_get", "hours_list"])]
+    #[ApiProperty(
+        readableLink: true,
+    )]
     private $employee;
 
     public function __construct()
