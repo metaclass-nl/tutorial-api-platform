@@ -10,8 +10,8 @@ This chapter adds JWT authentication
 Login Form<a name="Login"></a>
 ----------
 
-In chapter8-api a route was declared for /authentication_token. 
-It expects a POST with a body like 
+In chapter8-api a route was declared for /auth.
+It expects a POST with a body like
 ```json
 {"email":"d.peters@leiden.nl","password":"d.peters_password"}
 ```
@@ -134,7 +134,7 @@ when login has succeeded and the location state indicates so, or otherwise to th
 However, the form itself is not connect through Redux Forms. Instead the form keeps
 the value of the two inputs in its internal state. Furthermore it keeps track of
 its loading status in a property. Both where done because there is no need for other
-components to share this data and with respect to the loading property, it does not 
+components to share this data and with respect to the loading property, it does not
 need to trigger rendering. This does make the form a little more complicated but
 it eliminates a seperate connected form component and simplifies the actions in client/src/actions/login.js:
 ```javascript jsx
@@ -152,7 +152,7 @@ export function login(credentials) {
   return dispatch => {
     dispatch(error(null));
 
-    fetch("authentication_token", {method: 'POST', body: JSON.stringify(credentials)})
+    fetch("auth", {method: 'POST', body: JSON.stringify(credentials)})
       .then(response => response.json())
       .then(retrieved => {
         dispatch(token(retrieved.token));
@@ -236,8 +236,8 @@ Extending the dataAccess utility<a name="dataAccess"></a>
 Once a token is available it must be included in each request the app sends to the api.
 This would be easy if client/src/utils/dataAccess.js where a react comonent that could
 be connected to Redux. But it isn't. Furthermore if the token has become invalid the
-api will return a response with http status 401. If dataAccess where connected to 
-redux it could dispatch a message with respect to the error, but it can't. 
+api will return a response with http status 401. If dataAccess where connected to
+redux it could dispatch a message with respect to the error, but it can't.
 
 One solution would be to replace the dataAccess utility by a React component,
 but that would require all actions and components code that performs a fetch to be adapted.
@@ -247,7 +247,7 @@ for example by a Higher Order Component or so and that is beyond the scope of th
 Another solution could be to pass the token explicitly to the dataAccess fetch function
 and handle the 401 errors from the actions by dispatching a message with respect to the error.
 But that would also require all actions and components code that performs a fetch to be adapted
-even more because of the error handling. 
+even more because of the error handling.
 
 A less conventional solution would be to make the dataAccess module behave like an object.
 IOW set an internal state and use that state from the fetch function. The former can be done
@@ -281,9 +281,10 @@ of the fetch function:
     options.headers.set('Authorization', 'Bearer ' + token);
 ```
 
-And to call the error handlers below: 
+And to call the error handlers below:
 ```javascript jsx
-    return response.json().then(json => {
+    return response.json().then(
+      (json) => {
 ```
 add:
 ```javascript jsx
@@ -293,7 +294,7 @@ add:
 SECURITY WARNNIG: Be aware that the token is sent with ALL fetch calls made
 with the dataAccess utility. Normally this is no problem because the fetch function
 only makes calls to the same hard-coded entry point, but if the entrypoint offers access
-to multiple applications the token may be sent to the wrong application. 
+to multiple applications the token may be sent to the wrong application.
 DO NOT make the entrypoint variable!
 
 
@@ -302,7 +303,7 @@ Authentication Controller<a name="Controller"></a>
 
 OK, there is a login form that sets a token into Redux, the dataAccess utility
 can use the token and can call error handlers on fetch errors. Now it all needs
-to be combined so that whenever something happens that is relevant to the 
+to be combined so that whenever something happens that is relevant to the
 authentication, the proper actions are taken. Typically a task for a Controller.
 
 Create a new file client/src/components/common/AuthController.js with the
@@ -375,14 +376,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AuthContr
 ```
 This component receives the token from redux so that it can detect if
 a JWT token is available. It allways set the token on the dataAccess module
-so that the module it allways up to date. 
+so that the module it allways up to date.
 
 If no token, it pushes "/login/" onto the history unless the current location
 pathname already is "/login/". With login state {back: true} is passed to indicate
 that the login form should move the browser back in history after a successfull login.
 
 As soon as possible it registers an error handler with the dataAccess module.
-If an error with status 401 occurs it calls the forgetToken action, unless 
+If an error with status 401 occurs it calls the forgetToken action, unless
 the error is "Invalid credentials.", that is just to be handled by the login form.
 
 To import the AuthController add the following to client/src/index.js:
@@ -395,18 +396,18 @@ And below ConnectedRouter add
 ```
 and add a corrsponding </AuthController> above </ConnectedRouter>.
 
-You can now test the app. After succussfully logging in 
+You can now test the app. After succussfully logging in
 you should be retured to the page you requested. For example if you
 started with https://localhost/employees/ that should be the page
 you see after logging in successfully.
 
-Of couse everything should work normally once logged in. 
-If you start with https://localhost/login/ you should see the 
+Of couse everything should work normally once logged in.
+If you start with https://localhost/login/ you should see the
 Welcome page after logging in.
 
 Next
 ----
-Let git compare your own code with the branche of the next chapter 
+Let git compare your own code with the branche of the next chapter
 so that you can see the differences right away. For example:
 ```shell
 git diff origin/chapter8-react 
@@ -414,6 +415,6 @@ git diff origin/chapter8-react
 will compare your own version with code one of chapter8-react. You mau also add the path
 to a folder of file to make the diff more specific.
 
-After committing your changes check out branch chapter8-api. 
-Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api) 
+After committing your changes check out branch chapter8-api.
+Point your browser to the [same branch on github](https://github.com/metaclass-nl/tutorial-api-platform/tree/chapter8-api)
 and follow the instructions.
