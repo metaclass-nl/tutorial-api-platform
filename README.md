@@ -177,7 +177,7 @@ user of the Employee. Right below tbody insert:
                 <tr>
                   <th scope="row"><FormattedMessage id="employee.user" defaultMessage="user"/></th>
                   <td>
-                    {item['user'].label}
+                    {item['user'] && item['user'].label}
                   </td>
                 </tr>
               )}

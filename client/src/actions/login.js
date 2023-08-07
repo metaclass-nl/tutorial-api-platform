@@ -12,7 +12,7 @@ export function login(credentials) {
   return dispatch => {
     dispatch(error(null));
 
-    fetch("authentication_token", {method: 'POST', body: JSON.stringify(credentials)})
+    fetch("auth", {method: 'POST', body: JSON.stringify(credentials)})
       .then(response => response.json())
       .then(retrieved => {
         dispatch(token(retrieved.token));
