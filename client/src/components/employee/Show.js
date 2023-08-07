@@ -82,7 +82,7 @@ class Show extends Component {
                 <tr>
                   <th scope="row"><FormattedMessage id="employee.user" defaultMessage="user"/></th>
                   <td>
-                    {item['user'].label}
+                    {item['user'] && item['user'].label}
                   </td>
                 </tr>
               )}
