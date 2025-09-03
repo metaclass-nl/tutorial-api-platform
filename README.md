@@ -1,3 +1,5 @@
+This repository is no longer updated with changes from the [Api Platform Distribution](https://api-platform.com/docs/distribution/)<br>
+
 <h1>MetaClass' Tutorial API Platform</h1>
 
 [API Platform](https://api-platform.com) is quite well documented, but the documentation
@@ -186,7 +188,7 @@ be tested with your application before use in production.
 Credits
 -------
 
-The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021. [MetaClass](https://www.metaclass.nl/) offers software development and support in the Netherlands for Symfony, API Platform, React.js and Next.js
+The tutorial and examples are copyright (c) [MetaClass ](https://www.metaclass.nl/), Groningen, 2019-2021. All rights reserved. [MetaClass](https://www.metaclass.nl/) offers software development and support in the Netherlands for Symfony, API Platform, React.js and Next.js
 
 The tutorial is based the [Api Platform Distribution](https://api-platform.com/docs/distribution/)
 and Api Platform core version 3.0, created by [Kévin Dunglas](https://dunglas.fr). 
@@ -194,18 +196,4 @@ and Api Platform core version 3.0, created by [Kévin Dunglas](https://dunglas.f
 
 Contribution
 ------------
-Ideas and bug reports are welcome. 
-
-Please fork the repository and add tutorial branches there 
-for some other client (generation) platform or the admin component, 
-then send a merge request. 
-
-However, api platform and the client platforms are changing constantly. Even though
-the tutorial is for educational purposes only, 
-at some point you may need to update your branches to keep them up to date and
-working. Please do not request the merging of code that you are not 
-willing to maintain. Abandoned branches that are no longer functional 
-or have security issues may be removed. 
-
-When you open a Pull Request to this repository, you agree to license the (changes to the)
-code that is subject to the pull request under the MIT license.
+No longer possible as this repostory is archived.
